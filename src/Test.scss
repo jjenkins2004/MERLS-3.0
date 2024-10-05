@@ -1,0 +1,55 @@
+body {
+  background-color: #e3f2fd;
+}
+#testPage {
+  h3 {
+    text-align: center;
+  }
+  #progress {
+    border-radius: 7px;
+    width: 50%;
+    height: 22px;
+    margin: 0 auto 2rem;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  }
+  #progress::-webkit-progress-bar {
+    background-color: white;
+    border-radius: 7px;
+  }
+  #progress::-webkit-progress-value {
+    background-color: rgb(53, 161, 197);
+    border-radius: 7px;
+    box-shadow: 1px rgba(0, 234, 255, 0.8);
+  }
+  .testContainer {
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .indicator {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .pauseButton {
+    font-size: 4rem;
+    &.disabled {
+      opacity: 0.5;
+    }
+  }
+  .completionImg,
+  .reinforcementGif {
+    width: 50%;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+  .completionContainer,
+  .reinforcementContainer {
+    text-align: center;
+  }
+  .completionMessage {
+    font-size: 1rem;
+    margin: 2rem 0;
+  }
+}
