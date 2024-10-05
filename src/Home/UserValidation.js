@@ -40,7 +40,7 @@ const UserValidation = () => {
         let data = await response.json();
         if (data && data.length > 0 && data[0].is_active) {
           localStorage.setItem("username", username);
-          navigate("/language-selection");
+          navigate("/test-selection");
         } else {
           console.error("Failed to validate user");
           alertLoginFailure();
@@ -66,8 +66,8 @@ const UserValidation = () => {
       <AppBar className = "titleContainer">
           <h1 className = "title">
             {chineseLoginPage ? 
-            <>欢迎来到<strong>MERLS</strong></> :
-            <>Welcome to <strong>MERLS</strong></>
+            <>欢迎来到MERLS</> :
+            <>Welcome to MERLS</>
             }
           </h1>
           <h2 className = "subHeading">

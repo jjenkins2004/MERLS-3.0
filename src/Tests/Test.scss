@@ -6,10 +6,10 @@ body {
     text-align: center;
   }
   #progress {
-    border-radius: 7px;
+    border-radius: 10px;
     width: 50%;
-    height: 22px;
-    margin: 0 auto 2rem;
+    height: 18px;
+    margin: 0.5rem auto 1rem;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   }
   #progress::-webkit-progress-bar {
@@ -51,5 +51,18 @@ body {
   .completionMessage {
     font-size: 1rem;
     margin: 2rem 0;
+  }
+  
+  .testTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 35px;
+  font-family: sans-serif;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: rgb(203, 224, 253);
+  margin-bottom: 1rem;
+  margin-top: 0;
   }
 }

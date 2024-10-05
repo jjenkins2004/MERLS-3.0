@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Test.scss";
+import "./Tests/Test.scss";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Radio from "@mui/material/Radio";

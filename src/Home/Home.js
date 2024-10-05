@@ -22,8 +22,8 @@ const Home = () => {
       <AppBar className = "titleContainer">
           <h1 className = "title">
             {showChineseInstruction ? 
-            <>欢迎来到<strong>MERLS</strong></> :
-            <>Welcome to <strong>MERLS</strong></>
+            <>欢迎来到MERLS</> :
+            <>Welcome to MERLS</>
             }
           </h1>
           <h2 className = "subHeading">

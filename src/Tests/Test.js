@@ -12,6 +12,7 @@ const Test = ({ language }) => {
   const [curId, setCurId] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
+  const [showChinese, setShowChinese] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ const Test = ({ language }) => {
           }
         );
         if (response.ok) {
-          navigate("/language-selection");
+          navigate("/test-selection");
         } else {
           alert("Failed to submit answers");
         }
@@ -77,12 +78,14 @@ const Test = ({ language }) => {
   if (questions.length > 0) {
     return (
       <div id="testPage">
-        <AppBar position="fixed" sx={{ height: "7.5rem" }}>
-          <h3>Completion progress/完成进度：</h3>
+        <AppBar className = "titleContainer">
           <progress id="progress" value={curId} max={questions.length}>
             {Math.floor((curId / questions.length) * 100)}%
           </progress>
-        </AppBar>
+          <button className = "translationButton" onClick ={() => setShowChinese(!showChinese)}>
+            {showChinese ? "Change to English/更改为英语" : "Change to Chinese/更改为中文"}
+          </button>
+      </AppBar>
         <Container className="testContainer">
           {completed ? (
             <div>
