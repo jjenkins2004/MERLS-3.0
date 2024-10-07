@@ -17,8 +17,10 @@ root.render(
       <Route path="/parent-questions" element={<ParentQuestions />} />
       <Route path="login" element={<UserValidation />} />
       <Route path="/test-selection" element={<TestSeletion />} />
-      <Route path="/chinese-test" element={<Test language="CN" />} />
-      <Route path="/english-test" element={<Test language="EN" />} />
+      <Route path="/chinese-test" element={<Test type = "match" language="CN" />} />
+      <Route path="/english-test" element={<Test type = "match" language="EN" />} />
+      <Route path="/chinese-repetition-test" element={<Test type = "repetition" language="CN" />} />
+      <Route path="/english-repetition-test" element={<Test type = "repetition" language="EN" />} />
       <Route path="download-report" element={<ExportResult />} />
     </Routes>
   </BrowserRouter>

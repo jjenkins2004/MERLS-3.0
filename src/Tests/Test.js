@@ -6,8 +6,9 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Question from "./Question";
+import Repetition from "./Repetition";
 
-const Test = ({ language }) => {
+const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
   const [curId, setCurId] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -90,7 +91,9 @@ const Test = ({ language }) => {
           {completed ? (
             <div>
               <div className="indicator">
-                <p>Hooray! All questions completed!/太棒了！题目都完成了！</p>
+                <p> {showChinese ? 
+                <>太棒了！题目都完成了！</> : 
+                <>Hooray! All questions completed!</>}</p>
               </div>
               <div className="completionContainer">
                 <img
@@ -99,12 +102,17 @@ const Test = ({ language }) => {
                   alt="completion celebration"
                 />
                 <div className="completionMessage">
-                  Hooray! You've completed the{" "}
-                  {language === "CN" ? "Chinese" : "English"} section, press
-                  "Submit" below to record your answers!
+                {showChinese ? 
+                <>万岁！您已完成{language === "CN" ? "中文" : "英语"}部分，请按下面的“提交”记录您的答案！</> : 
+                <>Hooray! You've completed the{" "}
+                {language === "CN" ? "Chinese" : "English"} section, press
+                "Submit" below to record your answers!</>}
+                  
                 </div>
                 <Button variant="contained" onClick={submitAnswers}>
-                  Submit
+                {showChinese ? 
+                <>提交</> : 
+                <>Submit</>}
                 </Button>
               </div>
             </div>
@@ -132,11 +140,17 @@ const Test = ({ language }) => {
                 </Button>
               </div>
             </div>
-          ) : (
+          ) : type === "match" ? (
             <Question
               curQuestion={questions[curId]}
               recordAnswer={recordAnswer}
-              showChinese = {showChinese}
+              showChinese={showChinese}
+            />
+          ) : (
+            <Repetition
+              curQuestion={questions[curId]}
+              recordAnswer={recordAnswer}
+              showChinese={showChinese}
             />
           )}
         </Container>

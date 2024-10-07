@@ -95,7 +95,7 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
                 className="pauseButton disabled"
               />
             </IconButton>
-            <p>{showChinese ? 
+            <p className = "actionText">{showChinese ? 
                 <>播放中</> : 
                 <>Playing question</>}</p>
           </div>
@@ -136,15 +136,15 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
               </IconButton>
             )}
             {paused ? (
-              <p>{showChinese ? 
+              <p className = "actionText">{showChinese ? 
                 <>已被用户暂停</> : 
                 <>Paused by user</>}</p>
             ) : remainingPlayCount > 0 ? (
-              <p>{showChinese ? 
+              <p className = "actionText">{showChinese ? 
                 <>{countDown} 秒内播放音频</> : 
                 <>Audio playing in {countDown} second(s)</>}</p>
             ) : (
-              <p>{showChinese ? 
+              <p className = "actionText">{showChinese ? 
                 <>单击图片选择</> : 
                 <>Click image to choose</>}</p>
             )}

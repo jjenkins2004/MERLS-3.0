@@ -131,7 +131,7 @@ body {
   border: 3px solid rgb(48, 53, 69);
   border-radius: 1px;
   box-sizing: border-box;
-  transition: transform 0.15s ease-out, outline-color 0.15s ease;
+  transition: transform 0.2s ease, outline-color 0.2s ease;
 }
 
 .image.selected {
@@ -140,11 +140,15 @@ body {
 }
 
 .image.unselected {
-  transition: scale 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .image.unselected:hover {
-  scale: 1.03;
+  transform: scale(1.03);
+}
+
+.image.unselected:active {
+  transform: scale(1);
 }
 
 .imageSelectedOverlay {
@@ -158,9 +162,15 @@ body {
   opacity: 0;
   pointer-events: none;
   scale: 1.07;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
 }
 
 .imageSelectedOverlay.visible {
   opacity: 1;  /* Show the overlay when visible class is added */
+}
+
+.actionText {
+  margin-top: 0px;
+  margin-bottom: 40px;
+  height: 30px;
 }
