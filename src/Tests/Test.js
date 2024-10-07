@@ -136,6 +136,7 @@ const Test = ({ language }) => {
             <Question
               curQuestion={questions[curId]}
               recordAnswer={recordAnswer}
+              showChinese = {showChinese}
             />
           )}
         </Container>
