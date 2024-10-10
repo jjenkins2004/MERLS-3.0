@@ -109,7 +109,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1500px;
+  width: 100vw;
   height: auto;
 }
 
@@ -118,55 +118,56 @@ body {
   margin-right: 20px;
   margin-bottom: 20px;
   width: 20%;
-  max-height: 300px;
-  position: relative;
-}
-
-.image {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: contain;
+  height: 12rem;
+  display: flex;
+  justify-content: center;
   box-shadow: 3px 3px 10px 5px rgba(0, 0, 0, 0.3);
   border: 3px solid rgb(48, 53, 69);
   border-radius: 1px;
-  box-sizing: border-box;
+  background-color: white;
+  position: relative;
   transition: transform 0.2s ease, outline-color 0.2s ease;
 }
 
-.image.selected {
+.imageContainer.selected {
   border-color: rgb(100, 235, 129);
   transform: scale(1.07);
 }
 
-.image.unselected {
-  transition: transform 0.2s ease;
-}
-
-.image.unselected:hover {
+.imageContainer.unselected:hover {
   transform: scale(1.03);
 }
 
-.image.unselected:active {
+.imageContainer.unselected:active {
   transform: scale(1);
+}
+
+.image {
+  max-width: 100%;
+  height: 12rem;
+  object-fit: contain;
+  transition: transform 0.2s ease, outline-color 0.2s ease;
 }
 
 .imageSelectedOverlay {
   display: block;
   position: absolute;
-  top: -1px;
+  top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 186, 50, 0.15);
   opacity: 0;
-  pointer-events: none;
-  scale: 1.07;
   transition: opacity 0.2s ease;
 }
 
+.imageSelectedOverlay:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
 .imageSelectedOverlay.visible {
-  opacity: 1;  /* Show the overlay when visible class is added */
+  opacity: 1; 
+  background-color: rgba(0, 186, 50, 0.15);
 }
 
 .actionText {

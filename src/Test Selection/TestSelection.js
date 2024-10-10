@@ -51,7 +51,7 @@ const LanguageSelection = () => {
       </AppBar>
       <div className="testSelectionGroup">
         <button
-          className = {`testButton ${selectedButton === 1 ? 'scaled' : 'testButtonUnselected'}`}
+          className = {`testButton ${selectedButton === 1 ? 'selected' : 'unselected'}`}
           //href="/chinese-test"
           onClick={() => {
             if (selectedButton === 1) {
@@ -70,7 +70,7 @@ const LanguageSelection = () => {
           }
         </button>
         <button
-          className = {`testButton ${selectedButton === 2 ? 'scaled' : 'testButtonUnselected'}`}
+          className = {`testButton ${selectedButton === 2 ? 'selected' : 'unselected'}`}
           // href="/english-test"
           onClick={() => {
             if (selectedButton === 2) {
@@ -88,7 +88,7 @@ const LanguageSelection = () => {
           }
         </button>
         <button
-          className = {`testButton ${selectedButton === 3 ? 'scaled' : 'testButtonUnselected'}`}
+          className = {`testButton ${selectedButton === 3 ? 'selected' : 'unselected'}`}
           onClick={() => {
             if (selectedButton === 3) {
               setSelectedButton(0);
@@ -105,7 +105,7 @@ const LanguageSelection = () => {
           }
         </button>
         <button
-          className = {`testButton ${selectedButton === 4 ? 'scaled' : 'testButtonUnselected'}`}
+          className = {`testButton ${selectedButton === 4 ? 'selected' : 'unselected'}`}
           onClick={() => {
             if (selectedButton === 4) {
               setSelectedButton(0);

@@ -184,19 +184,21 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
       </Container> */}
       <div className = "imagesContainer"> 
         {curQuestion.options.map((url, idx) => (
-          <div className="imageContainer">
+          <div 
+            className={`imageContainer ${selectedIdx === idx ? 'selected' : 'unselected'}`}
+            onClick={() => {
+              if (idx === selectedIdx) {
+                setSelectedIdx(-1);
+              }
+              else {
+                setSelectedIdx(idx);
+              }
+            }}
+          >
             <img
-              className={`image ${selectedIdx === idx ? 'selected' : 'unselected'}`}
+              className="image"
               src={url}
               alt="choice"
-              onClick={() => {
-                if (idx === selectedIdx) {
-                  setSelectedIdx(-1);
-                }
-                else {
-                  setSelectedIdx(idx);
-                }
-              }}
             >
             </img>
             <div className={`imageSelectedOverlay ${selectedIdx === idx ? 'visible' : ''}`}></div>
