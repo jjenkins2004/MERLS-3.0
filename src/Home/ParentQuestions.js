@@ -21,6 +21,7 @@ const ParentQuestions = () => {
   });
 
   const [showQuestionInChinese, setShowQuestionInChinese] = useState(false);
+  const [allAnsweredCorrectly, setAllAnsweredCorrectly] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -32,14 +33,25 @@ const ParentQuestions = () => {
     setAnswers({ ...answers, [question]: value === "true" });
   };
 
-  const allAnsweredCorrectly =
-    answers.answer1 === true &&
-    answers.answer2 === true &&
-    answers.answer3 === true &&
-    answers.answer4 === true &&
-    answers.answer5 === true &&
-    answers.answer6 === true &&
-    answers.answer7 === false;
+  const checkCorrectness = () => {
+    if (
+      answers.answer1 === true &&
+      answers.answer2 === true &&
+      answers.answer3 === true &&
+      answers.answer4 === true &&
+      answers.answer5 === true &&
+      answers.answer6 === true &&
+      answers.answer7 === false
+    ) {
+      setAllAnsweredCorrectly(true);
+    } else {
+      alert(
+        showQuestionInChinese
+          ? "至少有一道题没有答对"
+          : "At least one question is answered incorrectly."
+      );
+    }
+  };
 
   const questions = {
     en: [
@@ -71,23 +83,25 @@ const ParentQuestions = () => {
 
   return (
     <div className="home">
-      <AppBar className = "titleContainer">
-          <h1 className = "title">
-            {showQuestionInChinese ? 
-            <>亲爱的家长</> :
-            <>Dear parent(s)</>
-            }
-          </h1>
-          <h2 className = "subHeading">
-            {
-              showQuestionInChinese ?
-              <>请正确回答问题以开始</> :
-              <>Please correctly answer the following questions to start</>
-            }
-          </h2>
-          <button className = "translationButton" onClick ={() => setShowQuestionInChinese(!showQuestionInChinese)}>
-            {showQuestionInChinese ? "Change to English/更改为英语" : "Change to Chinese/更改为中文"}
-          </button>
+      <AppBar className="titleContainer">
+        <h1 className="title">
+          {showQuestionInChinese ? <>亲爱的家长</> : <>Dear parent(s)</>}
+        </h1>
+        <h2 className="subHeading">
+          {showQuestionInChinese ? (
+            <>请正确回答问题以开始</>
+          ) : (
+            <>Please correctly answer the following questions to start</>
+          )}
+        </h2>
+        <button
+          className="translationButton"
+          onClick={() => setShowQuestionInChinese(!showQuestionInChinese)}
+        >
+          {showQuestionInChinese
+            ? "Change to English/更改为英语"
+            : "Change to Chinese/更改为中文"}
+        </button>
       </AppBar>
       <div className="questionContainer">
         <FormControl>
@@ -119,25 +133,33 @@ const ParentQuestions = () => {
               </li>
             ))}
           </ol>
+          <Button
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto", // Above 2 are for centering
+              width: "20%",
+              display: "block",
+            }}
+            variant="contained"
+            onClick={checkCorrectness}
+          >
+            Submit
+          </Button>
         </FormControl>
-      </div>    
-      <div className = "nextBack">
-      <Button
-          style = {{marginRight: "0.5rem"}}
+      </div>
+      <div className="nextBack">
+        <Button
+          style={{ marginRight: "0.5rem" }}
           variant="contained"
-          href={`/?cn-zw=${
-            showQuestionInChinese ? "true" : "false"
-          }`}
+          href={`/?cn-zw=${showQuestionInChinese ? "true" : "false"}`}
         >
           {showQuestionInChinese ? "后退" : "Back"}
         </Button>
         <Button
-          style = {{marginLeft: "0.5rem"}}
+          style={{ marginLeft: "0.5rem" }}
           disabled={!allAnsweredCorrectly}
           variant="contained"
-          href={`/login?cn-zw=${
-            showQuestionInChinese ? "true" : "false"
-          }`}
+          href={`/login?cn-zw=${showQuestionInChinese ? "true" : "false"}`}
         >
           {showQuestionInChinese ? "下一步" : "Next"}
         </Button>

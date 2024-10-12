@@ -17,7 +17,7 @@
 }
 
 .questionContainer {
-  margin-top: 5rem
+  margin-top: 5rem;
 }
 
 .parentQuestion {
@@ -72,7 +72,8 @@
   border-radius: 5px;
   border: 1px solid rgb(156, 202, 255);
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .translationButton:hover {
@@ -81,7 +82,7 @@
 }
 
 .translationButton:active {
-  transform: scale(.97);
+  transform: scale(0.97);
   background-color: rgb(143, 193, 250);
 }
 
