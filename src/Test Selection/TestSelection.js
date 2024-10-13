@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./TestSelection.css";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
+import TranslationButton from "../Components/TranslationButton";
 
 const LanguageSelection = () => {
   const [englishListeningCompleted, setEnglishListeningCompleted] = useState(false);
@@ -45,9 +46,10 @@ const LanguageSelection = () => {
             <>Please select a test below to start</>
             }
           </h1>
-          <button className = "translationButton" onClick ={() => setShowChinese(!showChinese)}>
-            {showChinese ? "Change to English/更改为英语" : "Change to Chinese/更改为中文"}
-          </button>
+          <TranslationButton 
+            showChinese={showChinese}
+            setShowChinese={setShowChinese}
+          />
       </AppBar>
       <div className="testSelectionGroup">
         <button

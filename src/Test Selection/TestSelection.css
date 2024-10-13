@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-family: sans-serif;
   font-size: 1.7rem;
   font-weight: bold;
   color: rgb(203, 224, 253);
@@ -34,7 +33,7 @@
 .testButton {
   margin-top: 0;
   background-color: rgb(0, 110, 235);
-  font-family: sans-serif;
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: bold;
   color: rgb(255, 255, 255);
@@ -69,9 +68,9 @@
 
 .selectionButton {
   margin-top: 1rem;
-  font-family: sans-serif;
+  font-family: inherit;
   font-size: 0.8rem;
-  font-weight: 400;
+  font-weight: 800;
   border-radius: 15px;
   height: 30px;
   width: 30%;

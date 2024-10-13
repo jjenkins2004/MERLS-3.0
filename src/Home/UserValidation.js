@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import "./Home.css";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import TranslationButton from "../Components/TranslationButton";
+import ProceedButton from "../Components/ProceedButton";
 
 const UserValidation = () => {
   const [username, setUsername] = useState(null);
@@ -25,6 +27,7 @@ const UserValidation = () => {
   };
 
   const validateUser = async () => {
+    setUsername(false);
     try {
       let response = await fetch(
         "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getUsers?participant_id=" +
@@ -77,9 +80,10 @@ const UserValidation = () => {
               "Please enter your username to login"
             }
           </h2>
-          <button className = "translationButton" onClick ={() => setChineseLoginPage(!chineseLoginPage)}>
-            {chineseLoginPage ? "Change to English/更改为英语" : "Change to Chinese/更改为中文"}
-          </button>
+          <TranslationButton 
+            showChinese={chineseLoginPage}
+            setShowChinese={setChineseLoginPage}
+          />
       </AppBar>
       <div className="loginSection">
         <TextField
@@ -87,9 +91,13 @@ const UserValidation = () => {
           variant="standard"
           onChange={(e) => setUsername(e.target.value)}
         />
-        <Button variant="contained" onClick={validateUser} disabled={!username}>
-          {chineseLoginPage ? "登录" : "login"}
-        </Button>
+        <ProceedButton 
+          textEnglish={"Login"}
+          textChinese={"登录"}
+          showChinese={chineseLoginPage}
+          onClick={validateUser}
+          disabled={!username}
+        />
       </div>
     </div>
   );
