@@ -49,7 +49,7 @@ public class ExportHandler implements RequestHandler<APIGatewayProxyRequestEvent
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            boolean isEn = language.toUpperCase(Locale.ROOT) == "EN";
+            boolean isEn = language.toUpperCase(Locale.ROOT).equals("EN");
             stmt.setString(1, participantId);
             stmt.setBoolean(2, isEn);
 
