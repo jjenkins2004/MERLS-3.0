@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Test.scss";
 import AppBar from "@mui/material/AppBar";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -7,12 +7,14 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Question from "./Question";
 import Repetition from "./Repetition";
+import Instructions from "./Instructions";
 
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
   const [curId, setCurId] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
 
   const navigate = useNavigate();
@@ -73,6 +75,18 @@ const Test = ({ type, language }) => {
     }
     fetchQuestionList();
   }, []);
+
+  let audioLink = useRef("");
+
+  useEffect(() => {
+    if (type === "match") {
+      audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-test-instruction-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/English-test-instruction-w-audio.m4a"
+      console.log("audio Link: " + audioLink.current);
+    }
+    else if (type === "repetition") {
+
+    }
+  }, [type, language]);
 
   let completed = curId === questions.length;
 
@@ -139,6 +153,14 @@ const Test = ({ type, language }) => {
                   Continue
                 </Button>
               </div>
+            </div>
+          ) : showInstructions ? (
+            <div>
+              <Instructions
+                showChinese = {showChinese}
+                audioLink = {audioLink.current}
+                setShowInstructions = {setShowInstructions}
+              />
             </div>
           ) : type === "match" ? (
             <Question

@@ -175,3 +175,17 @@ body {
   margin-bottom: 40px;
   height: 30px;
 }
+
+.puppyContainer {
+  margin-top: -2rem;
+  width: 50vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instructionPuppy {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
