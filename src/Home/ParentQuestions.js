@@ -38,10 +38,10 @@ const ParentQuestions = () => {
       answers.answer1 === true &&
       answers.answer2 === true &&
       answers.answer3 === true &&
-      answers.answer4 === true &&
+      answers.answer4 === false &&
       answers.answer5 === true &&
-      answers.answer6 === true &&
-      answers.answer7 === false
+      answers.answer6 === false &&
+      answers.answer7 === true
     ) {
       setAllAnsweredCorrectly(true);
     } else {
@@ -55,22 +55,22 @@ const ParentQuestions = () => {
 
   const questions = {
     en: [
+      "Does your computer have a stable connection to the internet?",
       "Is the room quiet and without distractions?",
-      "Is your computer connected to the internet?",
       "Is your audio set to a good volume?",
-      "Are you using Google Chrome?",
-      "If your child is confused, can you repeat the question for them?",
+      "If your child is unsure about the answer, can you repeat the question for them?",
       "If your child hesitates, can you encourage them to guess?",
       "If your child is wrong, can you correct them?",
+      "Is your child doing the selection/clicking independently?",
     ],
     cn: [
-      "您的房间目前是否安静且没有干扰？",
       "您的电脑是否有稳定的互联网连接？",
+      "您的房间目前是否安静且没有干扰？",
       "您的音量是否设置合适？",
-      "您是否正在使用谷歌浏览器？",
-      "如果你的孩子不确定答案, 你能重复问题给他们吗？",
-      "如果你的孩子不确定答案, 你可以鼓励他们猜答案吗？",
-      "如果你的孩子回答错误, 你可以纠正他们吗？",
+      "如果您的孩子不确定答案，您能重复问题给他们吗？",
+      "如果您的孩子不确定答案，您可以鼓励他们猜答案吗？",
+      "如果你的孩子回答错误, 您可以纠正他们吗？",
+      "您的孩子接下来会自己独立进行选择/点击的吗？",
     ],
   };
 

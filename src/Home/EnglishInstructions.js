@@ -7,26 +7,35 @@ const EnglishInstructions = () => {
       <h1>MECOLAB Instructions Page</h1>
       <p>
         Please watch the instruction video and answer the questions that will
-        appear below before getting started!
+        appear below before getting started!{" "}
       </p>
 
       <div className="section">
         <h2>Set up</h2>
         <ul>
           <li>
-            You will need a computer or tablet connected to the internet in a
-            quiet room where your child can be attentive and without
-            distractions. Google Chrome and Microsoft Edge browsers are
-            recommended for testing on your device. If you are using Safari
-            please see the instruction.
+            You will need a computer or tablet{" "}
+            <span className="redHighlight">connected to the internet</span> in a
+            quiet room without distractions.{" "}
+            <span className="redHighlight">Google Chrome</span> and{" "}
+            <span className="redHighlight">Microsoft Edge</span>
+            browsers are recommended for testing on your device. If you are
+            using <span className="redHighlight">Safari</span> please see the
+            instruction.
           </li>
           <li>
-            Make sure the device’s audio is set to a good volume so your child
-            can hear the task.
+            Make sure the device’s audio is set to a{" "}
+            <span className="redHighlight">loud</span> volume so your child can
+            hear the task.
           </li>
           <li>
-            Do not refresh the browser or hit the back button once you have
-            started a task or all progress will be lost.
+            Make sure the child sits in a comfortable position and can clearly
+            see the screen.
+          </li>
+          <li>
+            <span className="redHighlight">Do not</span> refresh the browser or
+            hit the back button once you have started a task or all progress
+            will be lost.
           </li>
         </ul>
       </div>
@@ -35,29 +44,40 @@ const EnglishInstructions = () => {
         <h2>Testing Instructions</h2>
         <ul>
           <li>
+            Be sure the child is the one using the mouse or touch screen when
+            answering the questions.
+          </li>
+          <li>
             Once you start a task, please finish it. You don’t have to do both
             the English and Mandarin tasks at once, but it is recommended.
           </li>
           <li>
-            Some of the sentences will be difficult. Allow your child to guess
-            rather than help them toward the answers. This should be a
-            reflection of their knowledge, not yours.
+            Some of the sentences will be difficult.{" "}
+            <span className="redHighlight">Allow your child to guess</span>
+            rather than tell them the answers. This should be a reflection of
+            <span className="redHighlight">their knowledge</span>, not yours.
           </li>
           <li>
-            This may be hard for you, but do not tell your child if the answer
-            is correct or incorrect. We do not expect your child to get all the
-            answers right.
+            This may be hard for you, but{" "}
+            <span className="redHighlight">do not</span> tell your child if the
+            answer is correct or incorrect. We{" "}
+            <span className="redHighlight">do not</span> expect your child to
+            get all the answers right.
           </li>
           <li>
             It’s okay to stay silent, but if you want to show encouragement,
-            here are examples of non-confirming or correcting comments to say
-            after every 3-5 sentences: ‘You did a good job listening!’; ‘Great
-            job paying attention!’
+            here are some examples: ‘You did a good job listening!’; ‘Great job
+            paying attention!’
           </li>
           <li>
-            Each sentence will automatically play twice before progressing to
-            the next sentence.
+            Each sentence will automatically play{" "}
+            <span className="redHighlight">twice</span> (there is a pause
+            between sentences) before progressing to the next sentence.
           </li>
+          <li>
+            Use the pause button during the testing if your child needs a break.
+          </li>
+          <li>When assisting your child:</li>
         </ul>
       </div>
 
