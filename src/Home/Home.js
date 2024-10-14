@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
+import YouTube from "react-youtube";
 import "./Home.css";
 import ChineseInstructions from "./ChineseInstructions";
 import EnglishInstructions from "./EnglishInstructions";
@@ -9,7 +10,8 @@ import TranslationButton from "../Components/TranslationButton";
 import ProceedButton from "../Components/ProceedButton";
 
 const Home = () => {
-  const [videoPlayed, setVideoPlayed] = useState(true);
+  const [parentInstructionPlayed, setParentInstructionPlayed] = useState(false);
+  const [childInstructionPlayed, setChildInstructionPlayed] = useState(false);
   const [showChineseInstruction, setShowChineseInstruction] = useState(true);
   const location = useLocation();
 
@@ -18,6 +20,14 @@ const Home = () => {
     const languageParam = params.get("cn-zw");
     setShowChineseInstruction(languageParam === "true");
   }, [location]);
+
+  const onVideoEnd = (videoIndex) => {
+    if (videoIndex === 1) {
+      setParentInstructionPlayed(true);
+    } else if (videoIndex === 2) {
+      setChildInstructionPlayed(true);
+    }
+  };
 
   return (
     <div className="home">
@@ -36,28 +46,17 @@ const Home = () => {
         />
       </AppBar>
       <div className="introVideo">
-        <iframe
-          title="parent-instruction"
-          src={
-            showChineseInstruction
-              ? "https://drive.google.com/file/d/1L-ndiuh5e-EoFXQwWKn1sNjxAXnMSZc4/preview"
-              : "https://drive.google.com/file/d/1vf9OY__JyOuY7qgM3-GlOskB1NuMzZXE/preview"
-          }
-          width="640"
-          height="480"
-        ></iframe>
-      </div>
-      <div className="introVideo">
-        <iframe
-          title="child-instruction"
-          src={
-            showChineseInstruction
-              ? "https://drive.google.com/file/d/1Iw0x5F4y82vB1HrlF14kujTzffCeostq/preview"
-              : "https://drive.google.com/file/d/1pTGSn4nQEUGCUQfwSY3wZmEQUeviKcyq/preview"
-          }
-          width="640"
-          height="480"
-        ></iframe>
+        {parentInstructionPlayed ? (
+          <YouTube
+            videoId={showChineseInstruction ? "orbkg5JH9C8" : "orbkg5JH9C8"} // Replace with child instruction's YouTube video ID
+            onEnd={() => onVideoEnd(2)}
+          />
+        ) : (
+          <YouTube
+            videoId={showChineseInstruction ? "hP0Jz-6JoyY" : "hP0Jz-6JoyY"} // Replace with parent instruction's YouTube video ID
+            onEnd={() => onVideoEnd(1)}
+          />
+        )}
       </div>
       {showChineseInstruction ? (
         <div>
@@ -68,13 +67,15 @@ const Home = () => {
           <EnglishInstructions />
         </div>
       )}
-      <ProceedButton 
-        disabled={!videoPlayed}
-        showChinese={showChineseInstruction} 
+      <ProceedButton
+        disabled={!childInstructionPlayed}
+        showChinese={showChineseInstruction}
         textEnglish={"Next"}
         textChinese={"下一步"}
-        onClick={()=> {
-          const url = `/parent-questions?cn-zw=${showChineseInstruction ? "true" : "false"}`;
+        onClick={() => {
+          const url = `/parent-questions?cn-zw=${
+            showChineseInstruction ? "true" : "false"
+          }`;
           window.location.href = url;
         }}
       />
