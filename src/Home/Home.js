@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
 import YouTube from "react-youtube";
 import "./Home.css";
 import ChineseInstructions from "./ChineseInstructions";
@@ -23,9 +22,9 @@ const Home = () => {
 
   const onVideoEnd = (videoIndex) => {
     if (videoIndex === 1) {
-      setParentInstructionPlayed(true);
+      setParentInstructionPlayed(true); // Parent video played
     } else if (videoIndex === 2) {
-      setChildInstructionPlayed(true);
+      setChildInstructionPlayed(true); // Child video played
     }
   };
 
@@ -45,19 +44,41 @@ const Home = () => {
           setShowChinese={setShowChineseInstruction}
         />
       </AppBar>
-      <div className="introVideo">
-        {parentInstructionPlayed ? (
-          <YouTube
-            videoId={showChineseInstruction ? "orbkg5JH9C8" : "orbkg5JH9C8"} // Replace with child instruction's YouTube video ID, which is the part of the URL after v=
-            onEnd={() => onVideoEnd(2)}
-          />
-        ) : (
-          <YouTube
-            videoId={showChineseInstruction ? "hP0Jz-6JoyY" : "hP0Jz-6JoyY"} // Replace with parent instruction's YouTube video ID, which is the part of the URL after v=
-            onEnd={() => onVideoEnd(1)}
-          />
+
+      {/* Parent video with header */}
+      <div className="videoSection">
+        <h3>
+          {showChineseInstruction ? "家长介绍视频" : "Parent Instruction Video"}
+        </h3>
+        <YouTube
+          videoId={showChineseInstruction ? "hP0Jz-6JoyY" : "hP0Jz-6JoyY"} // Replace with parent instruction's YouTube video ID
+          onEnd={() => onVideoEnd(1)}
+        />
+      </div>
+
+      {/* Child video with header, only enabled after parent video ends */}
+      <div className="videoSection">
+        <h3>
+          {showChineseInstruction ? "儿童介绍视频" : "Child Instruction Video"}
+        </h3>
+        <YouTube
+          videoId={showChineseInstruction ? "orbkg5JH9C8" : "orbkg5JH9C8"} // Replace with child instruction's YouTube video ID
+          onEnd={() => onVideoEnd(2)}
+          style={{
+            pointerEvents: parentInstructionPlayed ? "auto" : "none",
+            opacity: parentInstructionPlayed ? 1 : 0.5,
+          }}
+        />
+        {!parentInstructionPlayed && (
+          <p style={{ color: "red" }}>
+            {showChineseInstruction
+              ? "请先观看家长介绍视频"
+              : "Please watch the parent instruction video first"}
+          </p>
         )}
       </div>
+
+      {/* Language-specific instructions */}
       {showChineseInstruction ? (
         <div>
           <ChineseInstructions />
@@ -67,6 +88,8 @@ const Home = () => {
           <EnglishInstructions />
         </div>
       )}
+
+      {/* Proceed button, only enabled after both videos are played */}
       <ProceedButton
         disabled={!childInstructionPlayed}
         showChinese={showChineseInstruction}

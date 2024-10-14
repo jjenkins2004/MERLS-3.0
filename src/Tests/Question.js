@@ -12,7 +12,7 @@ import { SignalCellularConnectedNoInternet0Bar } from "@mui/icons-material";
 
 let questionAudio;
 
-const Question = ({ curQuestion, recordAnswer, showChinese}) => {
+const Question = ({ curQuestion, recordAnswer, showChinese }) => {
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [countDown, setCountDown] = useState(3);
   const [paused, setPaused] = useState(false);
@@ -48,6 +48,7 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
   useEffect(() => {
     clearTimeout(timeoutRef.current);
     if (countDown > 0 && !paused) {
+      // timeoutRef is used here so we can pause the countDown by clearing timeout
       timeoutRef.current = setTimeout(() => {
         setCountDown((prevCountDown) => prevCountDown - 1);
       }, 1000);
@@ -56,11 +57,14 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
         questionAudio = new Audio(curQuestion.question_link);
         questionAudio.addEventListener("play", () => {
           setAudioPlaying(true);
+          // Note below how I set remainingPlayCount, it's because the `set` method
+          // from useState are async so we need to pass in a call-back
           setRemainingPlayCount((prePlayCount) => prePlayCount - 1);
         });
         questionAudio.addEventListener("ended", () => {
           setAudioPlaying(false);
           if (disableOption) {
+            // after the audio is played for the first time, we will allow user to click the options
             setDisableOption(false);
           }
           // check the most up-to-date remainingPlayCount after audio ends
@@ -95,9 +99,9 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
                 className="pauseButton disabled"
               />
             </IconButton>
-            <p className = "actionText">{showChinese ? 
-                <>播放中</> : 
-                <>Playing question</>}</p>
+            <p className="actionText">
+              {showChinese ? <>播放中</> : <>Playing question</>}
+            </p>
           </div>
         ) : (
           <div>
@@ -105,7 +109,7 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
               <IconButton
                 disabled={remainingPlayCount < 1}
                 aria-label="play"
-                style={{marginBottom: '0'}}
+                style={{ marginBottom: "0" }}
                 onClick={() => {
                   setPaused(false);
                   setCountDown(countDown);
@@ -122,7 +126,7 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
               <IconButton
                 disabled={remainingPlayCount < 1}
                 aria-label="pause"
-                style={{marginBottom: '0'}}
+                style={{ marginBottom: "0" }}
                 onClick={() => {
                   setPaused(true);
                 }}
@@ -136,17 +140,21 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
               </IconButton>
             )}
             {paused ? (
-              <p className = "actionText">{showChinese ? 
-                <>已被用户暂停</> : 
-                <>Paused by user</>}</p>
+              <p className="actionText">
+                {showChinese ? <>已被用户暂停</> : <>Paused by user</>}
+              </p>
             ) : remainingPlayCount > 0 ? (
-              <p className = "actionText">{showChinese ? 
-                <>{countDown} 秒内播放音频</> : 
-                <>Audio playing in {countDown} second(s)</>}</p>
+              <p className="actionText">
+                {showChinese ? (
+                  <>{countDown} 秒内播放音频</>
+                ) : (
+                  <>Audio playing in {countDown} second(s)</>
+                )}
+              </p>
             ) : (
-              <p className = "actionText">{showChinese ? 
-                <>单击图片选择</> : 
-                <>Click image to choose</>}</p>
+              <p className="actionText">
+                {showChinese ? <>单击图片选择</> : <>Click image to choose</>}
+              </p>
             )}
           </div>
         )}
@@ -182,38 +190,40 @@ const Question = ({ curQuestion, recordAnswer, showChinese}) => {
           ))}
         </Grid>
       </Container> */}
-      <div className = "imagesContainer"> 
+      <div className="imagesContainer">
         {curQuestion.options.map((url, idx) => (
-          <div 
-            className={`imageContainer ${selectedIdx === idx ? 'selected' : 'unselected'}`}
+          <div
+            className={`imageContainer ${
+              selectedIdx === idx ? "selected" : "unselected"
+            }`}
             onClick={() => {
               if (idx === selectedIdx) {
                 setSelectedIdx(-1);
-              }
-              else {
+              } else {
                 setSelectedIdx(idx);
               }
             }}
           >
-            <img
-              className="image"
-              src={url}
-              alt="choice"
-            >
-            </img>
-            <div className={`imageSelectedOverlay ${selectedIdx === idx ? 'visible' : ''}`}></div>
+            <img className="image" src={url} alt="choice"></img>
+            <div
+              className={`imageSelectedOverlay ${
+                selectedIdx === idx ? "visible" : ""
+              }`}
+            ></div>
           </div>
         ))}
       </div>
       <div className="submitButtonContainer">
-        <button 
-        className = {`submitButton ${selectedIdx === -1 ? 'disabled' : 'enabled'}`}
-        onClick={() => {
-          if (selectedIdx !== -1) {
-            gotoNextQuestion(selectedIdx);
-            setSelectedIdx(-1);
-          }
-        }}
+        <button
+          className={`submitButton ${
+            selectedIdx === -1 ? "disabled" : "enabled"
+          }`}
+          onClick={() => {
+            if (selectedIdx !== -1) {
+              gotoNextQuestion(selectedIdx);
+              setSelectedIdx(-1);
+            }
+          }}
         >
           {showChinese ? <>下一个</> : <>Next</>}
         </button>
