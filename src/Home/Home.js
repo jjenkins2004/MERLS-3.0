@@ -48,12 +48,12 @@ const Home = () => {
       <div className="introVideo">
         {parentInstructionPlayed ? (
           <YouTube
-            videoId={showChineseInstruction ? "orbkg5JH9C8" : "orbkg5JH9C8"} // Replace with child instruction's YouTube video ID
+            videoId={showChineseInstruction ? "orbkg5JH9C8" : "orbkg5JH9C8"} // Replace with child instruction's YouTube video ID, which is the part of the URL after v=
             onEnd={() => onVideoEnd(2)}
           />
         ) : (
           <YouTube
-            videoId={showChineseInstruction ? "hP0Jz-6JoyY" : "hP0Jz-6JoyY"} // Replace with parent instruction's YouTube video ID
+            videoId={showChineseInstruction ? "hP0Jz-6JoyY" : "hP0Jz-6JoyY"} // Replace with parent instruction's YouTube video ID, which is the part of the URL after v=
             onEnd={() => onVideoEnd(1)}
           />
         )}
