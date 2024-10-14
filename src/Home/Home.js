@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import "./Home.css";
 import ChineseInstructions from "./ChineseInstructions";
 import EnglishInstructions from "./EnglishInstructions";
+import TranslationButton from "../Components/TranslationButton";
+import ProceedButton from "../Components/ProceedButton";
 
 const Home = () => {
   const [videoPlayed, setVideoPlayed] = useState(true);
@@ -28,14 +30,10 @@ const Home = () => {
             ? "请认真观看视频并完成问题再开始测试"
             : "Please watch the below video and finish the questions before starting tests"}
         </h2>
-        <button
-          className="translationButton"
-          onClick={() => setShowChineseInstruction(!showChineseInstruction)}
-        >
-          {showChineseInstruction
-            ? "Change to English/更改为英语"
-            : "Change to Chinese/更改为中文"}
-        </button>
+        <TranslationButton
+          showChinese={showChineseInstruction}
+          setShowChinese={setShowChineseInstruction}
+        />
       </AppBar>
       <div className="introVideo">
         <iframe
@@ -70,15 +68,16 @@ const Home = () => {
           <EnglishInstructions />
         </div>
       )}
-      <Button
+      <ProceedButton 
         disabled={!videoPlayed}
-        variant="contained"
-        href={`/parent-questions?cn-zw=${
-          showChineseInstruction ? "true" : "false"
-        }`}
-      >
-        {showChineseInstruction ? <>下一步</> : <>Next</>}
-      </Button>
+        showChinese={showChineseInstruction} 
+        textEnglish={"Next"}
+        textChinese={"下一步"}
+        onClick={()=> {
+          const url = `/parent-questions?cn-zw=${showChineseInstruction ? "true" : "false"}`;
+          window.location.href = url;
+        }}
+      />
     </div>
   );
 };

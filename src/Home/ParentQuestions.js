@@ -7,6 +7,9 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import TranslationButton from "../Components/TranslationButton";
+import ProceedButton from "../Components/ProceedButton";
+import { CheckOutlined } from "@mui/icons-material";
 
 const ParentQuestions = () => {
   const location = useLocation();
@@ -21,13 +24,23 @@ const ParentQuestions = () => {
   });
 
   const [showQuestionInChinese, setShowQuestionInChinese] = useState(false);
-  const [allAnsweredCorrectly, setAllAnsweredCorrectly] = useState(false);
+  const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const languageParam = params.get("cn-zw");
     setShowQuestionInChinese(languageParam === "true");
   }, [location]);
+
+  useEffect(() => {
+    for (let key in answers) {
+      if (answers[key] === null) {
+        setAllQuestionsAnswered(false);
+        return;
+      }
+    }
+    setAllQuestionsAnswered(true);
+  }, [answers])
 
   const handleChange = (question, value) => {
     setAnswers({ ...answers, [question]: value === "true" });
@@ -43,7 +56,8 @@ const ParentQuestions = () => {
       answers.answer6 === false &&
       answers.answer7 === true
     ) {
-      setAllAnsweredCorrectly(true);
+      const url = `/login?cn-zw=${showQuestionInChinese ? "true" : "false"}`;
+      window.location.href = url;
     } else {
       alert(
         showQuestionInChinese
@@ -94,14 +108,10 @@ const ParentQuestions = () => {
             <>Please correctly answer the following questions to start</>
           )}
         </h2>
-        <button
-          className="translationButton"
-          onClick={() => setShowQuestionInChinese(!showQuestionInChinese)}
-        >
-          {showQuestionInChinese
-            ? "Change to English/更改为英语"
-            : "Change to Chinese/更改为中文"}
-        </button>
+        <TranslationButton 
+          showChinese={showQuestionInChinese}
+          setShowChinese={setShowQuestionInChinese}
+        />
       </AppBar>
       <div className="questionContainer">
         <FormControl>
@@ -116,7 +126,7 @@ const ParentQuestions = () => {
                     handleChange(`answer${index + 1}`, e.target.value)
                   }
                 >
-                  <span>{question}</span>
+                  <span className="questionsSide">{question}</span>
                   <span className="radioButtons">
                     <FormControlLabel
                       value={true}
@@ -133,36 +143,29 @@ const ParentQuestions = () => {
               </li>
             ))}
           </ol>
-          <Button
-            style={{
-              marginLeft: "auto",
-              marginRight: "auto", // Above 2 are for centering
-              width: "20%",
-              display: "block",
-            }}
-            variant="contained"
-            onClick={checkCorrectness}
-          >
-            Submit
-          </Button>
         </FormControl>
       </div>
       <div className="nextBack">
-        <Button
-          style={{ marginRight: "0.5rem" }}
-          variant="contained"
-          href={`/?cn-zw=${showQuestionInChinese ? "true" : "false"}`}
-        >
-          {showQuestionInChinese ? "后退" : "Back"}
-        </Button>
-        <Button
-          style={{ marginLeft: "0.5rem" }}
-          disabled={!allAnsweredCorrectly}
-          variant="contained"
-          href={`/login?cn-zw=${showQuestionInChinese ? "true" : "false"}`}
-        >
-          {showQuestionInChinese ? "下一步" : "Next"}
-        </Button>
+        <div className={"nextBackButton"}>
+          <ProceedButton 
+            showChinese={showQuestionInChinese}
+            textEnglish={"Back"}
+            textChinese={"后退"}
+            onClick={() => {
+              const url = `/?cn-zw=${showQuestionInChinese ? "true" : "false"}`;
+              window.location.href = url;
+            }}
+          />
+        </div>
+        <div className={"nextBackButton"}>
+          <ProceedButton 
+            showChinese={showQuestionInChinese}
+            textEnglish={"Next"}
+            textChinese={"下一步"}
+            onClick={checkCorrectness}
+            disabled={!allQuestionsAnswered}
+          />
+        </div>      
       </div>
     </div>
   );

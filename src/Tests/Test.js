@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Question from "./Question";
 import Repetition from "./Repetition";
 import Instructions from "./Instructions";
+import TranslationButton from "../Components/TranslationButton";
 
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
@@ -97,9 +98,10 @@ const Test = ({ type, language }) => {
           <progress id="progress" value={curId} max={questions.length}>
             {Math.floor((curId / questions.length) * 100)}%
           </progress>
-          <button className = "translationButton" onClick ={() => setShowChinese(!showChinese)}>
-            {showChinese ? "Change to English/更改为英语" : "Change to Chinese/更改为中文"}
-          </button>
+         <TranslationButton 
+            showChinese={showChinese}
+            setShowChinese={setShowChinese}
+         />
       </AppBar>
         <Container className="testContainer">
           {completed ? (
