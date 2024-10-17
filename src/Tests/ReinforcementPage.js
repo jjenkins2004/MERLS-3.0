@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 
 let instructionAudio;
 
-const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
+const ReinforcementPage = ({showChinese, audioLink, imageLink, setShowReinforcement}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [replay, setReplay] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
@@ -64,8 +64,8 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
                     />
                     </IconButton>
                     <p className = "actionText">{showChinese ? 
-                        <>播放说明...</> : 
-                        <>Playing instructions...</>}</p>
+                        <>播放中...</> : 
+                        <>Playing...</>}</p>
                 </div>
                 ) : (
                 <div>
@@ -92,8 +92,8 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
                             <>Audio playing in {countDown} second(s)</>}</p>
                     ) : (
                         <p className = "actionText">{showChinese ? 
-                            <>再听一次指示?</> : 
-                            <>Listen to instructions again?</>}</p>
+                            <>再听一遍吗?</> : 
+                            <>Listen again?</>}</p>
                     )}
                 </div>
                 )}
@@ -101,8 +101,8 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
             <div className="puppyContainer">
                 <img
                     className="instructionPuppy"
-                    src="https://sites.usc.edu/heatlab/files/2024/10/puppy.png"
-                    alt="puppy staring"
+                    src={imageLink}
+                    alt="puppy animation"
                 ></img>
             </div>
             <div className="submitButtonContainer">
@@ -111,15 +111,15 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
                 onClick={() => {
                     if (finishedListening) {
                         instructionAudio.pause();
-                        setShowInstructions(false);
+                        setShowReinforcement(false);
                     }
                 }}
                 >
-                {showChinese ? <>开始测试</> : <>Start Test</>}
+                {showChinese ? <>继续</> : <>Continue</>}
                 </button>
             </div>
         </div>
     )
 }
 
-export default Instructions;
+export default ReinforcementPage;
