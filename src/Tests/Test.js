@@ -82,7 +82,6 @@ const Test = ({ type, language }) => {
   useEffect(() => {
     if (type === "match") {
       audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-test-instruction-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/English-test-instruction-w-audio.m4a"
-      console.log("audio Link: " + audioLink.current);
     }
     else if (type === "repetition") {
 
