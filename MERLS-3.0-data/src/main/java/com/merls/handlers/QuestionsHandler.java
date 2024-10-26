@@ -16,8 +16,12 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
     @Override
     public String handleRequest(Map<String, Object> input, Context context) {
         Map<String, String> queryParams = (Map<String, String>) input.get("queryStringParameters");
+
         if (queryParams == null || !queryParams.containsKey("language")) {
             return createErrorResponse("Missing parameter: language");
+        }
+        else if (!queryParams.containsKey("type")) {
+            return createErrorResponse("Missign parameter: type");
         }
 
         String language = queryParams.get("language");
@@ -25,11 +29,16 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
             return createErrorResponse("Invalid parameter: language must be either 'CN' or 'EN'");
         }
 
-        String response = getQuestionsFromDB(language);
+        String type = queryParams.get("type");
+        if (!type.equals("repetition") && !type.equals("matching")) {
+            return createErrorResponse("Invalid parameter: type must be either 'repetition' or 'matching'");
+        }
+
+        String response = getQuestionsFromDB(type, language);
         return response;
     }
 
-    private String getQuestionsFromDB(String language) {
+    private String getQuestionsFromDB(String type, String language) {
         // Bad practice. We should store database credentials as environment variables in your AWS Lambda function's configuration
         String url = "jdbc:postgresql://merlsdb.cpuk24q4an9x.us-east-2.rds.amazonaws.com:5432/postgres";
         String username = "merls_admin";
@@ -42,25 +51,41 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
         try {
             Connection conn = DriverManager.getConnection(url, username, password);
             Statement stmt = conn.createStatement();
-            // Adjust the query based on the language parameter
-            String tableName = language.equals("CN") ? "chinese_questions" : "english_questions";
+            // Adjust the query based on the language and type parameter
+            String tableName;
+            if (type.equals("matching")) {
+                tableName = language.equals("CN") ? "chinese_questions" : "english_questions";
+            }
+            else {
+                tableName = language.equals("CN") ? "chinese_repetition" : "english_repetition";
+            }
             String query = "SELECT * FROM " + tableName + " WHERE is_active = true ORDER BY question_id";
             ResultSet rs = stmt.executeQuery(query);
 
             JSONArray jsonArray = new JSONArray();
-            while (rs.next()) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("question_id", rs.getInt("question_id"));
-                jsonObject.put("question_link", rs.getString("question_link"));
-                String[] options = (String[]) rs.getArray("options").getArray();
-                JSONArray optionArray = new JSONArray();
-                for (String option : options) {
-                    optionArray.put(option);
+            if (type.equals("matching")) {
+                while (rs.next()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("question_id", rs.getInt("question_id"));
+                    jsonObject.put("question_link", rs.getString("question_link"));
+                    String[] options = (String[]) rs.getArray("options").getArray();
+                    JSONArray optionArray = new JSONArray();
+                    for (String option : options) {
+                        optionArray.put(option);
+                    }
+                    jsonObject.put("options", optionArray);
+                    jsonObject.put("answer", rs.getInt("answer"));
+                    // Add other fields as needed
+                    jsonArray.put(jsonObject);
                 }
-                jsonObject.put("options", optionArray);
-                jsonObject.put("answer", rs.getInt("answer"));
-                // Add other fields as needed
-                jsonArray.put(jsonObject);
+            }
+            else {
+                while (rs.next()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("question_id", rs.getInt("question_id"));
+                    jsonObject.put("question_link", rs.getString("question_link"));
+                    jsonArray.put(jsonObject);
+                }
             }
 
             rs.close();
@@ -83,7 +108,7 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
     // Main method for local testing
     public static void main(String[] args) {
         QuestionsHandler handler = new QuestionsHandler();
-        Map<String, Object> testInput = Map.of("queryStringParameters", Map.of("language", "CN"));
+        Map<String, Object> testInput = Map.of("queryStringParameters", Map.of("language", "CN", "type", "matching"));
         System.out.println(handler.handleRequest(testInput, null));
     }
 }

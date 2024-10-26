@@ -1,1 +1,6 @@
 node_modules/
+
+# Ignore Eclipse IDE files
+MERLS-3.0-data/.classpath
+MERLS-3.0-data/.project
+MERLS-3.0-data/.settings/

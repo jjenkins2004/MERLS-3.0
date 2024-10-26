@@ -1,8 +1,8 @@
-C:\MERLS-backend\src\main\java\com\lambda\business\Participant.java
-C:\MERLS-backend\src\main\java\com\lambda\data\ParticipantDB.java
-C:\MERLS-backend\src\main\java\com\lambda\handlers\UsersHandler.java
-C:\MERLS-backend\src\main\java\com\lambda\data\SubmissionsDB.java
-C:\MERLS-backend\src\main\java\com\lambda\handlers\ExportHandler.java
-C:\MERLS-backend\src\main\java\com\lambda\handlers\QuestionsHandler.java
-C:\MERLS-backend\src\main\java\com\lambda\handlers\SubmissionsHandler.java
-C:\MERLS-backend\src\main\java\com\lambda\business\Submission.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/business/Participant.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/business/Submission.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/data/ParticipantDB.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/data/SubmissionsDB.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/handlers/ExportHandler.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/handlers/QuestionsHandler.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/handlers/SubmissionsHandler.java
+/Users/joshuajenkins/Desktop/Projects/MERLS-3.0/MERLS-3.0-data/src/main/java/com/merls/handlers/UsersHandler.java

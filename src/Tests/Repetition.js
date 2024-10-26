@@ -8,7 +8,9 @@ import microphoneEnabled from "../Components/voice.png";
 
 let questionAudio;
 
-const Repetition = ({ curQuestion, recordAnswer, showChinese}) => {
+
+
+const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [listening, setListening] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
