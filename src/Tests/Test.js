@@ -63,7 +63,7 @@ const Test = ({ type, language }) => {
     async function fetchQuestionList() {
       const response = await fetch(
         "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
-          language,
+          language + "&type=" + type,
         {
           method: "GET",
           headers: {
@@ -71,6 +71,7 @@ const Test = ({ type, language }) => {
           },
         }
       );
+      console.log("getting questions");
       const questionList = await response.json();
       setQuestions(questionList);
     }
