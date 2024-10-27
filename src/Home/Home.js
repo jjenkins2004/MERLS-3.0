@@ -37,7 +37,7 @@ const Home = () => {
         <h2 className="subHeading">
           {showChineseInstruction
             ? "请认真观看视频并完成问题再开始测试"
-            : "Please watch the below video and finish the questions before starting tests"}
+            : "Please watch the below videos and finish the questions before starting tests"}
         </h2>
         <TranslationButton
           showChinese={showChineseInstruction}
@@ -51,9 +51,21 @@ const Home = () => {
           {showChineseInstruction ? "家长介绍视频" : "Parent Instruction Video"}
         </h3>
         <YouTube
-          videoId={showChineseInstruction ? "hP0Jz-6JoyY" : "hP0Jz-6JoyY"} // Replace with parent instruction's YouTube video ID
+          videoId={showChineseInstruction ? "wRf7l93Xvds" : "o0yBbHtLHGY"} // replaced with parent instruction's from MERLS YouTube video ID
           onEnd={() => onVideoEnd(1)}
+          opts={{
+            playerVars: {
+                rel: 0, // disables youtube's video suggestion feature at the end of the clip
+            },
+          }}
         />
+        {!parentInstructionPlayed && ( // moved warning to below parent video for clarity
+          <p style={{ color: "red" }}>
+            {showChineseInstruction
+              ? "请先观看家长介绍视频"
+              : "Please watch the parent instruction video first"}
+          </p>
+        )}
       </div>
 
       {/* Child video with header, only enabled after parent video ends */}
@@ -62,20 +74,25 @@ const Home = () => {
           {showChineseInstruction ? "儿童介绍视频" : "Child Instruction Video"}
         </h3>
         <YouTube
-          videoId={showChineseInstruction ? "orbkg5JH9C8" : "orbkg5JH9C8"} // Replace with child instruction's YouTube video ID
+          videoId={showChineseInstruction ? "6zwj_DnnYfA" : "T4z2BCcjzP8"} // replaced with child instruction's from MERLS YouTube video ID
           onEnd={() => onVideoEnd(2)}
+          opts={{
+              playerVars: {
+                  rel: 0, // disables youtube's video suggestion feature at the end of the clip
+              },
+          }}
           style={{
             pointerEvents: parentInstructionPlayed ? "auto" : "none",
             opacity: parentInstructionPlayed ? 1 : 0.5,
           }}
         />
-        {!parentInstructionPlayed && (
+        {/* {!parentInstructionPlayed && (
           <p style={{ color: "red" }}>
             {showChineseInstruction
               ? "请先观看家长介绍视频"
               : "Please watch the parent instruction video first"}
           </p>
-        )}
+        )} */}
       </div>
 
       {/* Language-specific instructions */}
