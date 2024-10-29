@@ -68,6 +68,11 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
 
         }
       }, [finishedListening])
+    
+    //skip tutorial for testing
+    //   useEffect(() => {
+    //     setShowGuidedTutorial(false);
+    //   }, [])
 
     return(
         <div>

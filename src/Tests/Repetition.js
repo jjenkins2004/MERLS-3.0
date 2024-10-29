@@ -30,7 +30,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     };
 
     const onStop = (recordedBlob) => {
-        const url = URL.createObjectURL(recordedBlob); // Create a blob URL
+        const url = recordedBlob.blobURL; // Create a blob URL
         const link = document.createElement('a'); // Create a temporary anchor element
         link.href = url; // Set the URL to the blob
         link.download = 'recording.wav'; // Set the desired file name
@@ -81,14 +81,16 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
 
     return(
         <div>
-            <ReactMic
-                record={recording}
-                onStop={onStop}
-                mimeType="audio/wav"
-                audioBitsPerSecond={128000}
-                ref={micRef}
-                style={{ display: 'none' }} // Hide the waveform
-            />
+            <div className="reactMicContainer">
+                <ReactMic
+                    record={recording}
+                    onStop={onStop}
+                    mimeType="audio/wav"
+                    audioBitsPerSecond={128000}
+                    ref={micRef}
+                    visualSetting="none" // Hide the waveform
+                />
+            </div>
             <div className="indicator">
                 {audioPlaying ? (
                 <div>
