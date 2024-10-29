@@ -1,0 +1,29 @@
+.ttContainer {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.ttTriangle {
+    height: 15px;
+    width: auto;
+}
+
+.ttRectangle {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    max-width: 200px;
+    height: fit-content;
+    background-color: white;
+    border-radius: 10px;
+    font-size: medium;
+    font-weight: 700;
+    text-align: center;
+
+}
+
+.button {
+    transform: scale(0.7) translateY(10px);
+    transform-origin: center;
+}

@@ -5,6 +5,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import microphoneDisabled from "../Components/mute.png";
 import microphoneEnabled from "../Components/voice.png";
+import { ReactMic } from 'react-mic';
 
 let questionAudio;
 
@@ -15,6 +16,29 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     const [listening, setListening] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
     const [countDown, setCountDown] = useState(3);
+
+    //microphone recording
+    const [recording, setRecording] = useState(false);
+    const micRef = useRef(null);
+
+    const startRecording = () => {
+        setRecording(true);
+    };
+
+    const stopRecording = () => {
+        setRecording(false);
+    };
+
+    const onStop = (recordedBlob) => {
+        const url = URL.createObjectURL(recordedBlob); // Create a blob URL
+        const link = document.createElement('a'); // Create a temporary anchor element
+        link.href = url; // Set the URL to the blob
+        link.download = 'recording.wav'; // Set the desired file name
+        document.body.appendChild(link); // Append to the body
+        link.click(); // Trigger the download
+        document.body.removeChild(link); // Clean up the DOM
+        URL.revokeObjectURL(url);
+    };
 
     const timeoutRef = useRef(null);
     
@@ -32,6 +56,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
             questionAudio.addEventListener("ended", () => {
               setAudioPlaying(false);
               setFinishedListening(true);
+              startRecording();
             });
             questionAudio.play();
         }
@@ -56,6 +81,14 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
 
     return(
         <div>
+            <ReactMic
+                record={recording}
+                onStop={onStop}
+                mimeType="audio/wav"
+                audioBitsPerSecond={128000}
+                ref={micRef}
+                style={{ display: 'none' }} // Hide the waveform
+            />
             <div className="indicator">
                 {audioPlaying ? (
                 <div>
@@ -111,6 +144,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                 </div>
                 )}
             </div>
+            <div style={{height: "60px"}} />
                 {finishedListening ? (
                     <div className="listeningContainer">
                         <div className="microphoneAnimationContainer">
@@ -145,12 +179,14 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                         </p>
                     </div>
                 )}
+            <div style={{height: "40px"}} />
             <div className="submitButtonContainer">
                 <button 
                 className = {`submitButton ${finishedListening ? 'enabled' : 'disabled'}`}
                 onClick={() => {
                     if (finishedListening) {
                         questionAudio.pause();
+                        stopRecording();
                         gotoNextQuestion();
                     }
                 }}

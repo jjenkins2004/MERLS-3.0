@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Question from "./Question";
 import Repetition from "./Repetition";
 import Instructions from "./Instructions";
+import GuidedTutorial from "./GuidedTutorial";
 import TranslationButton from "../Components/TranslationButton";
 
 const Test = ({ type, language }) => {
@@ -15,6 +16,7 @@ const Test = ({ type, language }) => {
   const [curId, setCurId] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
+  const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
 
@@ -170,6 +172,8 @@ const Test = ({ type, language }) => {
               recordAnswer={recordAnswer}
               showChinese={showChinese}
             />
+          ) : showGuidedTutorial ? (
+            <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
           ) : (
             <Repetition
               curQuestion={questions[curId]}
