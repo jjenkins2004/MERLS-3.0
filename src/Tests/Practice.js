@@ -159,10 +159,9 @@ const PracticePage = ({showChinese, audioLink, setShowPractice}) => {
                     textEnglish="Begin Test"
                     textChinese="开始测试"
                     onClick={() => {
-                        try {
+                        if (instructionAudio) {
                             instructionAudio.pause();
                         }
-                        catch {}
                         setShowPractice(false);
                     }}/>
             </div>

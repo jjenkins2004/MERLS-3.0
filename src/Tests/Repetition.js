@@ -200,7 +200,9 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                     disabled={!finishedListening}
                     onClick={() => {
                         if (finishedListening) {
-                            questionAudio.pause();
+                            if (questionAudio) {
+                                questionAudio.pause();
+                            }
                             stopRecording();
                             gotoNextQuestion();
                         }
