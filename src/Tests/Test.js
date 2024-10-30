@@ -10,6 +10,7 @@ import Repetition from "./Repetition";
 import Instructions from "./Instructions";
 import GuidedTutorial from "./GuidedTutorial";
 import TranslationButton from "../Components/TranslationButton";
+import AudioPermission from "./AudioPermission";
 
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
@@ -17,6 +18,7 @@ const Test = ({ type, language }) => {
   const [answers, setAnswers] = useState({});
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
   const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
+  const [showAudioPermission, setShowAudioPermission] = useState(true);
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
 
@@ -172,6 +174,8 @@ const Test = ({ type, language }) => {
               recordAnswer={recordAnswer}
               showChinese={showChinese}
             />
+          ) : showAudioPermission ? (
+            <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
           ) : showGuidedTutorial ? (
             <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
           ) : (

@@ -337,3 +337,39 @@ body {
   background-color: rgba(128, 128, 128, 0.7);
   z-index: 1;
 }
+
+.divider {
+  margin: 10px 0px;
+  height: 3px;
+  width: 100%;
+  background-color: rgb(206, 225, 242);
+}
+
+.browserIconContainer {
+  display: flex;
+}
+
+.browserIcon {
+  margin: 0px 20px;
+  width: 60px;
+  height: 60px;
+  transition: transform 0.2s ease
+}
+
+.browserIcon:hover {
+  transform: scale(1.07);
+}
+
+.reactMicStyle {
+  height: 50px;
+  width: 300px;
+  border: 2px solid rgba(125, 176, 235, 0.3);
+  border-radius: 5px;
+}
+
+.testMicrophone {
+  width: 200px;
+  height: 50px;
+  border-radius: 2px !important;
+  font-size: 15px !important;
+}

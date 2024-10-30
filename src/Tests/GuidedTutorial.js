@@ -23,6 +23,7 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [listening, setListening] = useState(false);
     const [beginCountDown, setBeginCountDown] = useState(false);
+    const [recordingTimer, setRecordingTimer] = useState(20);
     const [finishedListening, setFinishedListening] = useState(false);
     const [countDown, setCountDown] = useState(3);
     const [tipNum, setTipNum] = useState(1);
@@ -62,12 +63,6 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
             clearTimeout(timeoutRef.current);
         }
       }, [countDown, tipNum]);
-
-      useEffect(() => {
-        if (finishedListening === true) {
-
-        }
-      }, [finishedListening])
     
     //skip tutorial for testing
     //   useEffect(() => {

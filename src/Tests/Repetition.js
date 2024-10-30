@@ -9,12 +9,11 @@ import { ReactMic } from 'react-mic';
 
 let questionAudio;
 
-
-
 const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [listening, setListening] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
+    const [recordingTimer, setRecordingTimer] = useState(20); //change this to maximum audio duration
     const [countDown, setCountDown] = useState(3);
 
     //microphone recording
@@ -30,13 +29,17 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     };
 
     const onStop = (recordedBlob) => {
-        const url = recordedBlob.blobURL; // Create a blob URL
-        const link = document.createElement('a'); // Create a temporary anchor element
-        link.href = url; // Set the URL to the blob
-        link.download = 'recording.wav'; // Set the desired file name
-        document.body.appendChild(link); // Append to the body
-        link.click(); // Trigger the download
-        document.body.removeChild(link); // Clean up the DOM
+        if (!recordedBlob) {
+            return;
+        }
+        const url = recordedBlob.blobURL; 
+        console.log(url);
+        const link = document.createElement('a'); 
+        link.href = url;
+        link.download = 'recording.webm';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
     };
 
@@ -74,10 +77,18 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
       };
 
       useEffect(() => {
-        if (finishedListening === true) {
-
+        if (recordingTimer <= 0) {
+            stopRecording();
+            return;
         }
-      }, [finishedListening])
+
+        const timerId = setTimeout(() => {
+            setRecordingTimer((prevSeconds) => prevSeconds - 1);
+        }, 1000);
+
+        // Cleanup function to clear the timeout
+        return () => clearTimeout(timerId);
+      }, [recordingTimer])
 
     return(
         <div>
@@ -85,8 +96,6 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                 <ReactMic
                     record={recording}
                     onStop={onStop}
-                    mimeType="audio/wav"
-                    audioBitsPerSecond={128000}
                     ref={micRef}
                     visualSetting="none" // Hide the waveform
                 />
