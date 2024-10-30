@@ -9,6 +9,7 @@ import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import { SignalCellularConnectedNoInternet0Bar } from "@mui/icons-material";
+import GreenButton from "../Components/GreenButton";
 
 let questionAudio;
 
@@ -159,37 +160,6 @@ const Question = ({ curQuestion, recordAnswer, showChinese }) => {
           </div>
         )}
       </div>
-      {/* <Container>
-        <Grid
-          container
-          spacing={4}
-          sx={{
-            width: curQuestion.options.length === 3 ? "100%" : "70%",
-            margin: "0 auto",
-          }}
-          alignItems="baseline"
-        >
-          {curQuestion.options.map((url, idx) => (
-            <Grid item xs={getOptionWidth()} key={idx}>
-              <Card>
-                <CardActionArea disabled={disableOption}>
-                  <CardMedia
-                    component="img"
-                    image={url}
-                    alt="option image"
-                    disabled
-                    className = "cardImage"
-                    style={{
-                      boxShadow: '10px 10px 12px rgba(0, 0, 0, 1)',
-                    }}
-                    onClick={() => gotoNextQuestion(idx)}
-                  />
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container> */}
       <div className="imagesContainer">
         {curQuestion.options.map((url, idx) => (
           <div
@@ -214,19 +184,17 @@ const Question = ({ curQuestion, recordAnswer, showChinese }) => {
         ))}
       </div>
       <div className="submitButtonContainer">
-        <button
-          className={`submitButton ${
-            selectedIdx === -1 ? "disabled" : "enabled"
-          }`}
-          onClick={() => {
-            if (selectedIdx !== -1) {
-              gotoNextQuestion(selectedIdx);
-              setSelectedIdx(-1);
-            }
-          }}
-        >
-          {showChinese ? <>下一个</> : <>Next</>}
-        </button>
+        <GreenButton 
+            showChinese={showChinese} 
+            textEnglish="Next"
+            textChinese="下一个"
+            disabled={selectedIdx === -1}
+            onClick={() => {
+              if (selectedIdx !== -1) {
+                gotoNextQuestion(selectedIdx);
+                setSelectedIdx(-1);
+              }
+          }}/>
       </div>
     </div>
   );

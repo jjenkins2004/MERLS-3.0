@@ -9,15 +9,17 @@ import Question from "./Question";
 import Repetition from "./Repetition";
 import Instructions from "./Instructions";
 import GuidedTutorial from "./GuidedTutorial";
+import Practice from "./Practice";
 import TranslationButton from "../Components/TranslationButton";
 import AudioPermission from "./AudioPermission";
 
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
-  const [curId, setCurId] = useState(0);
+  const [curId, setCurId] = useState(1);
   const [answers, setAnswers] = useState({});
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
   const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
+  const [showPractice, setShowPractice] = useState(true);
   const [showAudioPermission, setShowAudioPermission] = useState(true);
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
@@ -85,11 +87,12 @@ const Test = ({ type, language }) => {
   let audioLink = useRef("");
 
   useEffect(() => {
-    if (type === "match") {
+    if (type === "matching") {
       audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-test-instruction-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/English-test-instruction-w-audio.m4a"
+      
     }
     else if (type === "repetition") {
-
+      audioLink.current = null;
     }
   }, [type, language]);
 
@@ -99,9 +102,7 @@ const Test = ({ type, language }) => {
     return (
       <div id="testPage">
         <AppBar className = "titleContainer">
-          <progress id="progress" value={curId} max={questions.length}>
-            {Math.floor((curId / questions.length) * 100)}%
-          </progress>
+          <progress id="progress" value={curId-1} max={questions.length-1}/>
          <TranslationButton 
             showChinese={showChinese}
             setShowChinese={setShowChinese}
@@ -168,22 +169,27 @@ const Test = ({ type, language }) => {
                 setShowInstructions = {setShowInstructions}
               />
             </div>
-          ) : type === "match" ? (
+          ) : showPractice ? (
+            <Practice 
+            setShowPractice={setShowPractice}
+            type={type}
+            language={language}
+            question={questions[0]}
+            showChinese={showChinese}/>
+          ) : type === "matching" ? (
             <Question
               curQuestion={questions[curId]}
               recordAnswer={recordAnswer}
               showChinese={showChinese}
             />
-          ) : showAudioPermission ? (
-            <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
-          ) : showGuidedTutorial ? (
-            <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
+          ) : type === "repetition" ? (
+              <Repetition
+                curQuestion={questions[curId]}
+                recordAnswer={recordAnswer}
+                showChinese={showChinese}
+              />
           ) : (
-            <Repetition
-              curQuestion={questions[curId]}
-              recordAnswer={recordAnswer}
-              showChinese={showChinese}
-            />
+            <p>page doesn't exist</p>
           )}
         </Container>
       </div>

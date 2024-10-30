@@ -3,6 +3,7 @@ import "./Test.scss";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
+import GreenButton from "../Components/GreenButton";
 
 let instructionAudio;
 
@@ -106,17 +107,17 @@ const ReinforcementPage = ({showChinese, audioLink, imageLink, setShowReinforcem
                 ></img>
             </div>
             <div className="submitButtonContainer">
-                <button 
-                className = {`submitButton ${finishedListening ? 'enabled' : 'disabled'}`}
-                onClick={() => {
-                    if (finishedListening) {
-                        instructionAudio.pause();
-                        setShowReinforcement(false);
-                    }
-                }}
-                >
-                {showChinese ? <>继续</> : <>Continue</>}
-                </button>
+                <GreenButton 
+                    showChinese={showChinese} 
+                    textEnglish="Continue"
+                    textChinese="继续"
+                    disabled={!finishedListening}
+                    onClick={() => {
+                        if (finishedListening) {
+                            instructionAudio.pause();
+                            setShowReinforcement(false);
+                        }
+                }}/>
             </div>
         </div>
     )

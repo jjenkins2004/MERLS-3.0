@@ -83,33 +83,7 @@ body {
 }
 
 .submitButton {
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 800;
-  border-radius: 15px;
-  height: 40px;
-  width: 100px;
-}
-
-.submitButton.enabled {
-  color: rgb(70, 72, 81);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  background-color: rgb(145, 236, 164);
-  border: 1px solid rgb(92, 178, 135);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.submitButton.enabled:hover {
-  background-color: rgb(117, 195, 134);
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-}
-
-.submitButton.disabled {
-  color: rgb(117, 115, 120);
-  background-color: rgb(153, 174, 163);
-  border: 1px solid rgb(129, 142, 158);
-  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.2);
+  font-weight: 800 !important;
 }
 
 .imagesContainer {

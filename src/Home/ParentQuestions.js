@@ -8,7 +8,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import TranslationButton from "../Components/TranslationButton";
-import ProceedButton from "../Components/ProceedButton";
+import BlueButton from "../Components/BlueButton";
 import { CheckOutlined } from "@mui/icons-material";
 
 const ParentQuestions = () => {
@@ -147,7 +147,7 @@ const ParentQuestions = () => {
       </div>
       <div className="nextBack">
         <div className={"nextBackButton"}>
-          <ProceedButton 
+          <BlueButton 
             showChinese={showQuestionInChinese}
             textEnglish={"Back"}
             textChinese={"后退"}
@@ -158,7 +158,7 @@ const ParentQuestions = () => {
           />
         </div>
         <div className={"nextBackButton"}>
-          <ProceedButton 
+          <BlueButton 
             showChinese={showQuestionInChinese}
             textEnglish={"Next"}
             textChinese={"下一步"}

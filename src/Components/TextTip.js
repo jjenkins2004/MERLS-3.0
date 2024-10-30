@@ -1,7 +1,7 @@
 import React from "react";
 import "./TextTip.css";
 import Triangle from './Triangle.png';
-import ProceedButton from "./ProceedButton";
+import ProceedButton from "./BlueButton";
 
 const TextTip = ({englishText, chineseText, showChinese, tipNum, setTipNum}) => {
     function nextToolTip() {

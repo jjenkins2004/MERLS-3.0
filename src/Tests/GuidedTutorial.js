@@ -5,6 +5,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import microphoneDisabled from "../Components/mute.png";
 import microphoneEnabled from "../Components/voice.png";
+import GreenButton from "../Components/GreenButton";
 import TextTip from "../Components/TextTip";
 
 let questionAudio;
@@ -175,17 +176,16 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
             <div className="submitButtonContainer">
                 <HighlightArea showChinese={showChinese} tipNum={tipNum} setTipNum={setTipNum} toolTipNum={5} 
                         childView={
-                            <button 
-                                className = {`submitButton ${finishedListening ? 'enabled' : 'disabled'}`}
+                            <GreenButton 
+                                showChinese={showChinese} 
+                                textEnglish="Next"
+                                textChinese="下一个"
+                                disabled={!finishedListening}
                                 onClick={() => {
                                     if (finishedListening) {
-                                        questionAudio.pause();
                                         setShowGuidedTutorial(false);
                                     }
-                                }}
-                            >
-                                {showChinese ? <>下一个</> : <>Next</>}
-                            </button>
+                            }}/>
                         }
                     />
             </div>

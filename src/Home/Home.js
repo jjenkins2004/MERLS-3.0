@@ -6,7 +6,7 @@ import "./Home.css";
 import ChineseInstructions from "./ChineseInstructions";
 import EnglishInstructions from "./EnglishInstructions";
 import TranslationButton from "../Components/TranslationButton";
-import ProceedButton from "../Components/ProceedButton";
+import BlueButton from "../Components/BlueButton";
 
 const Home = () => {
   const [parentInstructionPlayed, setParentInstructionPlayed] = useState(false);
@@ -107,7 +107,7 @@ const Home = () => {
       )}
 
       {/* Proceed button, only enabled after both videos are played */}
-      <ProceedButton
+      <BlueButton
         disabled={!childInstructionPlayed}
         showChinese={showChineseInstruction}
         textEnglish={"Next"}

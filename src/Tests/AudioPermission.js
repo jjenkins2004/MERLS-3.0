@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { ReactMic } from 'react-mic';
-import ProceedButton from "../Components/ProceedButton";
+import BlueButton from "../Components/BlueButton";
 import "./Test.scss";
 
 const AudioPermission = ({showChinese, setShowAudioPermission}) => {
@@ -157,9 +157,9 @@ const AudioPermission = ({showChinese, setShowAudioPermission}) => {
                 visualSetting="frequencyBars"
                 className="reactMicStyle" />
             <div style={{height: "20px"}}/>
-            <ProceedButton className="testMicrophone" showChinese={showChinese} textEnglish={getButtonTextEnglish()} textChinese={getButtonTextChinese()} onClick={beginRecording} disabled={disableRecordButton}/>
+            <BlueButton className="testMicrophone" showChinese={showChinese} textEnglish={getButtonTextEnglish()} textChinese={getButtonTextChinese()} onClick={beginRecording} disabled={disableRecordButton}/>
             <div style={{height: "90px"}}/>
-            <ProceedButton showChinese={showChinese} textEnglish={getProceedTextEnglish()} textChinese={getProceedTextChinese()} onClick={proceed} disabled={checkProceedStatus()}/>
+            <BlueButton showChinese={showChinese} textEnglish={getProceedTextEnglish()} textChinese={getProceedTextChinese()} onClick={proceed} disabled={checkProceedStatus()}/>
             <div style={{height: "30px"}}/>
             <div className="divider"/>
             <p style={{fontSize: "20px", fontWeight: "700", textAlign: "center"}}>

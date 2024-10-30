@@ -6,7 +6,7 @@ import "./Home.css";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import TranslationButton from "../Components/TranslationButton";
-import ProceedButton from "../Components/ProceedButton";
+import BlueButton from "../Components/BlueButton";
 
 const UserValidation = () => {
   const [username, setUsername] = useState(null);
@@ -91,7 +91,7 @@ const UserValidation = () => {
           variant="standard"
           onChange={(e) => setUsername(e.target.value)}
         />
-        <ProceedButton 
+        <BlueButton 
           textEnglish={"Login"}
           textChinese={"登录"}
           showChinese={chineseLoginPage}

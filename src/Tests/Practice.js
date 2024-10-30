@@ -1,13 +1,59 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import "./Test.scss";
+import Question from "./Question";
+import Repetition from "./Repetition";
+import GuidedTutorial from "./GuidedTutorial";
+import AudioPermission from "./AudioPermission";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import GreenButton from "../Components/GreenButton";
 
+const Practice = ({setShowPractice, type, language, question, showChinese}) => {
+    const [showPracticeQuestion, setShowPracticeQuestion] = useState(true);
+    const [showAudioPermission, setShowAudioPermission] = useState(true);
+    const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
+
+    const finishPractice = () => {
+        setShowPracticeQuestion(false);
+    }
+
+    return (
+       <div>
+        {
+             showPracticeQuestion ? (
+                type === "matching" ? (
+                    <Question
+                        curQuestion={question}
+                        recordAnswer={finishPractice}
+                        showChinese={showChinese}
+                    />
+                ) : type === "repetition" ? (
+                    showAudioPermission ? (
+                        <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
+                    ) : showGuidedTutorial ? (
+                        <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
+                    ) : (
+                        <Repetition
+                            curQuestion={question}
+                            recordAnswer={finishPractice}
+                            showChinese={showChinese}
+                        />
+                    )
+                ) : (
+                    <p> type invalid </p>
+                )
+            ) : (
+                <PracticePage showChinese={showChinese} audioLink={language === "EN" ? "https://sites.usc.edu/heatlab/files/2024/10/English-Transition-to-the-real-test-items-w-audio-.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Transition-to-the-real-test-items-w-audio.m4a"} setShowPractice={setShowPractice}/>
+            )
+        }
+       </div>
+    )
+};
+
 let instructionAudio;
 
-const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
+const PracticePage = ({showChinese, audioLink, setShowPractice}) => {
 
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [replay, setReplay] = useState(false);
@@ -17,20 +63,20 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
 
     const timeoutRef = useRef(null);
     
-      useEffect(() => {
+    useEffect(() => {
         clearTimeout(timeoutRef.current);
         if (countDown > 0) {
-          timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             setCountDown((prevCountDown) => prevCountDown - 1);
-          }, 1000);
+        }, 1000);
         } else {
             instructionAudio = new Audio(audioLink);
             instructionAudio.addEventListener("play", () => {
-              setAudioPlaying(true);
+            setAudioPlaying(true);
             });
             instructionAudio.addEventListener("ended", () => {
-              setAudioPlaying(false);
-              setFinishedListening(true);
+            setAudioPlaying(false);
+            setFinishedListening(true);
             });
             instructionAudio.play();
         }
@@ -38,9 +84,9 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
         return () => {
             clearTimeout(timeoutRef.current);
         }
-      }, [countDown]);
+    }, [countDown]);
 
-      useEffect(() => {
+    useEffect(() => {
         if (countDown < 1) {
             setReplay(false);
             instructionAudio = new Audio(audioLink);
@@ -52,7 +98,7 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
             });
             instructionAudio.play();
         }
-      }, [replay])
+    }, [replay])
 
     return(
         <div>
@@ -89,7 +135,7 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
                         />
                     </IconButton>
                     {countDown > 0 ? (
-                         <p className = "actionText">{showChinese ? 
+                        <p className = "actionText">{showChinese ? 
                             <>{countDown} 秒内播放音频</> : 
                             <>Audio playing in {countDown} second(s)</>}</p>
                     ) : (
@@ -103,24 +149,25 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
             <div className="puppyContainer">
                 <img
                     className="instructionPuppy"
-                    src="https://sites.usc.edu/heatlab/files/2024/10/puppy.png"
-                    alt="puppy staring"
+                    src="https://sites.usc.edu/heatlab/files/2024/10/puppy2.jpg"
+                    alt="puppy raising paw"
                 ></img>
             </div>
             <div className="submitButtonContainer">
-                <div className="submitButtonContainer">
-                    <GreenButton 
-                        showChinese={showChinese} 
-                        textEnglish="Begin Practice"
-                        textChinese="开始练习"
-                        onClick={() => {
+                <GreenButton 
+                    showChinese={showChinese} 
+                    textEnglish="Begin Test"
+                    textChinese="开始测试"
+                    onClick={() => {
+                        try {
                             instructionAudio.pause();
-                            setShowInstructions(false);
-                        }}/>
-                </div>
+                        }
+                        catch {}
+                        setShowPractice(false);
+                    }}/>
             </div>
         </div>
     )
-}
+};
 
-export default Instructions;
+export default Practice;

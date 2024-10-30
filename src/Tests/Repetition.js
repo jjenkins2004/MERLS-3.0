@@ -5,6 +5,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import microphoneDisabled from "../Components/mute.png";
 import microphoneEnabled from "../Components/voice.png";
+import GreenButton from "../Components/GreenButton";
 import { ReactMic } from 'react-mic';
 
 let questionAudio;
@@ -192,18 +193,18 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                 )}
             <div style={{height: "40px"}} />
             <div className="submitButtonContainer">
-                <button 
-                className = {`submitButton ${finishedListening ? 'enabled' : 'disabled'}`}
-                onClick={() => {
-                    if (finishedListening) {
-                        questionAudio.pause();
-                        stopRecording();
-                        gotoNextQuestion();
-                    }
-                }}
-                >
-                {showChinese ? <>下一个</> : <>Next</>}
-                </button>
+                <GreenButton 
+                    showChinese={showChinese} 
+                    textEnglish="Next"
+                    textChinese="下一个"
+                    disabled={!finishedListening}
+                    onClick={() => {
+                        if (finishedListening) {
+                            questionAudio.pause();
+                            stopRecording();
+                            gotoNextQuestion();
+                        }
+                }}/>
             </div>
         </div>
     )
