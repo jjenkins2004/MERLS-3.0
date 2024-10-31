@@ -19,6 +19,11 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     const [recordingTimer, setRecordingTimer] = useState(20); //change this to maximum audio duration
     const [countDown, setCountDown] = useState(3);
     const [uploading, setUploading] = useState(false);
+    const questionIdRef = useRef(curQuestion.question_id);
+
+    useEffect(() => {
+        questionIdRef.current = curQuestion.question_id;
+    }, [curQuestion]);
 
     //microphone recording
     const [recording, setRecording] = useState(false);
@@ -48,7 +53,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                 fileType: 'audio/webm',
                 audioData: base64Data,
                 userId: localStorage.getItem("username"),
-                questionId: curQuestion.question_id
+                questionId: questionIdRef.current
             };
             console.log('Request body:', requestBody);
 
@@ -93,7 +98,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
         URL.revokeObjectURL(url);
         // upload to s3
         try {
-            const s3Url = uploadToLambda(recordedBlob);
+            const s3Url = await uploadToLambda(recordedBlob);
             console.log('Recording stored at:', s3Url);
         } catch (error) {
             console.error('Failed to process recording:', error);
