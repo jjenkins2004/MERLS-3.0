@@ -8,6 +8,8 @@ import microphoneEnabled from "../Components/voice.png";
 import GreenButton from "../Components/GreenButton";
 import { ReactMic } from 'react-mic';
 
+const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
+
 let questionAudio;
 
 const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
@@ -16,6 +18,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     const [finishedListening, setFinishedListening] = useState(false);
     const [recordingTimer, setRecordingTimer] = useState(20); //change this to maximum audio duration
     const [countDown, setCountDown] = useState(3);
+    const [uploading, setUploading] = useState(false);
 
     //microphone recording
     const [recording, setRecording] = useState(false);
@@ -29,7 +32,53 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
         setRecording(false);
     };
 
-    const onStop = (recordedBlob) => {
+    const uploadToLambda = async (recordedBlob) => {
+        try {
+            setUploading(true);
+
+            // Create a FileReader to convert blob to base64
+            const reader = new FileReader();
+            const base64Data = await new Promise((resolve, reject) => {
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(recordedBlob.blob);
+            });
+
+            const requestBody = {
+                fileType: 'audio/webm',
+                audioData: base64Data,
+                userId: localStorage.getItem("username"),
+                questionId: curQuestion.question_id
+            };
+            console.log('Request body:', requestBody);
+
+            const response = await fetch(LAMBDA_API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Upload success:', data);
+            return data.url;
+
+        } catch (error) {
+            console.error('Upload error:', error);
+            throw error;
+        } finally {
+            setUploading(false);
+        }
+    };
+
+
+    const onStop = async (recordedBlob) => {
         if (!recordedBlob) {
             return;
         }
@@ -42,6 +91,14 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+        // upload to s3
+        try {
+            const s3Url = uploadToLambda(recordedBlob);
+            console.log('Recording stored at:', s3Url);
+        } catch (error) {
+            console.error('Failed to process recording:', error);
+            alert("Error uploading recording: " + error.message);
+        }
     };
 
     const timeoutRef = useRef(null);
