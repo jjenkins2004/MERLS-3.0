@@ -21,21 +21,22 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
     const [uploading, setUploading] = useState(false);
     const questionIdRef = useRef(curQuestion.question_id);
 
+     //microphone recording
+     const [recording, setRecording] = useState(false);
+     const [stoppedRecording, setStopRecording] = useState(false);
+     const micRef = useRef(null);
+ 
+     const startRecording = () => {
+         setRecording(true);
+     };
+ 
+     const stopRecording = () => {
+         setRecording(false);
+     };
+
     useEffect(() => {
         questionIdRef.current = curQuestion.question_id;
     }, [curQuestion]);
-
-    //microphone recording
-    const [recording, setRecording] = useState(false);
-    const micRef = useRef(null);
-
-    const startRecording = () => {
-        setRecording(true);
-    };
-
-    const stopRecording = () => {
-        setRecording(false);
-    };
 
     const uploadToLambda = async (recordedBlob) => {
         try {
@@ -84,6 +85,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
 
 
     const onStop = async (recordedBlob) => {
+        setStopRecording(true);
         if (!recordedBlob) {
             return;
         }
@@ -136,6 +138,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
         recordAnswer(curQuestion.question_id, 0 + 1);
         setAudioPlaying(false);
         setFinishedListening(false);
+        setStopRecording(false);
         setCountDown(3);
       };
 
@@ -152,6 +155,13 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
         // Cleanup function to clear the timeout
         return () => clearTimeout(timerId);
       }, [recordingTimer])
+
+      //unmount after onStop is called
+      useEffect(() => {
+        if (stoppedRecording) {
+            gotoNextQuestion();
+        }
+      }, [stoppedRecording])
 
     return(
         <div>
@@ -266,7 +276,6 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
                                 questionAudio.pause();
                             }
                             stopRecording();
-                            gotoNextQuestion();
                         }
                 }}/>
             </div>
