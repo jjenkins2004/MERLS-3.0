@@ -12,6 +12,7 @@ import GuidedTutorial from "./GuidedTutorial";
 import Practice from "./Practice";
 import TranslationButton from "../Components/TranslationButton";
 import AudioPermission from "./AudioPermission";
+import ReinforcementPage from "./ReinforcementPage";
 
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
@@ -23,17 +24,31 @@ const Test = ({ type, language }) => {
   const [showAudioPermission, setShowAudioPermission] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
+  const [reinforcementID, setReinforcementID] = useState(0);
 
   const navigate = useNavigate();
+
+  let ReinforcementAudio = [
+    "https://sites.usc.edu/heatlab/files/2024/10/English-1-4-way-through-the-test-w-audio.m4a",
+    "https://sites.usc.edu/heatlab/files/2024/10/English-Midway-through-the-test-w-audio.m4a",
+    "https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a",
+    "https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a"]
+
 
   // record answer and go to next question
   const recordAnswer = (questionId, answerId) => {
     // show the reinforcement page when the test is half through
-    if (curId === Math.floor(questions.length / 2)) {
+    if (curId === Math.floor(questions.length / 4)) {
       setShowReinforcementPage(true);
-    } else {
-      setCurId(curId + 1);
+      setReinforcementID(0);
+    } else if (curId === Math.floor(questions.length / 2)) {
+      setShowReinforcementPage(true);
+      setReinforcementID(1);
+    } else if (curId === Math.floor(3*questions.length / 4)) {
+      setShowReinforcementPage(true);
+      setReinforcementID(2);
     }
+    setCurId(curId + 1);
     setAnswers({ ...answers, [questionId]: answerId });
   };
 
@@ -139,29 +154,30 @@ const Test = ({ type, language }) => {
               </div>
             </div>
           ) : showReinforcementPage ? (
-            <div>
-              <div className="indicator">
-                <p>
-                  Come on! You are half way through!/加油！你已经完成一半了！
-                </p>
-              </div>
-              <div className="reinforcementContainer">
-                <img
-                  className="reinforcementGif"
-                  src="https://i0.wp.com/images.onwardstate.com/uploads/2015/05/oie_14175751vZSQRLEn.gif?fit=650%2C408&ssl=1"
-                  alt="reinforcement gif"
-                />
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setShowReinforcementPage(false);
-                    setCurId(curId + 1);
-                  }}
-                >
-                  Continue
-                </Button>
-              </div>
-            </div>
+            // <div>
+            //   <div className="indicator">
+            //     <p>
+            //       Come on! You are half way through!/加油！你已经完成一半了！
+            //     </p>
+            //   </div>
+            //   <div className="reinforcementContainer">
+            //     <img
+            //       className="reinforcementGif"
+            //       src="https://i0.wp.com/images.onwardstate.com/uploads/2015/05/oie_14175751vZSQRLEn.gif?fit=650%2C408&ssl=1"
+            //       alt="reinforcement gif"
+            //     />
+            //     <Button
+            //       variant="contained"
+            //       onClick={() => {
+            //         setShowReinforcementPage(false);
+            //         setCurId(curId + 1);
+            //       }}
+            //     >
+            //       Continue
+            //     </Button>
+            //   </div>
+            // </div>
+            <ReinforcementPage showChinese={showChinese} audioLink={ReinforcementAudio[reinforcementID]} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" setShowReinforcement={setShowReinforcementPage}/>
           ) : showAudioPermission ? (
             <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
           ) : showInstructions ? (

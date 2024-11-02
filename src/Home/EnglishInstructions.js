@@ -19,7 +19,7 @@ const EnglishInstructions = () => {
             quiet room without distractions.{" "}
             <span className="redHighlight">Google Chrome</span> and{" "}
             <span className="redHighlight">Microsoft Edge</span>
-            browsers are recommended for testing on your device. If you are
+            {" "}browsers are recommended for testing on your device. If you are
             using <span className="redHighlight">Safari</span> please see the
             instruction.
           </li>
@@ -54,7 +54,7 @@ const EnglishInstructions = () => {
           <li>
             Some of the sentences will be difficult.{" "}
             <span className="redHighlight">Allow your child to guess</span>
-            rather than tell them the answers. This should be a reflection of
+            {" "}rather than tell them the answers. This should be a reflection of{" "}
             <span className="redHighlight">their knowledge</span>, not yours.
           </li>
           <li>

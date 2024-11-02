@@ -91,13 +91,14 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
         }
         const url = recordedBlob.blobURL; 
         console.log(url);
-        const link = document.createElement('a'); 
-        link.href = url;
-        link.download = 'recording.webm';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        //download file
+        // const link = document.createElement('a'); 
+        // link.href = url;
+        // link.download = 'recording.webm';
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(url);
         // upload to s3
         try {
             const s3Url = await uploadToLambda(recordedBlob);
