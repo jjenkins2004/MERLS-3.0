@@ -29,9 +29,7 @@ const Practice = ({setShowPractice, type, language, question, showChinese}) => {
                         showChinese={showChinese}
                     />
                 ) : type === "repetition" ? (
-                    showAudioPermission ? (
-                        <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
-                    ) : showGuidedTutorial ? (
+                    showGuidedTutorial ? (
                         <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
                     ) : (
                         <Repetition

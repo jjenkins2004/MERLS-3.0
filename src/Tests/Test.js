@@ -20,7 +20,7 @@ const Test = ({ type, language }) => {
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
   const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
   const [showPractice, setShowPractice] = useState(true);
-  const [showAudioPermission, setShowAudioPermission] = useState(true);
+  const [showAudioPermission, setShowAudioPermission] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
 
@@ -93,6 +93,7 @@ const Test = ({ type, language }) => {
     }
     else if (type === "repetition") {
       audioLink.current = null;
+      setShowAudioPermission(true);
     }
   }, [type, language]);
 
@@ -161,6 +162,8 @@ const Test = ({ type, language }) => {
                 </Button>
               </div>
             </div>
+          ) : showAudioPermission ? (
+            <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
           ) : showInstructions ? (
             <div>
               <Instructions
