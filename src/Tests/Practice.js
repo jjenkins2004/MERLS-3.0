@@ -9,7 +9,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import GreenButton from "../Components/GreenButton";
 
-const Practice = ({setShowPractice, type, language, question, showChinese}) => {
+const Practice = ({setShowPractice, type, language, question, showChinese, recordAudioUrl}) => {
     const [showPracticeQuestion, setShowPracticeQuestion] = useState(true);
     const [showAudioPermission, setShowAudioPermission] = useState(true);
     const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
@@ -36,6 +36,7 @@ const Practice = ({setShowPractice, type, language, question, showChinese}) => {
                             curQuestion={question}
                             recordAnswer={finishPractice}
                             showChinese={showChinese}
+                            recordAudioUrl={recordAudioUrl}
                         />
                     )
                 ) : (

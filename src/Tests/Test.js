@@ -25,6 +25,7 @@ const Test = ({ type, language }) => {
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
   const [reinforcementID, setReinforcementID] = useState(0);
+  const [audioUrls, setAudioUrls] = useState({});
 
   const navigate = useNavigate();
 
@@ -33,7 +34,6 @@ const Test = ({ type, language }) => {
     "https://sites.usc.edu/heatlab/files/2024/10/English-Midway-through-the-test-w-audio.m4a",
     "https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a",
     "https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a"]
-
 
   // record answer and go to next question
   const recordAnswer = (questionId, answerId) => {
@@ -52,21 +52,53 @@ const Test = ({ type, language }) => {
     setAnswers({ ...answers, [questionId]: answerId });
   };
 
+  const recordAudioUrl = (questionId, s3Url) => {
+    if (!questionId || !s3Url) {
+      console.error('Missing required parameters:', { questionId, s3Url });
+      return;
+    }
+    const truncatedUrl = s3Url.split('?')[0];
+
+    setAudioUrls(prev => {
+      const updatedUrls = { ...prev, [questionId]: truncatedUrl };
+      console.log('Current Audio URLs:', updatedUrls);
+      return updatedUrls;
+    });
+  };
+
   const submitAnswers = () => {
     try {
       const username = localStorage.getItem("username");
       async function submitAnswersToDB() {
-        const response = await fetch(
-          "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions",
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              participantId: username,
-              userAns: answers,
-              isEN: language === "CN" ? false : true,
-            }),
-          }
-        );
+        console.log("type:", type);
+        let endpoint = "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions";
+        let requestBody;
+
+        if (type === "matching") {
+          requestBody = {
+            participantId: username,
+            userAns: answers,
+            isEN: language === "CN" ? false : true,
+            isAudioTest: false,
+            audioSubmissionList: null,
+          };
+        } else if (type === "repetition") {
+          requestBody = {
+            participantId: username,
+            audioSubmissionList: audioUrls,
+            isEN: language === "CN" ? false : true,
+            isAudioTest: true,
+            userAns: null,
+          };
+        }
+
+        console.log("Submitting data:", requestBody);
+
+        const response = await fetch(endpoint, {
+          method: "PUT",
+          body: JSON.stringify(requestBody)
+        });
+
         if (response.ok) {
           navigate("/test-selection");
         } else {
@@ -194,7 +226,8 @@ const Test = ({ type, language }) => {
             type={type}
             language={language}
             question={questions[0]}
-            showChinese={showChinese}/>
+            showChinese={showChinese}
+            recordAudioUrl={recordAudioUrl}/>
           ) : type === "matching" ? (
             <Question
               curQuestion={questions[curId]}
@@ -206,6 +239,7 @@ const Test = ({ type, language }) => {
                 curQuestion={questions[curId]}
                 recordAnswer={recordAnswer}
                 showChinese={showChinese}
+                recordAudioUrl={recordAudioUrl}
               />
           ) : (
             <p>page doesn't exist</p>

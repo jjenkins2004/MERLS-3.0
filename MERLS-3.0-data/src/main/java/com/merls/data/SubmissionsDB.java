@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.merls.business.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class SubmissionsDB {
 	// private final static String url = "jdbc:postgresql://merlsdb.cpuk24q4an9x.us-east-2.rds.amazonaws.com:5432/postgres";
@@ -13,6 +15,7 @@ public class SubmissionsDB {
 	private final static String url = System.getenv("DB_URL"); // DB URL from environment variable
 	private final static String username = System.getenv("DB_USER"); // DB username from environment variable
 	private final static String password = System.getenv("DB_PASSWORD"); // DB password from environment variable
+	private static final Log log = LogFactory.getLog(SubmissionsDB.class);
 
 	//save submission to database
 	public static int postSubmissionsToDB (Submission event) throws SQLException, ClassNotFoundException {
@@ -20,34 +23,52 @@ public class SubmissionsDB {
 		PreparedStatement ps = null;
 		
 		String participantId = event.getParticipantId();
-		HashMap<Integer, Integer> userAns = event.getUserAns();
 		boolean isEN = event.isEN;
+		boolean isAudioTest = event.isAudioTest();
+		log.info("Received submission - participantId:" + participantId + " isEN:"+isEN+" isAudioTest: "+ isAudioTest);
 		
-		try {	
-			String query = "INSERT INTO PUBLIC.SUBMISSIONS(participant_id, question_id, answer, is_correct, is_EN)"
-					+ "VALUES(?, ?, ?, ?, ?)";
-			
-			// iterate to save user's answer to each question into table submission
-			for(Map.Entry<Integer, Integer> e : userAns.entrySet()) {
-				int userAnswer = e.getValue();
-				int questionId = e.getKey();
-				
-				// check if user's answer correct or not
-				boolean is_correct = isCorrect(questionId, userAnswer, isEN, connection);
-				
-				ps = connection.prepareStatement(query);
-				System.out.println("Post data to DB");
-				ps.setString(1, participantId);
-				ps.setInt(2, questionId);
-				ps.setInt(3, userAnswer);
-				//for local test only
-				//ps.setBoolean(4, true);
-				ps.setBoolean(4, is_correct);
-				ps.setBoolean(5, isEN);
-				ps.executeUpdate();
+		try {
+			if (isAudioTest) {
+				log.info("audio request");
+				String query = "INSERT INTO PUBLIC.AUDIO_SUBMISSIONS(participant_id, question_id, audio_url, is_EN) " +
+						"VALUES(?, ?, ?, ?)";
+
+				HashMap<Integer, String> audioSubmissions = event.getAudioSubmissionList();
+				if (audioSubmissions != null && !audioSubmissions.isEmpty()) {
+					for (Map.Entry<Integer, String> entry : audioSubmissions.entrySet()) {
+						ps = connection.prepareStatement(query);
+						ps.setString(1, participantId);
+						ps.setInt(2, entry.getKey());      // questionId
+						ps.setString(3, entry.getValue());  // audio URL
+						ps.setBoolean(4, isEN);
+						ps.executeUpdate();
+						log.info("Inserted audio submission for question: " + entry.getKey());
+					}
+				}
+			} else {
+				log.info("not audio request");
+				String query = "INSERT INTO PUBLIC.SUBMISSIONS(participant_id, question_id, answer, is_correct, is_EN) " +
+						"VALUES(?, ?, ?, ?, ?)";
+
+				HashMap<Integer, Integer> userAns = event.getUserAns();
+
+				for(Map.Entry<Integer, Integer> e : userAns.entrySet()) {
+					int questionId = e.getKey();
+					int userAnswer = e.getValue();
+
+					ps = connection.prepareStatement(query);
+					boolean is_correct = isCorrect(questionId, userAnswer, isEN, connection);
+
+					ps.setString(1, participantId);
+					ps.setInt(2, questionId);
+					ps.setInt(3, userAnswer);
+					ps.setBoolean(4, is_correct);
+					ps.setBoolean(5, isEN);
+					ps.executeUpdate();
+				}
 			}
 			return 1;
-		}finally {
+		} finally {
 			ps.close();
 			connection.close();
 		}

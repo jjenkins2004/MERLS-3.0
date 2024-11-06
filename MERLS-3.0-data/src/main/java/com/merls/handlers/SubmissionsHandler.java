@@ -27,6 +27,9 @@ public class SubmissionsHandler {
 		headers.put("Access-Control-Allow-Origin", "*");
 		headers.put("Access-Control-Allow-Headers", "Content-Type,Authorization");
 		response.setHeaders(headers);
+
+		context.getLogger().log("Received request body: " + request.getBody());
+
 		Submission submission;
 		try {
 			submission = parseAndValidateSubmission(request.getBody());
@@ -49,7 +52,7 @@ public class SubmissionsHandler {
 			Map<Integer, Integer> answers = submission.getUserAns();
 			Boolean isEN = submission.isEN();
 
-			if (!isEN) {
+			if (!isEN && !submission.isAudioTest()) {
 				ParticipantDB.updateIsCompletedCN(participantId);
 			} else {
 				ParticipantDB.updateIsCompletedEN(participantId);
@@ -80,9 +83,17 @@ public class SubmissionsHandler {
 			throw new IllegalArgumentException("participantId is missing or not a string");
 		}
 
-		// Check for userAns
-		if (!requestBody.containsKey("userAns") || !(requestBody.get("userAns") instanceof HashMap)) {
-			throw new IllegalArgumentException("userAns is missing or not a valid map");
+		// Only validate userAns if isAudioTest is false
+		boolean isAudioTest = (Boolean) requestBody.get("isAudioTest");
+		if (!isAudioTest) {
+			if (!requestBody.containsKey("userAns") || !(requestBody.get("userAns") instanceof HashMap)) {
+				throw new IllegalArgumentException("userAns is missing or not a valid map");
+			}
+		} else {
+			// For audio test, validate audioSubmissionList
+			if (!requestBody.containsKey("audioSubmissionList") || !(requestBody.get("audioSubmissionList") instanceof HashMap)) {
+				throw new IllegalArgumentException("audioSubmissionList is missing or not a valid map");
+			}
 		}
 
 		// Check for isEN

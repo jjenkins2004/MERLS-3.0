@@ -12,7 +12,7 @@ const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.
 
 let questionAudio;
 
-const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
+const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [listening, setListening] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
@@ -25,7 +25,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
      const [recording, setRecording] = useState(false);
      const [stoppedRecording, setStopRecording] = useState(false);
      const micRef = useRef(null);
- 
+
      const startRecording = () => {
          setRecording(true);
      };
@@ -73,6 +73,11 @@ const Repetition = ({curQuestion, recordAnswer, showChinese}) => {
 
             const data = await response.json();
             console.log('Upload success:', data);
+
+            // Record the S3 URL for this question
+            if (data.url) {
+                recordAudioUrl(questionIdRef.current, data.url);
+            }
             return data.url;
 
         } catch (error) {
