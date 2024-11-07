@@ -113,11 +113,19 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
                         showChinese={showChinese} 
                         textEnglish="Begin Practice"
                         textChinese="开始练习"
+                        disabled={!finishedListening}
                         onClick={() => {
-                            if (instructionAudio) {
-                                instructionAudio.pause();
+                            if (finishedListening) {
+                                if (instructionAudio) {
+                                    instructionAudio.pause();
+                                }
+                                setShowInstructions(false);
                             }
-                            setShowInstructions(false);
+                            //testing to skip instructions before finish listening
+                            // if (instructionAudio) {
+                            //     instructionAudio.pause();
+                            // }
+                            // setShowInstructions(false);
                         }}/>
                 </div>
             </div>
