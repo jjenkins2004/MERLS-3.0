@@ -186,29 +186,6 @@ const Test = ({ type, language }) => {
               </div>
             </div>
           ) : showReinforcementPage ? (
-            // <div>
-            //   <div className="indicator">
-            //     <p>
-            //       Come on! You are half way through!/加油！你已经完成一半了！
-            //     </p>
-            //   </div>
-            //   <div className="reinforcementContainer">
-            //     <img
-            //       className="reinforcementGif"
-            //       src="https://i0.wp.com/images.onwardstate.com/uploads/2015/05/oie_14175751vZSQRLEn.gif?fit=650%2C408&ssl=1"
-            //       alt="reinforcement gif"
-            //     />
-            //     <Button
-            //       variant="contained"
-            //       onClick={() => {
-            //         setShowReinforcementPage(false);
-            //         setCurId(curId + 1);
-            //       }}
-            //     >
-            //       Continue
-            //     </Button>
-            //   </div>
-            // </div>
             <ReinforcementPage showChinese={showChinese} audioLink={ReinforcementAudio[reinforcementID]} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" setShowReinforcement={setShowReinforcementPage}/>
           ) : showAudioPermission ? (
             <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>

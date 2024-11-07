@@ -31,19 +31,19 @@ const AudioPermission = ({showChinese, setShowAudioPermission}) => {
             return "Test Microphone to Continue";
         }
         else {
-            return "Proceed to Tutorial";
+            return "Proceed to Instructions";
         }
     }
 
     const getProceedTextChinese = () => {
         if (!gavePermission) {
-            return "Give Permission to Continue";
+            return "允许继续";
         }
         else if (!tested) {
-            return "Test Microphone to Continue";
+            return "测试麦克风以继续";
         }
         else {
-            return "Proceed to Tutorial";
+            return "继续到说明";
         }
     }
 
@@ -76,16 +76,16 @@ const AudioPermission = ({showChinese, setShowAudioPermission}) => {
 
     const getButtonTextChinese = () => {
         if (!gavePermission) {
-            return "Microphone Access Disabled"
+            return "麦克风访问被禁用"
         }
         else if (isRecording) {
-            return "Listening..."
+            return "正在听..."
         }
         else if (isPlaying) {
-            return "Playing..."
+            return "正在播放..."
         }
         else {
-            return "Test Microphone"
+            return "测试麦克风"
         }
     }
 
@@ -143,11 +143,11 @@ const AudioPermission = ({showChinese, setShowAudioPermission}) => {
     return (
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100%"}}>
             <p style={{fontSize: "25px", fontWeight: "700", textAlign: "center"}}>
-                {!showChinese ? "Please allow microphone access to proceed." : ""}
+                {!showChinese ? "Please allow microphone access to proceed." : "请允许麦克风访问以继续。"}
             </p>
             <div style={{height: "30px"}}/>
             <p style={{fontSize: "15px", fontWeight: "500", textAlign: "center"}}>
-                {!showChinese ? "If you see the moving bars, that means your microphone is working." : ""}
+                {!showChinese ? "If you see the moving bars, that means your microphone is working." : "如果您看到移动的条形图，那意味着您的麦克风正在工作。"}
             </p>
             <ReactMic
                 record={isRecording}
@@ -163,7 +163,7 @@ const AudioPermission = ({showChinese, setShowAudioPermission}) => {
             <div style={{height: "30px"}}/>
             <div className="divider"/>
             <p style={{fontSize: "20px", fontWeight: "700", textAlign: "center"}}>
-                {!showChinese ? "Click on your browser to find out how to enable access" : ""}
+                {!showChinese ? "Click on your browser to find out how to enable access" : "点击您的浏览器以了解如何启用访问权限"}
             </p>
             <div className="browserIconContainer">
                 <img className="browserIcon" src="https://www.google.com/chrome/static/images/chrome-logo.svg" alt="google chrome icon" onClick={() => redirect("https://support.google.com/chrome/answer/2693767")}/>

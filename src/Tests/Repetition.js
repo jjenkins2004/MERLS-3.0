@@ -252,7 +252,9 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                             <div className="listeningBar"/>
                             <div className="listeningBar"/>
                         </div>
-                        <p className="listeningText">
+                        <p className="listeningText"> {showChinese ? 
+                            <>麦克风正在录音。</> : 
+                            <>Microphone is recording.</>}
                             Microphone is recording.
                         </p>
                     </div>
@@ -264,8 +266,9 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                             className="disabledMicrophone"
                         >
                         </img>
-                        <p className="listeningText">
-                            Please wait for me to finish speaking.
+                        <p className="listeningText"> {showChinese ? 
+                            <>请等待我说完。</> : 
+                            <>Please wait for me to finish speaking.</>}
                         </p>
                     </div>
                 )}
