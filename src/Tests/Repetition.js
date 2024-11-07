@@ -14,9 +14,10 @@ let questionAudio;
 
 const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
-    const [listening, setListening] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
-    const [recordingTimer, setRecordingTimer] = useState(20); //change this to maximum audio duration
+    const [proceedEnabled, setProceedEnabled] = useState(false);
+    const [proceed, setProceed] = useState(false);
+    const [recordingTimer, setRecordingTimer] = useState(30); //change this to maximum audio duration
     const [countDown, setCountDown] = useState(3);
     const [uploading, setUploading] = useState(false);
     const questionIdRef = useRef(curQuestion.question_id);
@@ -144,6 +145,8 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
         recordAnswer(curQuestion.question_id, 0 + 1);
         setAudioPlaying(false);
         setFinishedListening(false);
+        setProceedEnabled(false);
+        setProceed(false);
         setStopRecording(false);
         setCountDown(3);
       };
@@ -164,10 +167,18 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
 
       //unmount after onStop is called
       useEffect(() => {
-        if (stoppedRecording) {
+        if (stoppedRecording && proceed) {
             gotoNextQuestion();
         }
       }, [stoppedRecording])
+
+      useEffect(() => {
+        if (finishedListening) {
+            setTimeout(() => {
+                setProceedEnabled(true);
+            }, 1000);
+        }
+      }, [finishedListening])
 
     return(
         <div>
@@ -255,7 +266,6 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                         <p className="listeningText"> {showChinese ? 
                             <>麦克风正在录音。</> : 
                             <>Microphone is recording.</>}
-                            Microphone is recording.
                         </p>
                     </div>
                 ) : (
@@ -278,13 +288,19 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                     showChinese={showChinese} 
                     textEnglish="Next"
                     textChinese="下一个"
-                    disabled={!finishedListening}
+                    disabled={!proceedEnabled}
                     onClick={() => {
-                        if (finishedListening) {
+                        if (proceedEnabled) {
                             if (questionAudio) {
                                 questionAudio.pause();
                             }
-                            stopRecording();
+                            if (recording) {
+                                stopRecording();
+                                setProceed(true);
+                            }
+                            else {
+                                gotoNextQuestion();
+                            }
                         }
                 }}/>
             </div>
