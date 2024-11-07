@@ -152,8 +152,9 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                                         <div className="listeningBar"/>
                                         <div className="listeningBar"/>
                                     </div>
-                                    <p className="listeningText">
-                                        Microphone is recording.
+                                    <p className="listeningText"> {showChinese ? 
+                                        <>麦克风正在录音。</> : 
+                                        <>Microphone is recording.</>}
                                     </p>
                                 </div>
                             }
@@ -168,8 +169,9 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                                             className="disabledMicrophone"
                                         >
                                         </img>
-                                        <p className="listeningText">
-                                            Please wait for me to finish speaking.
+                                        <p className="listeningText"> {showChinese ? 
+                                            <>请等待我说完。</> : 
+                                            <>Please wait for me to finish speaking.</>}
                                         </p>
                                     </div>
                                 }
@@ -209,6 +211,7 @@ const HighlightArea = ({showChinese, tipNum, setTipNum, toolTipNum, childView}) 
                     </div>
                     <div className="highlightedAreaContainer">
                         <div className="backgroundHighlight"/>
+                        <div className="blockingOverlay"/>
                         {childView}
                     </div>
                 </div>
