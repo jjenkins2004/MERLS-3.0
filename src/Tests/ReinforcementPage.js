@@ -53,6 +53,10 @@ const ReinforcementPage = ({showChinese, audioLink, imageLink, setShowReinforcem
         }
       }, [replay])
 
+      useEffect(() => {
+        setFinishedListening(false);
+      })
+
     return(
         <div>
             <div className="indicator">
@@ -111,12 +115,9 @@ const ReinforcementPage = ({showChinese, audioLink, imageLink, setShowReinforcem
                     showChinese={showChinese} 
                     textEnglish="Continue"
                     textChinese="继续"
-                    disabled={!finishedListening}
                     onClick={() => {
-                        if (finishedListening) {
-                            instructionAudio.pause();
-                            setShowReinforcement(false);
-                        }
+                        instructionAudio.pause();
+                        setShowReinforcement(false);
                 }}/>
             </div>
         </div>
