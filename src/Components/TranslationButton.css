@@ -5,9 +5,9 @@
     font-family: inherit;
     font-size: 0.8rem;
     font-weight: 500;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    border: 1px solid rgb(156, 202, 255);
+    border: none;
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease,
       transform 0.2s ease;
@@ -15,7 +15,7 @@
   
   .translationButton:hover {
     background-color: rgb(170, 209, 255);
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.3);
   }
   
   .translationButton:active {

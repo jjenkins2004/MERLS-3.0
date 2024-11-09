@@ -116,7 +116,9 @@ const ReinforcementPage = ({showChinese, audioLink, imageLink, setShowReinforcem
                     textEnglish="Continue"
                     textChinese="继续"
                     onClick={() => {
-                        instructionAudio.pause();
+                        if (instructionAudio) {
+                            instructionAudio.pause();
+                        }
                         setShowReinforcement(false);
                 }}/>
             </div>
