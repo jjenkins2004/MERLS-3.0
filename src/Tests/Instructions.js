@@ -11,7 +11,7 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
 
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [replay, setReplay] = useState(false);
-    const [finishedListening, setFinishedListening] = useState(true);
+    const [finishedListening, setFinishedListening] = useState(false);
     const [countDown, setCountDown] = useState(3);
     const [paused, setPaused] = useState(false);
 
