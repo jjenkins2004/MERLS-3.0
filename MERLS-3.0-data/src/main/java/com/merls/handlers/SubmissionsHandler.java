@@ -52,10 +52,11 @@ public class SubmissionsHandler {
 			Map<Integer, Integer> answers = submission.getUserAns();
 			Boolean isEN = submission.isEN();
 
-			if (!isEN && !submission.isAudioTest()) {
-				ParticipantDB.updateIsCompletedCN(participantId);
-			} else {
-				ParticipantDB.updateIsCompletedEN(participantId);
+			if (submission.isAudioTest()) {
+				ParticipantDB.updateCompleted(participantId, "repetition", !isEN ? "cn" : "en");
+			}
+			else {
+				ParticipantDB.updateCompleted(participantId, "matching", !isEN ? "cn" : "en");
 			}
 
 //			context.getLogger().log("Participant ID: " + participantId + ", Is English: " + isEN + ", Answers: " + answers.toString());

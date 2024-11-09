@@ -1,9 +1,11 @@
 com/merls/handlers/SubmissionsHandler$1.class
 com/merls/handlers/ExportHandler.class
+com/merls/business/AudioUploadRequest.class
 com/merls/business/Submission.class
 com/merls/handlers/UsersHandler.class
 com/merls/data/SubmissionsDB.class
 com/merls/business/Participant.class
+com/merls/handlers/AudioUploadHandler.class
 com/merls/data/ParticipantDB.class
 com/merls/handlers/SubmissionsHandler.class
 com/merls/handlers/QuestionsHandler.class

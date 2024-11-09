@@ -55,8 +55,10 @@ public class UsersHandler implements RequestHandler<Map<String, Object>, String>
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("participant_id", rs.getString("participant_id"));
                 jsonObject.put("participant_name", rs.getString("participant_name"));
-                jsonObject.put("is_completed_cn", rs.getBoolean("is_completed_cn"));
-                jsonObject.put("is_completed_en", rs.getBoolean("is_completed_en"));
+                jsonObject.put("completed_matching_cn", rs.getBoolean("completed_matching_cn"));
+                jsonObject.put("completed_matching_en", rs.getBoolean("completed_matching_en"));
+                jsonObject.put("completed_repetition_cn", rs.getBoolean("completed_repetition_cn"));
+                jsonObject.put("completed_repetition_en", rs.getBoolean("completed_repetition_en"));
                 jsonObject.put("is_active", rs.getBoolean("is_active"));
                 jsonArray.put(jsonObject);
             }
@@ -76,8 +78,8 @@ public class UsersHandler implements RequestHandler<Map<String, Object>, String>
     public static void main(String[] args) {
         UsersHandler handler = new UsersHandler();
         JSONObject testInput = new JSONObject();
-        testInput.put("participant_id", "abc_testing"); // Optional parameter
-        testInput.put("participant_name", "John Doe"); // Optional parameter
+        testInput.put("participant_id", "lucy"); // Optional parameter
+//        testInput.put("participant_name", "John Doe"); // Optional parameter
         System.out.println(handler.handleRequest(Map.of("queryStringParameters", testInput.toMap()), null));
     }
 }

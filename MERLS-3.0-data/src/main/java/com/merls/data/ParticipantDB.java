@@ -46,32 +46,29 @@ public class ParticipantDB {
 	}
 
 	// Update is_completed_cn for a participant
-	public static void updateIsCompletedCN(String participantId) throws SQLException, ClassNotFoundException {
+	public static void updateCompleted(String participantId, String type, String lang) throws SQLException, ClassNotFoundException {
 		Class.forName(driver);
 		Connection connection = DriverManager.getConnection(url, username, password);
 		PreparedStatement ps = null;
 
 		try {
-			String updateQuery = "UPDATE public.participants SET is_completed_cn = TRUE WHERE participant_id = ?";
-			ps = connection.prepareStatement(updateQuery);
-			ps.setString(1, participantId);
-			ps.executeUpdate();
-		} finally {
-			if (ps != null) {
-				ps.close();
+			String updateQuery;
+			if (type.equals("repetition")) {
+				if (lang.equals("cn")) {
+					updateQuery = "UPDATE public.participants SET completed_repetition_cn = TRUE WHERE participant_id = ?";
+				}
+				else {
+					updateQuery = "UPDATE public.participants SET completed_repetition_en = TRUE WHERE participant_id = ?";
+				}
 			}
-			connection.close();
-		}
-	}
-
-	// Update is_completed_cn for a participant
-	public static void updateIsCompletedEN(String participantId) throws SQLException, ClassNotFoundException {
-		Class.forName(driver);
-		Connection connection = DriverManager.getConnection(url, username, password);
-		PreparedStatement ps = null;
-
-		try {
-			String updateQuery = "UPDATE public.participants SET is_completed_en = TRUE WHERE participant_id = ?";
+			else {
+				if (lang.equals("cn")) {
+					updateQuery = "UPDATE public.participants SET completed_matching_cn = TRUE WHERE participant_id = ?";
+				}
+				else {
+					updateQuery = "UPDATE public.participants SET completed_matching_en = TRUE WHERE participant_id = ?";
+				}
+			}
 			ps = connection.prepareStatement(updateQuery);
 			ps.setString(1, participantId);
 			ps.executeUpdate();

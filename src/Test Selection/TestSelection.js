@@ -27,8 +27,10 @@ const LanguageSelection = () => {
           const data = await response.json();
           if (data && data.length > 0 && data[0].is_active) {
             const user = data[0];
-            setEnglishListeningCompleted(/*user.is_completed_en*/ false);
-            setChineseListeningCompleted(user.is_completed_cn);
+            setEnglishListeningCompleted(user.completed_matching_en);
+            setChineseListeningCompleted(user.completed_matching_cn);
+            setEnglishRepetitionCompleted(user.completed_repetition_en);
+            setChineseRepetitionCompleted(user.completed_repetition_cn);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -53,15 +55,16 @@ const LanguageSelection = () => {
       </AppBar>
       <div className="testSelectionGroup">
         <button
-          className = {`testButton ${selectedButton === 1 ? 'selected' : 'unselected'}`}
+          className = {`testButton ${chineseListeningCompleted ? 'selectionDisabled' : selectedButton === 1 ? 'selected' : 'unselected'}`}
           //href="/chinese-test"
           onClick={() => {
-            if (selectedButton === 1) {
-              setSelectedButton(0);
-            }
-            else {
-              setSelectedButton(1);
-
+            if (!chineseListeningCompleted) {
+              if (selectedButton === 1) {
+                setSelectedButton(0);
+              }
+              else {
+                setSelectedButton(1);
+              }
             }
           }}
           disabled={chineseListeningCompleted}
@@ -72,14 +75,16 @@ const LanguageSelection = () => {
           }
         </button>
         <button
-          className = {`testButton ${selectedButton === 2 ? 'selected' : 'unselected'}`}
+          className = {`testButton ${englishListeningCompleted ? 'selectionDisabled' : selectedButton === 2 ? 'selected' : 'unselected'}`}
           // href="/english-test"
           onClick={() => {
-            if (selectedButton === 2) {
-              setSelectedButton(0);
-            }
-            else {
-              setSelectedButton(2);
+            if (!englishListeningCompleted) {
+              if (selectedButton === 2) {
+                setSelectedButton(0);
+              }
+              else {
+                setSelectedButton(2);
+              }
             }
           }}
           disabled={englishListeningCompleted}
@@ -90,16 +95,18 @@ const LanguageSelection = () => {
           }
         </button>
         <button
-          className = {`testButton ${selectedButton === 3 ? 'selected' : 'unselected'}`}
+          className = {`testButton ${chineseRepetitionCompleted ? 'selectionDisabled' : selectedButton === 3 ? 'selected' : 'unselected'}`}
           onClick={() => {
-            if (selectedButton === 3) {
-              setSelectedButton(0);
-            }
-            else {
-              setSelectedButton(3);
+            if (!chineseRepetitionCompleted) {
+              if (selectedButton === 3) {
+                setSelectedButton(0);
+              }
+              else {
+                setSelectedButton(3);
+              }
             }
           }}
-          disabled={englishListeningCompleted}
+          disabled={chineseRepetitionCompleted}
         >
           {showChinese ? 
             <>汉语句子复读</> :
@@ -107,16 +114,18 @@ const LanguageSelection = () => {
           }
         </button>
         <button
-          className = {`testButton ${selectedButton === 4 ? 'selected' : 'unselected'}`}
+          className = {`testButton ${englishRepetitionCompleted ? 'selectionDisabled' : selectedButton === 4 ? 'selected' : 'unselected'}`}
           onClick={() => {
-            if (selectedButton === 4) {
-              setSelectedButton(0);
-            }
-            else {
-              setSelectedButton(4);
+            if (!englishRepetitionCompleted) {
+              if (selectedButton === 4) {
+                setSelectedButton(0);
+              }
+              else {
+                setSelectedButton(4);
+              }
             }
           }}
-          disabled={englishListeningCompleted}
+          disabled={englishRepetitionCompleted}
         >
           {showChinese ? 
             <>英语句子重复</> :
