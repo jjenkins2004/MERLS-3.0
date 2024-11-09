@@ -32,7 +32,6 @@
 
 .testButton {
   margin-top: 0;
-  background-color: rgb(0, 110, 235);
   font-family: inherit;
   font-size: 0.9rem;
   font-weight: bold;
@@ -53,10 +52,13 @@
 }
 
 .testButton.unselected {
+  background-color: rgb(66, 70, 74);
+  border: 1px solid rgb(87, 99, 113);
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .testButton.unselected:hover {
+  border: 1px solid rgb(111, 167, 231);
   background-color: rgb(39, 126, 225);
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
   transform: scale(1.05);
