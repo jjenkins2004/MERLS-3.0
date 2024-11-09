@@ -9,13 +9,25 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import GreenButton from "../Components/GreenButton";
 
-const Practice = ({setShowPractice, type, language, question, showChinese, recordAudioUrl}) => {
+const Practice = ({setShowPractice, question, type, language, showChinese, recordAudioUrl}) => {
     const [showPracticeQuestion, setShowPracticeQuestion] = useState(true);
     const [showAudioPermission, setShowAudioPermission] = useState(true);
     const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
 
     const finishPractice = () => {
         setShowPracticeQuestion(false);
+    }
+
+    const getAudioLink = () => {
+        if (type === "repetition") {
+            return language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR练习完成后.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-once-the-practice-is-completed.m4a";
+        }
+        else if (language === "EN") {
+            return "https://sites.usc.edu/heatlab/files/2024/10/English-Transition-to-the-real-test-items-w-audio-.m4a";
+        }
+        else {
+            return "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Transition-to-the-real-test-items-w-audio.m4a";
+        }
     }
 
     return (
@@ -43,7 +55,7 @@ const Practice = ({setShowPractice, type, language, question, showChinese, recor
                     <p> type invalid </p>
                 )
             ) : (
-                <PracticePage showChinese={showChinese} audioLink={language === "EN" ? "https://sites.usc.edu/heatlab/files/2024/10/English-Transition-to-the-real-test-items-w-audio-.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Transition-to-the-real-test-items-w-audio.m4a"} setShowPractice={setShowPractice}/>
+                <PracticePage showChinese={showChinese} audioLink={getAudioLink()} setShowPractice={setShowPractice}/>
             )
         }
        </div>

@@ -27,8 +27,8 @@ const LanguageSelection = () => {
           const data = await response.json();
           if (data && data.length > 0 && data[0].is_active) {
             const user = data[0];
-            setEnglishListeningCompleted(/*user.is_completed_en*/false);
-            setChineseListeningCompleted(/*user.is_completed_cn*/false);
+            setEnglishListeningCompleted(/*user.is_completed_en*/ false);
+            setChineseListeningCompleted(user.is_completed_cn);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
