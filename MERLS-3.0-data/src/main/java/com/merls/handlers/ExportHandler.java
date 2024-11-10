@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Base64;
 import java.util.HashMap;
@@ -44,45 +45,39 @@ public class ExportHandler implements RequestHandler<APIGatewayProxyRequestEvent
         headers.put("Content-Disposition", "attachment; filename=\"submission.xlsx\"");
         response.setHeaders(headers);
 
-        String query = "SELECT * FROM submissions WHERE participant_id = ? AND is_en = ?";
+        String submissionsQuery = "SELECT * FROM submissions WHERE participant_id = ? AND is_en = ?";
+        String audioQuery = "SELECT * FROM audio_submissions WHERE participant_id = ? AND is_en = ?";
+
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement submissionsStmt = conn.prepareStatement(submissionsQuery);
+             PreparedStatement audioStmt = conn.prepareStatement(audioQuery);
+             Workbook workbook = new XSSFWorkbook()) {
 
             boolean isEn = language.toUpperCase(Locale.ROOT).equals("EN");
-            stmt.setString(1, participantId);
-            stmt.setBoolean(2, isEn);
 
-            try (ResultSet rs = stmt.executeQuery();
-                 Workbook workbook = new XSSFWorkbook()) {
+            // Populate Submissions sheet
+            submissionsStmt.setString(1, participantId);
+            submissionsStmt.setBoolean(2, isEn);
+            try (ResultSet submissionsRs = submissionsStmt.executeQuery()) {
+                populateSheet(submissionsRs, workbook, "Submissions");
+            }
 
-                // Create an Excel sheet and populate it with data
-                var sheet = workbook.createSheet("Submission");
+            // Populate Audio Submissions sheet
+            audioStmt.setString(1, participantId);
+            audioStmt.setBoolean(2, isEn);
+            try (ResultSet audioRs = audioStmt.executeQuery()) {
+                populateSheet(audioRs, workbook, "Audio Submissions");
+            }
 
-                var headerRow = sheet.createRow(0);
-                var metaData = rs.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    headerRow.createCell(i - 1).setCellValue(metaData.getColumnName(i));
-                }
-
-                int rowIndex = 1;
-                while (rs.next()) {
-                    var row = sheet.createRow(rowIndex++);
-                    for (int i = 1; i <= columnCount; i++) {
-                        row.createCell(i - 1).setCellValue(rs.getString(i));
-                    }
-                }
-
-                // Write the workbook to a byte array
-                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                    workbook.write(baos);
-                    byte[] bytes = baos.toByteArray();
-                    String base64EncodedExcel = Base64.getEncoder().encodeToString(bytes);
-                    response.setBody(base64EncodedExcel);
-                    response.setIsBase64Encoded(true);
-                    response.setStatusCode(200);
-                }
+            // Write the workbook to a byte array
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                workbook.write(baos);
+                byte[] bytes = baos.toByteArray();
+                String base64EncodedExcel = Base64.getEncoder().encodeToString(bytes);
+                response.setBody(base64EncodedExcel);
+                response.setIsBase64Encoded(true);
+                response.setStatusCode(200);
             }
 
         } catch (Exception e) {
@@ -92,5 +87,32 @@ public class ExportHandler implements RequestHandler<APIGatewayProxyRequestEvent
         }
 
         return response;
+    }
+
+    private void populateSheet(ResultSet rs, Workbook workbook, String sheetName) throws SQLException {
+        var sheet = workbook.createSheet(sheetName);
+
+        // Create header row
+        var headerRow = sheet.createRow(0);
+        var metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        for (int i = 1; i <= columnCount; i++) {
+            headerRow.createCell(i - 1).setCellValue(metaData.getColumnName(i));
+        }
+
+        // Populate data rows
+        int rowIndex = 1;
+        while (rs.next()) {
+            var row = sheet.createRow(rowIndex++);
+            for (int i = 1; i <= columnCount; i++) {
+                var value = rs.getString(i);
+                row.createCell(i - 1).setCellValue(value != null ? value : "");
+            }
+        }
+
+        // Auto-size columns
+        for (int i = 0; i < columnCount; i++) {
+            sheet.autoSizeColumn(i);
+        }
     }
 }
