@@ -140,7 +140,7 @@ const Test = ({ type, language }) => {
     }
     else if (type === "repetition") {
       audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR-场景介绍.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-Introducing-Scenario.m4a";
-      setShowAudioPermission(true);
+      setShowAudioPermission(false);
     }
   }, [type, language]);
 

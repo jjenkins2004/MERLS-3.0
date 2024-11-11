@@ -11,8 +11,7 @@ import GreenButton from "../Components/GreenButton";
 
 const Practice = ({setShowPractice, question, type, language, showChinese, recordAudioUrl}) => {
     const [showPracticeQuestion, setShowPracticeQuestion] = useState(true);
-    const [showAudioPermission, setShowAudioPermission] = useState(true);
-    const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
+    const [showGuidedTutorial, setShowGuidedTutorial] = useState(false);
 
     const finishPractice = () => {
         setShowPracticeQuestion(false);
@@ -35,21 +34,31 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
         {
              showPracticeQuestion ? (
                 type === "matching" ? (
-                    <Question
-                        curQuestion={question}
-                        recordAnswer={finishPractice}
-                        showChinese={showChinese}
-                    />
+                    <div> 
+                        <p className="practiceText">
+                            {showChinese ? "这是一个练习题！" : "This a practice question!"}
+                        </p>
+                        <Question
+                            curQuestion={question}
+                            recordAnswer={finishPractice}
+                            showChinese={showChinese}
+                        />
+                    </div>
                 ) : type === "repetition" ? (
                     showGuidedTutorial ? (
                         <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
                     ) : (
-                        <Repetition
-                            curQuestion={question}
-                            recordAnswer={finishPractice}
-                            showChinese={showChinese}
-                            recordAudioUrl={recordAudioUrl}
-                        />
+                        <div> 
+                            <p className="practiceText">
+                                {showChinese ? "这是一个练习题！" : "This a practice question!"}
+                            </p>
+                            <Repetition
+                                curQuestion={question}
+                                recordAnswer={finishPractice}
+                                showChinese={showChinese}
+                                recordAudioUrl={recordAudioUrl}
+                            />
+                        </div>
                     )
                 ) : (
                     <p> type invalid </p>

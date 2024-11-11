@@ -208,7 +208,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                     <IconButton
                         aria-label={finishedListening ? "pause" : "play"}
                         disabled={finishedListening ? true : false}
-                        style={{marginBottom: '0'}}
+                        style={{marginBottom: '0', padding: '0'}}
                         onClick={() => {
                         if (countDown > 0) {
                             setCountDown(0);
@@ -233,9 +233,14 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                             <>Audio playing in {countDown} second(s)</>}</p>
                     ) : (
                         finishedListening ? (
-                            <p className = "actionText">{showChinese ? 
-                                <>现在，尝试重复我所说的话。</> : 
-                                <>Now, try to repeat what I said.</>}</p>
+                            <div> 
+                                <p className = "actionText">{showChinese ? 
+                                    <>现在，尝试重复我所说的话。</> : 
+                                    <>Now, try to repeat what I said.</>}</p>
+                                <p className = "actionText subText">{showChinese ? 
+                                    <>现在，尝试重复我所说的话。</> : 
+                                    <>If you don't know, just say what you remember.</>}</p>
+                            </div>
                         ) : (
                             <p className = "actionText">{showChinese ? 
                                 <>仔细听我说的话。</> : 
@@ -245,7 +250,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                 </div>
                 )}
             </div>
-            <div style={{height: "60px"}} />
+            <div style={{height: finishedListening ? "35px" : "60px"}} />
                 {finishedListening ? (
                     <div className="listeningContainer">
                         <div className="microphoneAnimationContainer">

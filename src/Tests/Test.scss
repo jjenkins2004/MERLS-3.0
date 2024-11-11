@@ -157,6 +157,14 @@ body {
   height: 30px;
 }
 
+.actionText.subText {
+  margin-top: 10px;
+  height: 20px;
+  font-weight: 800;
+  color: rgb(113, 113, 113);
+  font-size: 13px;
+}
+
 .puppyContainer {
   margin-top: -2rem;
   width: 50vw;
@@ -354,4 +362,13 @@ body {
   height: 50px;
   border-radius: 2px !important;
   font-size: 15px !important;
+}
+
+.practiceText {
+  margin-top: -20px;
+  text-align: center;
+  color: red;
+  font-weight: 700;
+  font-size: large;
+  margin-bottom: 10px;
 }
