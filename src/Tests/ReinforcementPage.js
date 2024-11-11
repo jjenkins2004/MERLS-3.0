@@ -40,7 +40,7 @@ const ReinforcementPage = ({showChinese, audioLink, imageLink, setShowReinforcem
       }, [countDown]);
 
       useEffect(() => {
-        if (countDown < 1) {
+        if (countDown < 1 && replay) {
             setReplay(false);
             instructionAudio = new Audio(audioLink);
             instructionAudio.addEventListener("play", () => {

@@ -13,7 +13,6 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
     const [replay, setReplay] = useState(false);
     const [finishedListening, setFinishedListening] = useState(false);
     const [countDown, setCountDown] = useState(3);
-    const [paused, setPaused] = useState(false);
 
     const timeoutRef = useRef(null);
     
@@ -41,7 +40,7 @@ const Instructions = ({showChinese, audioLink, setShowInstructions}) => {
       }, [countDown]);
 
       useEffect(() => {
-        if (countDown < 1) {
+        if (countDown < 1 && replay) {
             setReplay(false);
             instructionAudio = new Audio(audioLink);
             instructionAudio.addEventListener("play", () => {
