@@ -25,6 +25,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
      //microphone recording
      const [recording, setRecording] = useState(false);
      const [stoppedRecording, setStopRecording] = useState(false);
+     const [timedOut, setTimedOut] = useState(false);
      const micRef = useRef(null);
 
      const startRecording = () => {
@@ -149,21 +150,26 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
         setProceed(false);
         setStopRecording(false);
         setCountDown(3);
+        setRecordingTimer(30);
       };
+
+      const timerId = useRef(null);
 
       useEffect(() => {
         if (recordingTimer <= 0) {
             stopRecording();
+            setTimedOut(true);
             return;
         }
-
-        const timerId = setTimeout(() => {
-            setRecordingTimer((prevSeconds) => prevSeconds - 1);
-        }, 1000);
+        if (recording) {
+            timerId.current = setTimeout(() => {
+                setRecordingTimer((prevSeconds) => prevSeconds - 1);
+            }, 1000);
+        }
 
         // Cleanup function to clear the timeout
-        return () => clearTimeout(timerId);
-      }, [recordingTimer])
+        return () => clearTimeout(timerId.current);
+      }, [recordingTimer, recording])
 
       //unmount after onStop is called
       useEffect(() => {
@@ -193,7 +199,9 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
             <div className="indicator">
                 {audioPlaying ? (
                 <div>
-                    <IconButton aria-label="pause" disabled>
+                    <IconButton aria-label="pause" 
+                    style={{marginBottom: '0', padding: '0'}}
+                    disabled>
                     <PauseCircleIcon
                         color="primary"
                         className="pauseButton disabled"
@@ -227,31 +235,46 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
                         />
                         )}
                     </IconButton>
-                    {countDown > 0 ? (
+                    {timedOut ? (
+                        <p className = "actionText">{showChinese ? 
+                            <>录音时间已超过最大限制，请继续进行。</> : 
+                            <>Recording has exceeded the maximum time, please proceed.</>}</p>
+                    ) : countDown > 0 ? (
                          <p className = "actionText">{showChinese ? 
                             <>{countDown} 秒内播放音频</> : 
                             <>Audio playing in {countDown} second(s)</>}</p>
-                    ) : (
-                        finishedListening ? (
-                            <div> 
-                                <p className = "actionText">{showChinese ? 
-                                    <>现在，尝试重复我所说的话。</> : 
-                                    <>Now, try to repeat what I said.</>}</p>
-                                <p className = "actionText subText">{showChinese ? 
-                                    <>现在，尝试重复我所说的话。</> : 
-                                    <>If you don't know, just say what you remember.</>}</p>
-                            </div>
-                        ) : (
+                    ) : finishedListening ? (
+                        <div> 
                             <p className = "actionText">{showChinese ? 
-                                <>仔细听我说的话。</> : 
-                                <>Listen carefully to what I say.</>}</p>
-                        )
+                                <>现在，尝试重复我所说的话。</> : 
+                                <>Now, try to repeat what I said.</>}</p>
+                            <p className = "actionText subText">{showChinese ? 
+                                <>如果你不知道，就说出你记得的。</> : 
+                                <>If you don't know, just say what you remember.</>}</p>
+                        </div>
+                    ) : (
+                        <p className = "actionText">{showChinese ? 
+                            <>仔细听我说的话。</> : 
+                            <>Listen carefully to what I say.</>}</p>
                     )}
                 </div>
                 )}
             </div>
             <div style={{height: finishedListening ? "35px" : "60px"}} />
-                {finishedListening ? (
+                {timedOut ? (
+                    <div className="listeningContainer">
+                        <img
+                            src={microphoneDisabled}
+                            alt="crossed out microhphone"
+                            className="disabledMicrophone"
+                        >
+                        </img>
+                        <p className="listeningText"> {showChinese ? 
+                            <>录音已停止。</> : 
+                            <>Recording has stopped.</>}
+                        </p>
+                    </div>
+                ) : finishedListening ? (
                     <div className="listeningContainer">
                         <div className="microphoneAnimationContainer">
                             <div className="listeningBar"/>

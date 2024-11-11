@@ -78,7 +78,9 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                     <div className="indicator">
                         {audioPlaying ? (
                         <div>
-                            <IconButton aria-label="pause" disabled>
+                            <IconButton aria-label="pause" 
+                            style={{marginBottom: '0', padding: '0'}}
+                            disabled>
                             <PauseCircleIcon
                                 color="primary"
                                 className="pauseButton disabled"
@@ -97,7 +99,7 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                             <IconButton
                                 aria-label={finishedListening ? "pause" : "play"}
                                 disabled={finishedListening ? true : false}
-                                style={{marginBottom: '0'}}
+                                style={{marginBottom: '0', padding: '0'}}
                                 onClick={() => {
                                 if (countDown > 0) {
                                     setCountDown(0);
@@ -125,13 +127,18 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                                     }
                                 />
                             ) : (
-                                <p className = "actionText">{showChinese ? 
-                                    <>现在，尝试重复我所说的话。</> : 
-                                    <>Now, try to repeat what I said.</>}</p>
+                                <div> 
+                                    <p className = "actionText">{showChinese ? 
+                                        <>现在，尝试重复我所说的话。</> : 
+                                        <>Now, try to repeat what I said.</>}</p>
+                                    <p className = "actionText subText">{showChinese ? 
+                                        <>如果你不知道，就说出你记得的。</> : 
+                                        <>If you don't know, just say what you remember.</>}</p>
+                                </div>
                             )}
                         </div>
                         )}
-                    <div style={{height: "60px"}} />
+                    <div style={{height: finishedListening ? "35px" : "60px"}} />
                     </div>
                         {finishedListening ? (
                             <HighlightArea showChinese={showChinese} tipNum={tipNum} setTipNum={setTipNum} toolTipNum={5}
