@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import microphoneDisabled from "../Components/mute.png";
 import microphoneEnabled from "../Components/voice.png";
 import GreenButton from "../Components/GreenButton";
+import redoImg from "../Components/redo.png";
 import { ReactMic } from 'react-mic';
 
 const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
@@ -187,7 +188,14 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl}) =>
       }, [finishedListening])
 
     return(
-        <div>
+        <div style={{position: "relative"}}>
+            {/* <div className="repeatQuestion">
+                <img 
+                    src={redoImg}
+                    alt="redo button"
+                    className="redoImg"
+                />
+            </div> */}
             <div className="reactMicContainer">
                 <ReactMic
                     record={recording}
