@@ -11,7 +11,7 @@ import GreenButton from "../Components/GreenButton";
 
 const Practice = ({setShowPractice, question, type, language, showChinese, recordAudioUrl}) => {
     const [showPracticeQuestion, setShowPracticeQuestion] = useState(true);
-    const [showGuidedTutorial, setShowGuidedTutorial] = useState(false);
+    const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
 
     const finishPractice = () => {
         setShowPracticeQuestion(false);
