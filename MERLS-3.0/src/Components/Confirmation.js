@@ -1,10 +1,13 @@
 import React from "react"
 import "./Confirmation.css"
 
-const Confirmation = ({showConfirmation, showChinese}) => {
+const Confirmation = ({setShowConfirmation, showChinese}) => {
     return (
-        <div>
-
+        <div className="confirmationContainer">
+            <div className="grayOutBackground"/>
+            <div className="confirmationPopup">
+                
+            </div>
         </div>
     )
 };

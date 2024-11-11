@@ -4,6 +4,7 @@ import Question from "./Question";
 import Repetition from "./Repetition";
 import GuidedTutorial from "./GuidedTutorial";
 import AudioPermission from "./AudioPermission";
+import Confirmation from "../Components/Confirmation";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
@@ -80,6 +81,7 @@ const PracticePage = ({showChinese, audioLink, setShowPractice}) => {
     const [finishedListening, setFinishedListening] = useState(true);
     const [countDown, setCountDown] = useState(3);
     const [paused, setPaused] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
     const timeoutRef = useRef(null);
     
@@ -179,11 +181,15 @@ const PracticePage = ({showChinese, audioLink, setShowPractice}) => {
                     textEnglish="Begin Test"
                     textChinese="开始测试"
                     onClick={() => {
-                        if (instructionAudio) {
-                            instructionAudio.pause();
-                        }
-                        setShowPractice(false);
+                        // if (instructionAudio) {
+                        //     instructionAudio.pause();
+                        // }
+                        // setShowPractice(false);
+                        setShowConfirmation(true);
                     }}/>
+            </div>
+            <div>
+                {showConfirmation && <Confirmation />}
             </div>
         </div>
     )
