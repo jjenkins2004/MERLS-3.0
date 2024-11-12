@@ -65,7 +65,7 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
                     <p> type invalid </p>
                 )
             ) : (
-                <PracticePage showChinese={showChinese} audioLink={getAudioLink()} setShowPractice={setShowPractice}/>
+                <PracticePage showChinese={showChinese} audioLink={getAudioLink()} setShowPractice={setShowPractice} type = {type} language = {language}/>
             )
         }
        </div>
@@ -74,7 +74,7 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
 
 let instructionAudio;
 
-const PracticePage = ({showChinese, audioLink, setShowPractice}) => {
+const PracticePage = ({showChinese, audioLink, setShowPractice, type, language}) => {
 
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [replay, setReplay] = useState(false);
@@ -181,15 +181,23 @@ const PracticePage = ({showChinese, audioLink, setShowPractice}) => {
                     textEnglish="Begin Test"
                     textChinese="开始测试"
                     onClick={() => {
-                        // if (instructionAudio) {
-                        //     instructionAudio.pause();
-                        // }
-                        // setShowPractice(false);
                         setShowConfirmation(true);
                     }}/>
             </div>
             <div>
-                {showConfirmation && <Confirmation />}
+                {showConfirmation && 
+                <Confirmation 
+                    showChinese={showChinese}
+                    setShowConfirmation={setShowConfirmation}
+                    confirmAction={() => {
+                        if (instructionAudio) {
+                            instructionAudio.pause();
+                        }
+                        setShowPractice(false);
+                    }}
+                    englishText={`Are you sure you want to begin the ${language === "EN" ? "English" : "Chinese"} ${type === "repetition" ? "repetition" : "matching"} test?`}
+                    chineseText={`您确定要开始${language === "EN" ? "英文" : "中文"}${type === "repetition" ? "重复" : "匹配"}测试吗？`}
+                />}
             </div>
         </div>
     )

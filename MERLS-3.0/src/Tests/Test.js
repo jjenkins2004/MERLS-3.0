@@ -22,7 +22,7 @@ const Test = ({ type, language }) => {
   const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
   const [showPractice, setShowPractice] = useState(true);
   const [showAudioPermission, setShowAudioPermission] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(false);
   const [showChinese, setShowChinese] = useState(false);
   const [reinforcementID, setReinforcementID] = useState(0);
   const [audioUrls, setAudioUrls] = useState({});
