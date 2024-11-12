@@ -20,10 +20,9 @@ const Test = ({ type, language }) => {
   const [curId, setCurId] = useState(1);
   const [answers, setAnswers] = useState({});
   const [showReinforcementPage, setShowReinforcementPage] = useState(false);
-  const [showGuidedTutorial, setShowGuidedTutorial] = useState(true);
   const [showPractice, setShowPractice] = useState(true);
   const [showAudioPermission, setShowAudioPermission] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
   const [reinforcementID, setReinforcementID] = useState(0);
   const [audioUrls, setAudioUrls] = useState({});
@@ -31,9 +30,10 @@ const Test = ({ type, language }) => {
   const navigate = useNavigate();
 
   let ReinforcementAudio = [
-    "https://sites.usc.edu/heatlab/files/2024/10/English-1-4-way-through-the-test-w-audio.m4a",
-    "https://sites.usc.edu/heatlab/files/2024/10/English-Midway-through-the-test-w-audio.m4a",
-    "https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a"]
+    ["https://sites.usc.edu/heatlab/files/2024/10/English-1-4-way-through-the-test-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-1-4-way-through-the-test-w-audio.m4a"],
+    ["https://sites.usc.edu/heatlab/files/2024/10/English-Midway-through-the-test-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Midway-through-the-test-w-audio.m4a"],
+    ["https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-3-4-way-through-the-test-w-audio.m4a"],
+    ["https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-End-of-the-test-narration-w-audio.m4a"]]
 
   // record answer and go to next question
   const recordAnswer = (questionId, answerId) => {
@@ -140,12 +140,11 @@ const Test = ({ type, language }) => {
     }
     else if (type === "repetition") {
       audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR-场景介绍.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-Introducing-Scenario.m4a";
-      setShowAudioPermission(false);
+      setShowAudioPermission(true);
     }
   }, [type, language]);
 
-  // let completed = curId === questions.length;
-  let completed = true;
+  let completed = curId === questions.length;
 
   if (questions.length > 0) {
     return (
@@ -159,7 +158,7 @@ const Test = ({ type, language }) => {
       </AppBar>
         <Container className="testContainer">
           {completed ? (
-            <CompletionPage showChinese={showChinese} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" submitAnswers={submitAnswers} audioLink={language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-End-of-the-test-narration-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a"}/>
+            <CompletionPage showChinese={showChinese} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" submitAnswers={submitAnswers} audioLink={ReinforcementAudio[3][language === "EN" ? 0 : 1]}/>
           ) : showReinforcementPage ? (
             <ReinforcementPage showChinese={showChinese} audioLink={ReinforcementAudio[reinforcementID]} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" setShowReinforcement={setShowReinforcementPage}/>
           ) : showAudioPermission ? (
