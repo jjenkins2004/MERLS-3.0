@@ -35,6 +35,8 @@ const Test = ({ type, language }) => {
     ["https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-3-4-way-through-the-test-w-audio.m4a"],
     ["https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-End-of-the-test-narration-w-audio.m4a"]]
 
+  let audioLink = useRef("");
+
   // record answer and go to next question
   const recordAnswer = (questionId, answerId) => {
     // show the reinforcement page when the test is half through
@@ -131,8 +133,6 @@ const Test = ({ type, language }) => {
     fetchQuestionList();
   }, []);
 
-  let audioLink = useRef("");
-
   useEffect(() => {
     if (type === "matching") {
       audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-test-instruction-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/English-test-instruction-w-audio.m4a"
@@ -143,6 +143,14 @@ const Test = ({ type, language }) => {
       setShowAudioPermission(true);
     }
   }, [type, language]);
+
+  useEffect(() => {
+    if (type === "matching" && language === "CN" && curId === 29) {
+      audioLink.current = "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Quantifier-test-instruction-w-audio.m4a";
+      setShowInstructions(true);
+      setShowPractice(true);
+    }
+  }, [curId])
 
   let completed = curId === questions.length;
 
@@ -175,8 +183,8 @@ const Test = ({ type, language }) => {
             <Practice 
             setShowPractice={setShowPractice}
             type={type}
-            language={language}
-            question={questions[0]}
+            language={curId > 1 ? "second" : language}
+            question={questions[curId-1]}
             showChinese={showChinese}
             recordAudioUrl={recordAudioUrl}/>
           ) : type === "matching" ? (

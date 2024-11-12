@@ -70,8 +70,8 @@ const LanguageSelection = () => {
           disabled={chineseListeningCompleted}
         >
           {showChinese ? 
-            <>汉语听力</> :
-            <>Chinese Listening</>
+            <>中文配對</> :
+            <>Chinese Matching</>
           }
         </button>
         <button
@@ -90,8 +90,8 @@ const LanguageSelection = () => {
           disabled={englishListeningCompleted}
         >
           {showChinese ? 
-            <>英语听力</> :
-            <>English Listening</>
+            <>英文配對</> :
+            <>English Matching</>
           }
         </button>
         <button

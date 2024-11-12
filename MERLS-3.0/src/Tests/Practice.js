@@ -22,6 +22,9 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
         if (type === "repetition") {
             return language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR练习完成后.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-once-the-practice-is-completed.m4a";
         }
+        else if (language === "second") {
+            return "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Transition-to-the-real-test-items-w-audio-2.m4a"
+        }
         else if (language === "EN") {
             return "https://sites.usc.edu/heatlab/files/2024/10/English-Transition-to-the-real-test-items-w-audio-.m4a";
         }
@@ -178,12 +181,20 @@ const PracticePage = ({showChinese, audioLink, setShowPractice, type, language})
             <div className="submitButtonContainer">
                 <GreenButton 
                     showChinese={showChinese} 
-                    textEnglish="Begin Test"
+                    textEnglish={language === "second" ? "Continue" : "Begin Test"}
                     textChinese="开始测试"
                     disabled={!finishedListening}
                     onClick={() => {
                         if (finishedListening) {
-                            setShowConfirmation(true);
+                            if (language === "second") {
+                                if (instructionAudio) {
+                                    instructionAudio.pause();
+                                }
+                                setShowPractice(false);
+                            }
+                            else {
+                                setShowConfirmation(true);
+                            }
                         }
                     }}/>
             </div>
