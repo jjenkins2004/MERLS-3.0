@@ -383,3 +383,15 @@ body {
   width: 30px;
   height: auto;
 }
+
+.confettiContainer {
+  position: fixed;
+  padding: 10px;
+  bottom: 0;
+  left: 0;
+}
+
+.confettiButton {
+  background-color: rgb(232, 154, 252) !important;
+  border-color: rgb(231, 137, 255) !important;
+}

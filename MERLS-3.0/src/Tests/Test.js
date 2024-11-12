@@ -13,6 +13,7 @@ import Practice from "./Practice";
 import TranslationButton from "../Components/TranslationButton";
 import AudioPermission from "./AudioPermission";
 import ReinforcementPage from "./ReinforcementPage";
+import CompletionPage from "./CompletionPage";
 
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
@@ -32,8 +33,7 @@ const Test = ({ type, language }) => {
   let ReinforcementAudio = [
     "https://sites.usc.edu/heatlab/files/2024/10/English-1-4-way-through-the-test-w-audio.m4a",
     "https://sites.usc.edu/heatlab/files/2024/10/English-Midway-through-the-test-w-audio.m4a",
-    "https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a",
-    "https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a"]
+    "https://sites.usc.edu/heatlab/files/2024/10/English-3-4-way-through-the-test-w-audio.m4a"]
 
   // record answer and go to next question
   const recordAnswer = (questionId, answerId) => {
@@ -144,7 +144,8 @@ const Test = ({ type, language }) => {
     }
   }, [type, language]);
 
-  let completed = curId === questions.length;
+  // let completed = curId === questions.length;
+  let completed = true;
 
   if (questions.length > 0) {
     return (
@@ -158,33 +159,7 @@ const Test = ({ type, language }) => {
       </AppBar>
         <Container className="testContainer">
           {completed ? (
-            <div>
-              <div className="indicator">
-                <p> {showChinese ? 
-                <>太棒了！题目都完成了！</> : 
-                <>Hooray! All questions completed!</>}</p>
-              </div>
-              <div className="completionContainer">
-                <img
-                  className="completionImg"
-                  src="https://previews.123rf.com/images/mariaprischepa/mariaprischepa1807/mariaprischepa180700011/105938717-bright-abstract-elements-set.jpg"
-                  alt="completion celebration"
-                />
-                <div className="completionMessage">
-                {showChinese ? 
-                <>万岁！您已完成{language === "CN" ? "中文" : "英语"}部分，请按下面的“提交”记录您的答案！</> : 
-                <>Hooray! You've completed the{" "}
-                {language === "CN" ? "Chinese" : "English"} section, press
-                "Submit" below to record your answers!</>}
-                  
-                </div>
-                <Button variant="contained" onClick={submitAnswers}>
-                {showChinese ? 
-                <>提交</> : 
-                <>Submit</>}
-                </Button>
-              </div>
-            </div>
+            <CompletionPage showChinese={showChinese} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" submitAnswers={submitAnswers} audioLink={language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-End-of-the-test-narration-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/10/English-End-of-the-test-narration-w-audio.m4a"}/>
           ) : showReinforcementPage ? (
             <ReinforcementPage showChinese={showChinese} audioLink={ReinforcementAudio[reinforcementID]} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" setShowReinforcement={setShowReinforcementPage}/>
           ) : showAudioPermission ? (

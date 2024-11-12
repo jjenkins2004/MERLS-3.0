@@ -78,7 +78,7 @@ const PracticePage = ({showChinese, audioLink, setShowPractice, type, language})
 
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [replay, setReplay] = useState(false);
-    const [finishedListening, setFinishedListening] = useState(true);
+    const [finishedListening, setFinishedListening] = useState(false);
     const [countDown, setCountDown] = useState(3);
     const [paused, setPaused] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -180,8 +180,11 @@ const PracticePage = ({showChinese, audioLink, setShowPractice, type, language})
                     showChinese={showChinese} 
                     textEnglish="Begin Test"
                     textChinese="开始测试"
+                    disabled={!finishedListening}
                     onClick={() => {
-                        setShowConfirmation(true);
+                        if (finishedListening) {
+                            setShowConfirmation(true);
+                        }
                     }}/>
             </div>
             <div>
