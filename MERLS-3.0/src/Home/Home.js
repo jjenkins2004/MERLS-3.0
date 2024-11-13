@@ -51,7 +51,7 @@ const Home = () => {
           {showChineseInstruction ? "家长介绍视频" : "Parent Instruction Video"}
         </h3>
         <YouTube
-          videoId={showChineseInstruction ? "wRf7l93Xvds" : "o0yBbHtLHGY"} // replaced with parent instruction's from MERLS YouTube video ID
+          videoId={showChineseInstruction ? "wRf7l93Xvds" : "iklkk62J6-Q"} // replaced with parent instruction's from MERLS YouTube video ID
           onEnd={() => onVideoEnd(1)}
           opts={{
             playerVars: {
