@@ -15,6 +15,8 @@ import AudioPermission from "./AudioPermission";
 import ReinforcementPage from "./ReinforcementPage";
 import CompletionPage from "./CompletionPage";
 
+const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
+
 const Test = ({ type, language }) => {
   const [questions, setQuestions] = useState([]);
   const [curId, setCurId] = useState(1);
@@ -25,7 +27,7 @@ const Test = ({ type, language }) => {
   const [showInstructions, setShowInstructions] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
   const [reinforcementID, setReinforcementID] = useState(0);
-  const [audioUrls, setAudioUrls] = useState({});
+  const [audioBlobs, setAudioBlobs] = useState({});
 
   const navigate = useNavigate();
 
@@ -54,18 +56,55 @@ const Test = ({ type, language }) => {
     setAnswers({ ...answers, [questionId]: answerId });
   };
 
-  const recordAudioUrl = (questionId, s3Url) => {
-    if (!questionId || !s3Url) {
-      console.error('Missing required parameters:', { questionId, s3Url });
+  const recordAudioBlob = (questionId, blob) => {
+    if (!questionId || !blob) {
+      console.error('Missing required parameters:', { questionId, blob });
       return;
     }
-    const truncatedUrl = s3Url.split('?')[0];
 
-    setAudioUrls(prev => {
-      const updatedUrls = { ...prev, [questionId]: truncatedUrl };
-      console.log('Current Audio URLs:', updatedUrls);
-      return updatedUrls;
+    setAudioBlobs(prev => {
+      const updatedBlobs = { ...prev, [questionId]: blob };
+      console.log('Current Audio Blobs:', Object.keys(updatedBlobs));
+      return updatedBlobs;
     });
+  };
+
+  const uploadBlobToLambda = async (blob, questionId) => {
+    try {
+      // Convert blob to base64
+      const reader = new FileReader();
+      const base64Data = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob.blob);
+      });
+
+      const requestBody = {
+        fileType: 'audio/webm',
+        audioData: base64Data,
+        userId: localStorage.getItem("username"),
+        questionId: questionId
+      };
+
+      const response = await fetch(LAMBDA_API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.url;
+    } catch (error) {
+      console.error('Upload error:', error);
+      throw error;
+    }
   };
 
   const submitAnswers = () => {
@@ -85,6 +124,19 @@ const Test = ({ type, language }) => {
             audioSubmissionList: null,
           };
         } else if (type === "repetition") {
+          const audioUrls = {};
+          for (const [questionId, blob] of Object.entries(audioBlobs)) {
+            try {
+              const s3UrlMatch = await uploadBlobToLambda(blob, questionId);
+              if (s3UrlMatch) {
+                audioUrls[questionId] = s3UrlMatch.split('?')[0];
+              } else {
+                console.error('Invalid S3 URL format:', s3UrlMatch);
+              }
+            } catch (error) {
+              console.error(`Failed to upload audio for question ${questionId}:`, error);
+            }
+          }
           requestBody = {
             participantId: username,
             audioSubmissionList: audioUrls,
@@ -186,7 +238,7 @@ const Test = ({ type, language }) => {
             language={curId > 1 ? "second" : language}
             question={questions[curId-1]}
             showChinese={showChinese}
-            recordAudioUrl={recordAudioUrl}/>
+            recordAudioBlob={recordAudioBlob}/>
           ) : type === "matching" ? (
             <Question
               curQuestion={questions[curId]}
@@ -198,7 +250,7 @@ const Test = ({ type, language }) => {
                 curQuestion={questions[curId]}
                 recordAnswer={recordAnswer}
                 showChinese={showChinese}
-                recordAudioUrl={recordAudioUrl}
+                recordAudioBlob={recordAudioBlob}
               />
           ) : (
             <p>page doesn't exist</p>
