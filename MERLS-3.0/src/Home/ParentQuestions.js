@@ -13,7 +13,7 @@ import { CheckOutlined } from "@mui/icons-material";
 
 const ParentQuestions = () => {
   const location = useLocation();
-  const navigate = useLocation();
+  const navigate = useNavigate();
   const [answers, setAnswers] = useState({
     answer1: null,
     answer2: null,
@@ -156,7 +156,8 @@ const ParentQuestions = () => {
             textChinese={"后退"}
             onClick={() => {
               const url = `/?cn-zw=${showQuestionInChinese ? "true" : "false"}`;
-              window.location.href = url;
+              navigate(url);
+              
             }}
           />
         </div>
