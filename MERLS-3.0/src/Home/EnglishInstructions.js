@@ -17,11 +17,11 @@ const EnglishInstructions = () => {
             You will need a computer or tablet{" "}
             <span className="redHighlight">connected to the internet</span> in a
             quiet room without distractions.{" "}
-            <span className="redHighlight">Google Chrome</span> and{" "}
-            <span className="redHighlight">Microsoft Edge</span>
-            {" "}browsers are recommended for testing on your device. If you are
-            using <span className="redHighlight">Safari</span> please see the
-            instruction.
+            // <span className="redHighlight">Google Chrome</span> and{" "}
+            // <span className="redHighlight">Microsoft Edge</span>
+            // {" "}browsers are recommended for testing on your device. If you are
+            // using <span className="redHighlight">Safari</span> please see the
+            // instruction.
           </li>
           <li>
             Make sure the device’s audio is set to a{" "}
