@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./TestSelection.css";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import TranslationButton from "../Components/TranslationButton";
 
 const LanguageSelection = () => {
+  const navigate = useNavigate();
   const [englishListeningCompleted, setEnglishListeningCompleted] = useState(false);
   const [chineseListeningCompleted, setChineseListeningCompleted] = useState(false);
   const [englishRepetitionCompleted, setEnglishRepetitionCompleted] = useState(false);
   const [chineseRepetitionCompleted, setChineseRepetitionCompleted] = useState(false);
   const [selectedButton, setSelectedButton] = useState(0);
   const [showChinese, setShowChinese] = useState(true);
-  const [itemSelected, setItemSelected] = useState(false);
 
   const linkLocations = ["/chinese-test", "/english-test", "/chinese-repetition-test", "/english-repetition-test"];
 
@@ -136,7 +137,7 @@ const LanguageSelection = () => {
           className = {selectedButton === 0 ? "selectionButton selectionDisabled": "selectionButton selectionEnabled"}
           disabled = {selectedButton === 0}
           onClick = {() => {
-            window.location.href = linkLocations[selectedButton-1];
+            navigate(linkLocations[selectedButton-1]);
           }}
         >
           {showChinese ?

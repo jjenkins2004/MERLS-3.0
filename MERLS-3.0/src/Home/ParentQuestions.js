@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import "./Home.css";
@@ -13,6 +13,7 @@ import { CheckOutlined } from "@mui/icons-material";
 
 const ParentQuestions = () => {
   const location = useLocation();
+  const navigate = useLocation();
   const [answers, setAnswers] = useState({
     answer1: null,
     answer2: null,
@@ -56,8 +57,10 @@ const ParentQuestions = () => {
       answers.answer6 === false &&
       answers.answer7 === true
     ) {
-      const url = `/login?cn-zw=${showQuestionInChinese ? "true" : "false"}`;
-      window.location.href = url;
+      const queryParam = `?cn-zw=${showQuestionInChinese ? "true" : "false"}`;
+      navigate(`/login${queryParam}`);
+      // const url = `/login?cn-zw=${showQuestionInChinese ? "true" : "false"}`;
+      // window.location.href = url;
     } else {
       alert(
         showQuestionInChinese

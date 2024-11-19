@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import YouTube from "react-youtube";
 import "./Home.css";
@@ -13,6 +13,7 @@ const Home = () => {
   const [childInstructionPlayed, setChildInstructionPlayed] = useState(false);
   const [showChineseInstruction, setShowChineseInstruction] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -113,10 +114,8 @@ const Home = () => {
         textEnglish={"Next"}
         textChinese={"下一步"}
         onClick={() => {
-          const url = `/parent-questions?cn-zw=${
-            showChineseInstruction ? "true" : "false"
-          }`;
-          window.location.href = url;
+          const queryParam = `?cn-zw=${showChineseInstruction ? "true" : "false"}`;
+          navigate(`/parent-questions${queryParam}`);
         }}
       />
     </div>

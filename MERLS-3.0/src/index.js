@@ -7,11 +7,11 @@ import ParentQuestions from "./Home/ParentQuestions";
 import TestSeletion from "./Test Selection/TestSelection";
 import UserValidation from "./Home/UserValidation";
 import ExportResult from "./ExportResult";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
+  <HashRouter>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/parent-questions" element={<ParentQuestions />} />
@@ -23,5 +23,5 @@ root.render(
       <Route path="/english-repetition-test" element={<Test type = "repetition" language="EN" />} />
       <Route path="download-report" element={<ExportResult />} />
     </Routes>
-  </BrowserRouter>
+  </HashRouter>
 );
