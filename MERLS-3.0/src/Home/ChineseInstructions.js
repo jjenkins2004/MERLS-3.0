@@ -12,11 +12,7 @@ const ChineseInstructions = () => {
         <ul>
           <li>
             请您确保您和孩子在安静的房间里。请确保您的电脑或平板设备已
-            <span className="redHighlight">连接互联网</span>，我们推荐您使用
-            <span className="redHighlight">Google Chrome</span>或
-            <span className="redHighlight">Microsoft Edge</span>
-            浏览器打开实验网页，如果您准备使用
-            <span className="redHighlight">Safari</span>浏览器，请您点开设置说明
+            <span className="redHighlight">连接互联网</span>。
           </li>
           <li>
             请确定您的设备已调试到
