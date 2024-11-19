@@ -1,5 +1,6 @@
 {
   "name": "merls",
+  "homepage": "https://heat-lab.github.io",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
