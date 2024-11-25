@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import "./TestSelection.css";
 import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
 import TranslationButton from "../Components/TranslationButton";
 
 const LanguageSelection = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [englishListeningCompleted, setEnglishListeningCompleted] = useState(false);
   const [chineseListeningCompleted, setChineseListeningCompleted] = useState(false);
   const [englishRepetitionCompleted, setEnglishRepetitionCompleted] = useState(false);
@@ -16,6 +16,11 @@ const LanguageSelection = () => {
 
   const linkLocations = ["/chinese-test", "/english-test", "/chinese-repetition-test", "/english-repetition-test"];
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const languageParam = params.get("cn-zw");
+    setShowChinese(languageParam === "true");
+  }, [location]);
 
   useEffect(() => {
     const username = localStorage.getItem("username");

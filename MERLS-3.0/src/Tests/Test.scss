@@ -41,7 +41,7 @@ body {
     margin-bottom: 40px;
   }
   .pauseButton {
-    font-size: 4rem;
+    font-size: 70px;
     &.disabled {
       opacity: 0.5;
     }
@@ -60,18 +60,18 @@ body {
     font-size: 1rem;
     margin: 2rem 0;
   }
-  
+
   .testTitle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 35px;
-  font-family: sans-serif;
-  font-size: 1.7rem;
-  font-weight: bold;
-  color: rgb(203, 224, 253);
-  margin-bottom: 1rem;
-  margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 35px;
+    font-family: sans-serif;
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: rgb(203, 224, 253);
+    margin-bottom: 1rem;
+    margin-top: 0;
   }
 }
 
@@ -96,11 +96,13 @@ body {
 }
 
 .imageContainer {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 30px;
+  margin-right: 30px;
   margin-bottom: 20px;
   width: 20%;
-  height: 12rem;
+  height: 15vw !important;
+  padding: 30px 5px;
+  height: fit-content;
   display: flex;
   justify-content: center;
   box-shadow: 3px 3px 10px 5px rgba(0, 0, 0, 0.3);
@@ -125,8 +127,7 @@ body {
 }
 
 .image {
-  max-width: 100%;
-  height: 12rem;
+  width: 100%;
   object-fit: contain;
   transition: transform 0.2s ease, outline-color 0.2s ease;
 }
@@ -148,7 +149,7 @@ body {
 }
 
 .imageSelectedOverlay.visible {
-  opacity: 1; 
+  opacity: 1;
   background-color: rgba(0, 186, 50, 0.15);
 }
 
@@ -230,7 +231,7 @@ body {
     transform: scale(1);
   }
   40% {
-      transform: scale(0.7);
+    transform: scale(0.7);
   }
   100% {
     transform: scale(1);
@@ -343,7 +344,7 @@ body {
   margin: 0px 20px;
   width: 60px;
   height: 60px;
-  transition: transform 0.2s ease
+  transition: transform 0.2s ease;
 }
 
 .browserIcon:hover {
@@ -365,7 +366,6 @@ body {
 }
 
 .practiceText {
-  margin-top: -20px;
   text-align: center;
   color: red;
   font-weight: 700;
@@ -394,4 +394,48 @@ body {
 .confettiButton {
   background-color: rgb(232, 154, 252) !important;
   border-color: rgb(231, 137, 255) !important;
+}
+
+@media (max-width: 1000px) {
+  .imageContainer {
+    margin-left: 15px;
+    margin-right: 15px;
+    width: 25%;
+  }
+}
+
+@media (max-width: 700px) {
+  .imageContainer {
+    margin-left: 7px;
+    margin-right: 7px;
+  }
+}
+
+@media (max-height: 600px) {
+  #testPage {
+    #progress {
+      height: 14px;
+      margin: 0 auto 10px;
+    }
+
+    .testContainer {
+      margin-top: -50px;
+    }
+
+    .pauseButton {
+      font-size: 50px;
+    }
+  }
+
+  .imageContainer {
+    padding: 15px 5px;
+  }
+
+  .actionText {
+    font-size: 23px;
+  }
+}
+
+@media (max-height: 500px) {
+
 }

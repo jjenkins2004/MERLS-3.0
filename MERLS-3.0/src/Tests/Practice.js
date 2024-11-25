@@ -183,9 +183,9 @@ const PracticePage = ({showChinese, audioLink, setShowPractice, type, language})
                     showChinese={showChinese} 
                     textEnglish={language === "second" ? "Continue" : "Begin Test"}
                     textChinese="开始测试"
-                    disabled={!finishedListening}
+                    disabled={/*!finishedListening*/ false}
                     onClick={() => {
-                        if (finishedListening) {
+                        if (/*finishedListening*/ true) {
                             if (language === "second") {
                                 if (instructionAudio) {
                                     instructionAudio.pause();
