@@ -168,7 +168,7 @@ body {
 
 .puppyContainer {
   margin-top: -2rem;
-  width: 50vw;
+  width: 40vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,6 +186,7 @@ body {
   justify-content: center;
   flex-direction: column;
   height: fit-content;
+  margin-top: 40px;
 }
 
 .disabledMicrophone {
@@ -423,7 +424,7 @@ body {
     }
 
     .pauseButton {
-      font-size: 50px;
+      font-size: 55px;
     }
   }
 
@@ -432,7 +433,15 @@ body {
   }
 
   .actionText {
-    font-size: 23px;
+    font-size: 22px;
+  }
+
+  .disabledMicrophone {
+    width: 80px;
+  }
+
+  .enabledMicrophone {
+    width: 75px;
   }
 }
 

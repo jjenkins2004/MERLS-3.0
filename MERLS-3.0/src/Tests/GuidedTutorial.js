@@ -138,7 +138,6 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                             )}
                         </div>
                         )}
-                    <div style={{height: finishedListening ? "35px" : "60px"}} />
                     </div>
                         {finishedListening ? (
                             <HighlightArea showChinese={showChinese} tipNum={tipNum} setTipNum={setTipNum} toolTipNum={5}
