@@ -7,11 +7,15 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
+import TranslationButton from "./Components/TranslationButton";
+import BlueButton from "./Components/BlueButton";
 import "./ExportResult.scss";
+import "./Home/Home.css";
 
 const ExportResult = () => {
   const [username, setUsername] = useState(null);
   const [language, setLanguage] = useState(null);
+  const [showChinese, setShowChinese] = useState(true);
 
   const alertExportFailure = () => {
     alert(
@@ -41,8 +45,15 @@ const ExportResult = () => {
   };
   return (
     <div className="exportResult">
-      <AppBar position="fixed" sx={{ height: "7.5rem" }}>
-        <h2>输入用户名并选择一门语言后，点击Download下载报告</h2>
+     <AppBar className="titleContainer">
+        <h1 className="title">
+          {showChinese ? <>输入用户名并选择一门语言后，点击Download下载报告</> : <>Enter Username, select language, then click Download to download report</>}
+        </h1>
+        <div style={{height: "20px"}}></div>
+        <TranslationButton
+          showChinese={showChinese}
+          setShowChinese={setShowChinese}
+        />
       </AppBar>
       <div className="reportAttributes">
         <TextField
@@ -59,20 +70,22 @@ const ExportResult = () => {
                 className="exportLanguageSelection"
                 onChange={(e) => setLanguage(e.target.value)}
               >
-                <span>请选择想要下载报告的语言：</span>
+                <span>{showChinese ? "请选择想要下载报告的语言： " : "Please select the language you want to download the report in: "}</span>
                 <FormControlLabel value={"EN"} control={<Radio />} label="EN" />
                 <FormControlLabel value={"CN"} control={<Radio />} label="CN" />
               </RadioGroup>
             </li>
           </ol>
         </FormControl>
-        <Button
-          variant="contained"
+        <BlueButton
+          showChinese={showChinese}
+          textEnglish={"Download"}
+          textChinese={"下载"}
           onClick={downloadReport}
           disabled={!(username && language)}
         >
-          Download
-        </Button>
+
+        </BlueButton>
       </div>
     </div>
   );

@@ -204,7 +204,8 @@ const Test = ({ type, language }) => {
     }
   }, [curId])
 
-  let completed = curId === questions.length;
+  /*let completed = curId === questions.length;*/
+  let completed = true;
 
   if (questions.length > 0) {
     return (
