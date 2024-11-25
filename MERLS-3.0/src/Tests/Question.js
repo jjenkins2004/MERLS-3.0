@@ -188,9 +188,9 @@ const Question = ({ curQuestion, recordAnswer, showChinese }) => {
             showChinese={showChinese} 
             textEnglish="Next"
             textChinese="下一个"
-            disabled={selectedIdx === -1 /*|| disableOption*/}
+            disabled={selectedIdx === -1 || disableOption}
             onClick={() => {
-              if (selectedIdx !== -1 /*&& !disableOption*/) {
+              if (selectedIdx !== -1 && !disableOption) {
                 gotoNextQuestion(selectedIdx);
                 setSelectedIdx(-1);
               }
