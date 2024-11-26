@@ -63,13 +63,10 @@ const Question = ({ curQuestion, recordAnswer, showChinese }) => {
             return prevPlayCount;
           });
         });
-        try {
-          questionAudio.play();
-        }
-        catch (error) {
-          console.log(error);
+        questionAudio.play().catch((error) => {
+          alert("error in playing question.", error);
           setDisableOption(false);
-        }
+        });
       }
     }
 

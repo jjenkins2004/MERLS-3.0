@@ -221,7 +221,7 @@ const Test = ({ type, language }) => {
           {completed ? (
             <CompletionPage showChinese={showChinese} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" submitAnswers={submitAnswers} audioLink={ReinforcementAudio[3][language === "EN" ? 0 : 1]}/>
           ) : showReinforcementPage ? (
-            <ReinforcementPage showChinese={showChinese} audioLink={ReinforcementAudio[reinforcementID]} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" setShowReinforcement={setShowReinforcementPage}/>
+            <ReinforcementPage showChinese={showChinese} audioLink={ReinforcementAudio[reinforcementID][language === "EN" ? 0 : 1]} imageLink="https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif" setShowReinforcement={setShowReinforcementPage}/>
           ) : showAudioPermission ? (
             <AudioPermission setShowAudioPermission = {setShowAudioPermission} showChinese = {showChinese}/>
           ) : showInstructions ? (
