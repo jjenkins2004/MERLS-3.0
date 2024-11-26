@@ -21,26 +21,42 @@ public class SubmissionsDB {
 	public static int postSubmissionsToDB (Submission event) throws SQLException, ClassNotFoundException {
 		Connection connection = DriverManager.getConnection(url, username, password);
 		PreparedStatement ps = null;
-		
+
 		String participantId = event.getParticipantId();
 		boolean isEN = event.isEN;
 		boolean isAudioTest = event.isAudioTest();
 		log.info("Received submission - participantId:" + participantId + " isEN:"+isEN+" isAudioTest: "+ isAudioTest);
-		
+
 		try {
 			if (isAudioTest) {
 				log.info("audio request");
-				String query = "INSERT INTO PUBLIC.AUDIO_SUBMISSIONS(participant_id, question_id, audio_url, is_EN) " +
-						"VALUES(?, ?, ?, ?)";
+
+				String repetitionTable = isEN ? "english_repetition" : "chinese_repetition";
+				String transcriptQuery = "SELECT question_transcript FROM PUBLIC." + repetitionTable + " WHERE question_id = ?";
+				String query = "INSERT INTO PUBLIC.AUDIO_SUBMISSIONS(participant_id, question_id, audio_url, is_EN, question_transcript) " +
+						"VALUES(?, ?, ?, ?, ?)";
 
 				HashMap<Integer, String> audioSubmissions = event.getAudioSubmissionList();
 				if (audioSubmissions != null && !audioSubmissions.isEmpty()) {
 					for (Map.Entry<Integer, String> entry : audioSubmissions.entrySet()) {
+						int questionId = entry.getKey();
+
+						String questionTranscript = null;
+						try (PreparedStatement transcriptPs = connection.prepareStatement(transcriptQuery)) {
+							transcriptPs.setInt(1, questionId);
+							try (ResultSet rs = transcriptPs.executeQuery()) {
+								if (rs.next()) {
+									questionTranscript = rs.getString("question_transcript");
+								}
+							}
+						}
+
 						ps = connection.prepareStatement(query);
 						ps.setString(1, participantId);
-						ps.setInt(2, entry.getKey());      // questionId
+						ps.setInt(2, questionId);
 						ps.setString(3, entry.getValue());  // audio URL
 						ps.setBoolean(4, isEN);
+						ps.setString(5, questionTranscript);
 						ps.executeUpdate();
 						log.info("Inserted audio submission for question: " + entry.getKey());
 					}
@@ -73,17 +89,17 @@ public class SubmissionsDB {
 			connection.close();
 		}
 	}
-	
+
 	// TO TEST and UPDATE table names once Questions tables are updated
 	// method to check if participant's answer is correct
 	public static boolean isCorrect(int questionId, int userAnswer, boolean isEN, Connection conn) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		int correctAnswer = 0;
-		
+
 		String tableName = isEN ? "english_questions" : "chinese_questions";
 		String query = "SELECT answer FROM " + tableName + " WHERE question_id = '" + questionId + "'";
-		
+
 		// retrieve correct answer from DB
 		try {
 			// ps = conn.prepareStatement(query);
