@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Tests/Test.scss";
 import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
