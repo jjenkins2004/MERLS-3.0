@@ -44,7 +44,7 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                 }, 1000);
                 } else {
                     if (tipNum > 4) {
-                        questionAudio = new Audio("https://bpb-us-w1.wpmucdn.com/sites.usc.edu/dist/b/837/files/2024/10/SRThe-big-football-player-washed-the-car-with-the-hose.m4a");
+                        questionAudio = new Audio("https://sites.usc.edu/heatlab/files/2024/11/SR-当你看到麦克风时.m4a");
                         questionAudio.addEventListener("play", () => {
                         setAudioPlaying(true);
                         });

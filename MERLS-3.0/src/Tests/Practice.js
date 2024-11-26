@@ -20,7 +20,7 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
 
     const getAudioLink = () => {
         if (type === "repetition") {
-            return language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR练习完成后.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-once-the-practice-is-completed.m4a";
+            return language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR-完成练习后.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-Once-the-practice-is-completed.m4a";
         }
         else if (language === "second") {
             return "https://sites.usc.edu/heatlab/files/2024/11/RV-Transition-to-the-real-test-items-w-audio-2.m4a"
@@ -29,7 +29,7 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
             return "https://sites.usc.edu/heatlab/files/2024/11/RV-English-Transition-to-the-real-test-items-w-audio.m4a";
         }
         else {
-            return "https://bpb-us-w1.wpmucdn.com/sites.usc.edu/dist/b/837/files/2024/11/RV-Transition-to-the-real-test-items-w-audio.m4a";
+            return "https://sites.usc.edu/heatlab/files/2024/11/RV-Transition-to-the-real-test-items-w-audio.m4a";
         }
     }
 

@@ -192,7 +192,7 @@ const Test = ({ type, language }) => {
       
     }
     else if (type === "repetition") {
-      audioLink.current = language === "CN" ? "https://bpb-us-w1.wpmucdn.com/sites.usc.edu/dist/b/837/files/2024/11/RV-Mandarin-test-instruction-w-audio.m4a" : "https://bpb-us-w1.wpmucdn.com/sites.usc.edu/dist/b/837/files/2024/11/RV-English-test-instruction-w-audio.m4a";
+      audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/SR-介绍场景.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/SR-Introducing-Scenario.m4a";
       setShowAudioPermission(true);
     }
   }, [type, language]);
