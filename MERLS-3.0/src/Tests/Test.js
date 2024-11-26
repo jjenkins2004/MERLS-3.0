@@ -53,6 +53,7 @@ const Test = ({ type, language }) => {
       setReinforcementID(2);
     }
     setCurId(curId + 1);
+    console.log("question id:", curId);
     setAnswers({ ...answers, [questionId]: answerId });
   };
 
@@ -187,7 +188,7 @@ const Test = ({ type, language }) => {
 
   useEffect(() => {
     if (type === "matching") {
-      audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-test-instruction-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/RV-English-test-instruction-w-audio.m4a"
+      audioLink.current = language === "CN" ? "https://sites.usc.edu/heatlab/files/2024/11/RV-Mandarin-test-instruction-w-audio.m4a" : "https://sites.usc.edu/heatlab/files/2024/11/RV-English-test-instruction-w-audio.m4a"
       
     }
     else if (type === "repetition") {
@@ -198,7 +199,7 @@ const Test = ({ type, language }) => {
 
   useEffect(() => {
     if (type === "matching" && language === "CN" && curId === 29) {
-      audioLink.current = "https://sites.usc.edu/heatlab/files/2024/10/Mandarin-Quantifier-test-instruction-w-audio.m4a";
+      audioLink.current = "https://sites.usc.edu/heatlab/files/2024/11/RV-Quantifier-test-instruction-w-audio.m4a";
       setShowInstructions(true);
       setShowPractice(true);
     }

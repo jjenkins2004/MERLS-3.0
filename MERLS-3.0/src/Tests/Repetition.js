@@ -75,7 +75,13 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl, rec
               setFinishedListening(true);
               startRecording();
             });
-            questionAudio.play();
+            try {
+                questionAudio.play();
+            }
+            catch(error) {
+                console.log(error);
+                setProceedEnabled(true);
+            }
         }
     
         return () => {
