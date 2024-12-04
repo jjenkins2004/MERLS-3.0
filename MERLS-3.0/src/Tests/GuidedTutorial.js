@@ -44,7 +44,7 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                 }, 1000);
                 } else {
                     if (tipNum > 4) {
-                        questionAudio = new Audio("https://sites.usc.edu/heatlab/files/2024/11/SR-当你看到麦克风时.m4a");
+                        questionAudio = new Audio("https://sites.usc.edu/heatlab/files/2024/12/SR-当你看到麦克风时new.m4a");
                         questionAudio.addEventListener("play", () => {
                         setAudioPlaying(true);
                         });
