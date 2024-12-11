@@ -50,7 +50,7 @@ const Practice = ({setShowPractice, question, type, language, showChinese, recor
                     </div>
                 ) : type === "repetition" ? (
                     showGuidedTutorial ? (
-                        <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese}/>
+                        <GuidedTutorial setShowGuidedTutorial = {setShowGuidedTutorial} showChinese = {showChinese} lang = {language}/>
                     ) : (
                         <div> 
                             <p className="practiceText">

@@ -52,10 +52,22 @@ const Test = ({ type, language }) => {
       setShowReinforcementPage(true);
       setReinforcementID(2);
     }
-    setCurId(curId + 1);
-    console.log("question id:", curId);
+    if (type === "matching" && language === "CN" && curId+1 === 29) {
+      audioLink.current = "https://sites.usc.edu/heatlab/files/2024/11/RV-Quantifier-test-instruction-w-audio.m4a";
+      setShowInstructions(true);
+      setShowPractice(true);
+      setCurId((prevId) => prevId + 2);
+    }
+    else {
+      setCurId((prevId) => prevId + 1);
+    }
+    console.log("submitting question id:", curId+1);
     setAnswers({ ...answers, [questionId]: answerId });
   };
+
+  useEffect(() => {
+    setCurId(25);
+  }, [])
 
   const recordAudioBlob = (questionId, blob) => {
     if (!questionId || !blob) {
@@ -196,14 +208,6 @@ const Test = ({ type, language }) => {
       setShowAudioPermission(true);
     }
   }, [type, language]);
-
-  useEffect(() => {
-    if (type === "matching" && language === "CN" && curId === 29) {
-      audioLink.current = "https://sites.usc.edu/heatlab/files/2024/11/RV-Quantifier-test-instruction-w-audio.m4a";
-      setShowInstructions(true);
-      setShowPractice(true);
-    }
-  }, [curId])
 
   let completed = curId === questions.length;
 

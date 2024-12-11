@@ -21,7 +21,7 @@ const toolTipText = [
 
 
 
-const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
+const GuidedTutorial = ({setShowGuidedTutorial, showChinese, lang}) => {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const [listening, setListening] = useState(false);
     const [beginCountDown, setBeginCountDown] = useState(false);
@@ -44,7 +44,7 @@ const GuidedTutorial = ({setShowGuidedTutorial, showChinese}) => {
                 }, 1000);
                 } else {
                     if (tipNum > 4) {
-                        questionAudio = new Audio("https://sites.usc.edu/heatlab/files/2024/12/SR-当你看到麦克风时new.m4a");
+                        questionAudio = new Audio(lang === "CN" ? "https://sites.usc.edu/heatlab/files/2024/12/SR-当你看到麦克风时new.m4a" : "https://bpb-us-w1.wpmucdn.com/sites.usc.edu/dist/b/837/files/2024/11/SR-When-you-see-the-blue-microphone.m4a");
                         questionAudio.addEventListener("play", () => {
                         setAudioPlaying(true);
                         });
