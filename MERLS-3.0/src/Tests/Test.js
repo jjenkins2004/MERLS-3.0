@@ -3,12 +3,10 @@ import "./Test.scss";
 import AppBar from "@mui/material/AppBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import Question from "./Question";
 import Repetition from "./Repetition";
 import Instructions from "./Instructions";
-import GuidedTutorial from "./GuidedTutorial";
 import Practice from "./Practice";
 import TranslationButton from "../Components/TranslationButton";
 import AudioPermission from "./AudioPermission";
@@ -30,6 +28,7 @@ const Test = ({ type, language }) => {
   const [audioBlobs, setAudioBlobs] = useState({});
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   let ReinforcementAudio = [
     ["https://sites.usc.edu/heatlab/files/2024/11/RV-English-14-way-through-the-test-w-audio.m4a", "https://sites.usc.edu/heatlab/files/2024/11/RV-14-way-through-the-test-w-audio.m4a"],
@@ -167,7 +166,8 @@ const Test = ({ type, language }) => {
         });
 
         if (response.ok) {
-          navigate("/test-selection");
+          const queryParam = `?cn-zw=${showChinese ? "true" : "false"}`;
+          navigate(`/test-selection${queryParam}`);
         } else {
           alert("Failed to submit answers");
         }
@@ -178,6 +178,12 @@ const Test = ({ type, language }) => {
       console.error("Failed to submit answers: ", error);
     }
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const languageParam = params.get("cn-zw");
+    setShowChinese(languageParam === "true");
+  }, [location]);
 
   useEffect(() => {
     async function fetchQuestionList() {

@@ -1,14 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Test.scss";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import { CardActionArea } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
-import Container from "@mui/material/Container";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
-import { SignalCellularConnectedNoInternet0Bar } from "@mui/icons-material";
 import GreenButton from "../Components/GreenButton";
 
 let questionAudio;
