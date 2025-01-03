@@ -1,9 +1,20 @@
-import React from "react"
-const Story = () => {
-    return (
-        <div>
+import React from "react";
+import "./StoryTest.css";
 
-        </div>
-    )
-}
-export default Story
+const Story = ({ imageLinks }) => {
+  return (
+    <div id="fullStory">
+      <div className="container">
+        {imageLinks.map((link, index) => {
+          return (
+            <div className="itemContainer">
+              {`${index + 1}.`}
+              <img src={link} alt="story scene" className="storyItem" />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+export default Story;

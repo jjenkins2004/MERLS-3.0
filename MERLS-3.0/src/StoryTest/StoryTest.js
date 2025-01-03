@@ -3,6 +3,7 @@ import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import IconButton from "@mui/material/IconButton";
 import GreenButton from "../Components/GreenButton";
+import Story from "./Story";
 import TranslationButton from "../Components/TranslationButton";
 import AppBar from "@mui/material/AppBar";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -10,6 +11,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../Tests/Test.scss";
 
 let questionAudio;
+
+let links = [
+  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+];
 
 const StoryTest = ({ language }) => {
   const [showChinese, setShowChinese] = useState(false);
@@ -120,7 +130,14 @@ const StoryTest = ({ language }) => {
           </div>
         )}
       </div>
-      
+      <Story imageLinks={links} />
+      <GreenButton
+        showChinese={showChinese}
+        textEnglish="Next"
+        textChinese="下一个"
+        onClick={() => {}}
+        disabled={disableOption}
+      />
     </div>
   );
 };
