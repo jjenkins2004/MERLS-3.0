@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../Tests/Test.scss";
 
 let questionAudio;
+let audioLink;
 
 let links = [
   "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
@@ -22,6 +23,8 @@ let links = [
 ];
 
 const StoryTest = ({ language }) => {
+  //currentStory and stages will use 1 based indexing
+  const [currentStory, setCurrentStory] = useState(1);
   //used to keep track of the current question stage, stage 1 is telling the story, stage 2 is the retelling, stage 3 are the followup questions
   const [stage, setStage] = useState(1);
   //used to keep track of the stage's different parts, i.e. current question or which narration link
@@ -59,6 +62,7 @@ const StoryTest = ({ language }) => {
         setCountDown((prevCountDown) => prevCountDown - 1);
       }, 1000);
     } else {
+      //plays audio with link that is assigned to audioLink
       playAudio();
     }
 
@@ -66,8 +70,8 @@ const StoryTest = ({ language }) => {
   }, [countDown]);
 
   //function to play instruction/story audio
-  const playAudio = (link) => {
-    questionAudio = new Audio(link);
+  const playAudio = () => {
+    questionAudio = new Audio(audioLink);
     questionAudio.addEventListener("play", () => {
       setAudioPlaying(true);
     });
@@ -91,17 +95,63 @@ const StoryTest = ({ language }) => {
     return "link";
   };
 
-  const advanceNarrator = () => {
-    //advance the narrator to the next part of the story
-    playAudio(getInstructionLink());
+  const advanceSubStage = () => {
+    //first reset all variables
+    setAudioPlaying(false);
+    setCountDown(3);
+    setDisableOption(true);
+    if (stage === 1) {
+      //assume there are always 3 narration links each narrating two pictures
+      if (subStage === 3) {
+        setStage((prevStage) => {
+          const updated = prevStage + 1;
+          audioLink = "";
+          return updated;
+        });
+        setSubStage(1);
+      } else {
+        setSubStage((prevStage) => {
+          const updated = prevStage + 1;
+          audioLink = narrationLinks[updated - 1];
+          return updated;
+        });
+      }
+    } else if (stage === 2) {
+      //assume user will have 3 retelling sections
+      if (subStage === 3) {
+        setStage((prevStage) => {
+          const updated = prevStage + 1;
+          audioLink = "";
+          return updated;
+        });
+        setSubStage(1);
+      } else {
+        setSubStage((prevStage) => {
+          const updated = prevStage + 1;
+          audioLink = "";
+          return updated;
+        });
+      }
+    } else {
+      //go until the end of the questions
+      if (subStage === questions.length) {
+        setStage(1);
+        setSubStage(1);
+        //advance story
+        if (currentStory === stories.length) {
+          //end test
+        } else {
+          setCurrentStory((prev) => {
+            const updated = prev + 1;
+            audioLink = questions[updated-1].audio;
+            return updated;
+          });
+        }
+      } else {
+        setSubStage((prevStage) => prevStage + 1);
+      }
+    }
   };
-
-  const nextQuestion = () => {
-    //go to next question
-    return "question";
-  }
-
-
 
   return (
     <div>
@@ -116,6 +166,12 @@ const StoryTest = ({ language }) => {
               setShowChinese={setShowChinese}
             />
           </AppBar>
+          <GreenButton
+            textEnglish="next part"
+            onClick={() => {
+              setSubStage();
+            }}
+          />
           <div className="indicator">
             {audioPlaying ? (
               <div>
@@ -167,10 +223,14 @@ const StoryTest = ({ language }) => {
               imageLinks={links}
               disableOption={disableOption}
               showChinese={showChinese}
-              beforeUnload={() => {}}
+              beforeUnload={advanceSubStage}
             />
-          ) : (
+          ) : stage === 2 ? (
             <div></div>
+          ) : stage === 3 ? (
+            <div></div>
+          ) : (
+            <div>page does not exist</div>
           )}
         </div>
       )}
