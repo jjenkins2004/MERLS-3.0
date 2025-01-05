@@ -22,6 +22,18 @@ let links = [
 ];
 
 const StoryTest = ({ language }) => {
+  //used to keep track of the current question stage, stage 1 is telling the story, stage 2 is the retelling, stage 3 are the followup questions
+  const [stage, setStage] = useState(1);
+  //used to keep track of the stage's different parts, i.e. current question or which narration link
+  const [subStage, setSubStage] = useState(1);
+
+  //data for questions
+  const [stories, setStories] = useState([]);
+  const [imageLinks, setImageLinks] = useState([]);
+  const [narrationLinks, setNarrationLinks] = useState([]);
+  const [questions, setQuestions] = useState([]);
+
+  const [showLoading, setShowLoading] = useState(false);
   const [showChinese, setShowChinese] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [countDown, setCountDown] = useState(3);
@@ -54,10 +66,8 @@ const StoryTest = ({ language }) => {
   }, [countDown]);
 
   //function to play instruction/story audio
-  const playAudio = () => {
-    questionAudio = new Audio(
-      "https://sites.usc.edu/heatlab/files/2024/11/RV-English-test-instruction-w-audio.m4a"
-    );
+  const playAudio = (link) => {
+    questionAudio = new Audio(link);
     questionAudio.addEventListener("play", () => {
       setAudioPlaying(true);
     });
@@ -75,69 +85,95 @@ const StoryTest = ({ language }) => {
     });
   };
 
+  //defining functions for question flow and logic
+  const getInstructionLink = () => {
+    //get the current instruction audio link
+    return "link";
+  };
+
+  const advanceNarrator = () => {
+    //advance the narrator to the next part of the story
+    playAudio(getInstructionLink());
+  };
+
+  const nextQuestion = () => {
+    //go to next question
+    return "question";
+  }
+
+
+
   return (
-    <div id="testPage">
-      <AppBar className="titleContainer">
-        <progress id="progress" value={5} max={10} />
-        <TranslationButton
-          showChinese={showChinese}
-          setShowChinese={setShowChinese}
-        />
-      </AppBar>
-      <div className="indicator">
-        {audioPlaying ? (
-          <div>
-            <IconButton aria-label="pause" disabled>
-              <PauseCircleIcon
-                color="primary"
-                className="pauseButton disabled"
-              />
-            </IconButton>
-            <p className="actionText">
-              {showChinese ? <>播放中</> : <>Playing Instructions</>}
-            </p>
-          </div>
-        ) : (
-          <div>
-            <IconButton
-              aria-label="play"
-              style={{ marginBottom: "0" }}
-              onClick={() => {
-                playAudio();
-              }}
-            >
-              <PlayCircleIcon color="primary" className={"pauseButton"} />
-            </IconButton>
-            <p className="actionText">
-              {countDown > 0 ? (
+    <div>
+      {showLoading ? (
+        <div></div>
+      ) : (
+        <div id="testPage">
+          <AppBar className="titleContainer">
+            <progress id="progress" value={5} max={10} />
+            <TranslationButton
+              showChinese={showChinese}
+              setShowChinese={setShowChinese}
+            />
+          </AppBar>
+          <div className="indicator">
+            {audioPlaying ? (
+              <div>
+                <IconButton aria-label="pause" disabled>
+                  <PauseCircleIcon
+                    color="primary"
+                    className="pauseButton disabled"
+                  />
+                </IconButton>
                 <p className="actionText">
-                  {showChinese ? (
-                    <>{countDown} 秒内播放音频</>
+                  {showChinese ? <>播放中</> : <>Playing Instructions</>}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <IconButton
+                  aria-label="play"
+                  style={{ marginBottom: "0" }}
+                  onClick={() => {
+                    playAudio();
+                  }}
+                >
+                  <PlayCircleIcon color="primary" className={"pauseButton"} />
+                </IconButton>
+                <p className="actionText">
+                  {countDown > 0 ? (
+                    <p className="actionText">
+                      {showChinese ? (
+                        <>{countDown} 秒内播放音频</>
+                      ) : (
+                        <>Audio playing in {countDown} second(s)</>
+                      )}
+                    </p>
                   ) : (
-                    <>Audio playing in {countDown} second(s)</>
+                    <p className="actionText">
+                      {showChinese ? (
+                        <>再听一次指示?</>
+                      ) : (
+                        <>Listen to instructions again?</>
+                      )}
+                    </p>
                   )}
                 </p>
-              ) : (
-                <p className="actionText">
-                  {showChinese ? (
-                    <>再听一次指示?</>
-                  ) : (
-                    <>Listen to instructions again?</>
-                  )}
-                </p>
-              )}
-            </p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <Story imageLinks={links} />
-      <GreenButton
-        showChinese={showChinese}
-        textEnglish="Next"
-        textChinese="下一个"
-        onClick={() => {}}
-        disabled={disableOption}
-      />
+          {stage === 1 ? (
+            <Story
+              imageLinks={links}
+              disableOption={disableOption}
+              showChinese={showChinese}
+              beforeUnload={() => {}}
+            />
+          ) : (
+            <div></div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

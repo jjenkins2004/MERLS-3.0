@@ -1,7 +1,8 @@
 import React from "react";
+import GreenButton from "../Components/GreenButton";
 import "./StoryTest.css";
 
-const Story = ({ imageLinks }) => {
+const Story = ({ imageLinks, showChinese, disableOption, beforeUnload }) => {
   return (
     <div id="fullStory">
       <div className="container">
@@ -14,6 +15,15 @@ const Story = ({ imageLinks }) => {
           );
         })}
       </div>
+      <GreenButton
+        showChinese={showChinese}
+        textEnglish="Next"
+        textChinese="下一个"
+        onClick={() => {
+          beforeUnload();
+        }}
+        disabled={disableOption}
+      />
     </div>
   );
 };
