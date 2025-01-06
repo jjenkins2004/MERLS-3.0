@@ -9,18 +9,21 @@ import AppBar from "@mui/material/AppBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../Tests/Test.scss";
+import Retell from "./Retell";
 
 let questionAudio;
 let audioLink;
 
 let links = [
   "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
-  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
-  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
-  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
-  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
-  "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+  "https://preview.redd.it/world-where-cats-are-tiny-v0-ph2fbl81bjnc1.png?width=640&crop=smart&auto=webp&s=09b30f046cec73ae5ea0274051121df387af0c62",
+  "https://i.pinimg.com/736x/28/95/e0/2895e0015ce0f5c34406aea2f9cc5643.jpg",
+  "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOuymCW3YqLt21VvEEM3gtdU65O8aU6oDAXw&s",
+  "https://ychef.files.bbci.co.uk/1280x720/p0jkct29.jpg",
 ];
+
+let retellingLinks = [];
 
 const StoryTest = ({ language }) => {
   //currentStory and stages will use 1 based indexing
@@ -32,7 +35,7 @@ const StoryTest = ({ language }) => {
 
   //data for questions
   const [stories, setStories] = useState([]);
-  const [imageLinks, setImageLinks] = useState([]);
+  const [imageLinks, setImageLinks] = useState(links);
   const [narrationLinks, setNarrationLinks] = useState([]);
   const [questions, setQuestions] = useState([]);
 
@@ -71,6 +74,7 @@ const StoryTest = ({ language }) => {
 
   //function to play instruction/story audio
   const playAudio = () => {
+    setDisableOption(false);
     questionAudio = new Audio(audioLink);
     questionAudio.addEventListener("play", () => {
       setAudioPlaying(true);
@@ -90,9 +94,17 @@ const StoryTest = ({ language }) => {
   };
 
   //defining functions for question flow and logic
-  const getInstructionLink = () => {
-    //get the current instruction audio link
-    return "link";
+  const updateInstructionLink = (stage, subStage) => {
+    //get the next instruction link based on the based in stage and substages
+    if (stage === 1) {
+      audioLink = narrationLinks[subStage - 1];
+    } else if (stage === 2) {
+      audioLink = retellingLinks[subStage - 1];
+    } else if (stage === 3) {
+      audioLink = questions[subStage - 1].link;
+    } else {
+      audioLink = "";
+    }
   };
 
   const advanceSubStage = () => {
@@ -103,53 +115,61 @@ const StoryTest = ({ language }) => {
     if (stage === 1) {
       //assume there are always 3 narration links each narrating two pictures
       if (subStage === 3) {
-        setStage((prevStage) => {
-          const updated = prevStage + 1;
-          audioLink = "";
-          return updated;
-        });
+        updateInstructionLink(2, 1);
+        setStage(2);
         setSubStage(1);
       } else {
-        setSubStage((prevStage) => {
-          const updated = prevStage + 1;
-          audioLink = narrationLinks[updated - 1];
-          return updated;
-        });
+        updateInstructionLink(1, subStage + 1);
+        setSubStage((prevStage) => prevStage + 1);
       }
     } else if (stage === 2) {
       //assume user will have 3 retelling sections
       if (subStage === 3) {
-        setStage((prevStage) => {
-          const updated = prevStage + 1;
-          audioLink = "";
-          return updated;
-        });
+        updateInstructionLink(3, 1);
+        setStage(3);
         setSubStage(1);
       } else {
-        setSubStage((prevStage) => {
-          const updated = prevStage + 1;
-          audioLink = "";
-          return updated;
-        });
+        updateInstructionLink(2, subStage + 1);
+        setSubStage((prevStage) => prevStage + 1);
       }
     } else {
       //go until the end of the questions
       if (subStage === questions.length) {
+        audioLink = "instuction audio";
         setStage(1);
         setSubStage(1);
         //advance story
         if (currentStory === stories.length) {
           //end test
         } else {
-          setCurrentStory((prev) => {
-            const updated = prev + 1;
-            audioLink = questions[updated-1].audio;
-            return updated;
-          });
+          setCurrentStory((prev) => prev + 1);
         }
       } else {
+        updateInstructionLink(3, subStage + 1);
         setSubStage((prevStage) => prevStage + 1);
       }
+    }
+  };
+
+  const getRetellLinks = () => {
+    console.log("current substage is: " + subStage);
+    if (subStage === 1) {
+      return [
+        { id: 1, link: imageLinks[0] },
+        { id: 2, link: imageLinks[1] },
+      ];
+    } else if (subStage === 2) {
+      return [
+        { id: 3, link: imageLinks[2] },
+        { id: 4, link: imageLinks[3] },
+      ];
+    } else if (subStage === 3) {
+      return [
+        { id: 5, link: imageLinks[4] },
+        { id: 6, link: imageLinks[5] },
+      ];
+    } else {
+      return null;
     }
   };
 
@@ -166,12 +186,18 @@ const StoryTest = ({ language }) => {
               setShowChinese={setShowChinese}
             />
           </AppBar>
-          <GreenButton
-            textEnglish="next part"
-            onClick={() => {
-              setSubStage();
-            }}
-          />
+          <div className="debugAdvanceButton">
+            <GreenButton
+              textEnglish="next part"
+              onClick={() => {
+                setAudioPlaying(false);
+                setCountDown(3);
+                setDisableOption(true);
+                setStage((prevStage) => prevStage + 1);
+                setSubStage(1);
+              }}
+            />
+          </div>
           <div className="indicator">
             {audioPlaying ? (
               <div>
@@ -196,7 +222,7 @@ const StoryTest = ({ language }) => {
                 >
                   <PlayCircleIcon color="primary" className={"pauseButton"} />
                 </IconButton>
-                <p className="actionText">
+                <div className="actionText">
                   {countDown > 0 ? (
                     <p className="actionText">
                       {showChinese ? (
@@ -214,19 +240,24 @@ const StoryTest = ({ language }) => {
                       )}
                     </p>
                   )}
-                </p>
+                </div>
               </div>
             )}
           </div>
           {stage === 1 ? (
             <Story
-              imageLinks={links}
+              imageLinks={imageLinks}
               disableOption={disableOption}
               showChinese={showChinese}
               beforeUnload={advanceSubStage}
             />
           ) : stage === 2 ? (
-            <div></div>
+            <Retell
+              imageLinks={getRetellLinks()}
+              showChinese={showChinese}
+              disableOption={disableOption}
+              beforeUnload={advanceSubStage}
+            />
           ) : stage === 3 ? (
             <div></div>
           ) : (
