@@ -18,11 +18,13 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    aspect-ratio: 1 / 1;
   }
   .storyItem {
     border: 2px black solid;
     width: 100%;
-    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
     box-sizing: border-box;
   }
 }
@@ -41,19 +43,20 @@
     align-items: center;
     flex-direction: row;
     gap: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
   }
 
   .itemContainer {
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: min(20%, 30vh);
+    aspect-ratio: 1 / 1;
   }
 
   .storyItem {
     border: 2px black solid;
     width: 100%;
-    height: auto;
+    aspect-ratio: 1 / 1;
     box-sizing: border-box;
   }
 
@@ -153,6 +156,185 @@
   .listeningBar:nth-child(9) {
     height: 25px;
     animation-delay: 0.5s;
+  }
+}
+
+#questions {
+  margin-bottom: 70px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .container {
+    width: 100vw;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    margin-bottom: 50px;
+  }
+
+  .space {
+    height: 150px;
+  }
+
+  .itemContainer {
+    width: min(20%, 30vh);
+    aspect-ratio: 1 / 1;
+  }
+
+  .storyItem {
+    border: 2px black solid;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    object-fit: cover;
+  }
+
+  .recordingActionContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    font-size: 15px;
+    font-weight: 400;
+    gap: 5px;
+  }
+
+  .recordingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: rgb(24, 118, 210);
+    border: 1px solid rgb(60, 123, 213);
+    border-radius: 5px;
+    cursor: pointer;
+    width: 300px;
+    height: 60px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease,
+      transform 0.2s ease-out;
+  }
+
+  .recordingContainer:hover {
+    background-color: rgb(33, 102, 199);
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  p {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 20px;
+  }
+
+  .listeningBar {
+    background-color: white;
+    border-radius: 5px;
+    width: 4px;
+    margin-left: 3px;
+    margin-right: 3px;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(0.7);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .listeningBar:nth-child(1) {
+    height: 25px;
+    animation-delay: 0s;
+  }
+
+  .listeningBar:nth-child(2) {
+    height: 30px;
+    animation-delay: 0.2s;
+  }
+
+  .listeningBar:nth-child(3) {
+    height: 35px;
+    animation-delay: 0.1s;
+  }
+
+  .listeningBar:nth-child(4) {
+    height: 32px;
+    animation-delay: 0.4s;
+  }
+
+  .listeningBar:nth-child(6) {
+    height: 37px;
+    animation-delay: 0s;
+  }
+
+  .listeningBar:nth-child(7) {
+    height: 28px;
+    animation-delay: 0.2s;
+  }
+
+  .listeningBar:nth-child(8) {
+    height: 30px;
+    animation-delay: 0.3s;
+  }
+
+  .listeningBar:nth-child(9) {
+    height: 25px;
+    animation-delay: 0.5s;
+  }
+}
+
+@media(max-height: 440px) {
+  #fullStory {
+    .container {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+@media (max-height: 500px) {
+  #retell {
+    .container {
+      margin-bottom: 30px;
+    }
+    .recordingActionContainer {
+      width: 225px;
+      height: 50px;
+    }
+    .recordingContainer {
+      width: 225px;
+      height: 50px;
+    }
+    p {
+      font-size: 17px;
+      margin: 0 17px;
+    }
+  }
+
+  #questions {
+    .container {
+      margin-bottom: 30px;
+    }
+    .recordingContainer {
+      width: 225px;
+      height: 50px;
+    }
+    .recordingActionContainer {
+      width: 225px;
+      height: 50px;
+    }
+    p {
+      font-size: 17px;
+      margin: 0 17px;
+    }
   }
 }
 

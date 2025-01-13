@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../Tests/Test.scss";
 import Retell from "./Retell";
+import Questions from "./Questions";
 
 let questionAudio;
 let audioLink;
@@ -21,6 +22,13 @@ let links = [
   "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg",
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOuymCW3YqLt21VvEEM3gtdU65O8aU6oDAXw&s",
   "https://ychef.files.bbci.co.uk/1280x720/p0jkct29.jpg",
+];
+
+let test_questions = [
+  {link: "", image_link: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7", "https://preview.redd.it/world-where-cats-are-tiny-v0-ph2fbl81bjnc1.png?width=640&crop=smart&auto=webp&s=09b30f046cec73ae5ea0274051121df387af0c62", "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg"]},
+  {link: "", image_link: null},
+  {link: "", image_link: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7"]},
+  {link: "", image_link: null},
 ];
 
 let retellingLinks = [];
@@ -37,7 +45,7 @@ const StoryTest = ({ language }) => {
   const [stories, setStories] = useState([]);
   const [imageLinks, setImageLinks] = useState(links);
   const [narrationLinks, setNarrationLinks] = useState([]);
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(test_questions);
 
   const [showLoading, setShowLoading] = useState(false);
   const [showChinese, setShowChinese] = useState(false);
@@ -259,7 +267,12 @@ const StoryTest = ({ language }) => {
               beforeUnload={advanceSubStage}
             />
           ) : stage === 3 ? (
-            <div></div>
+            <Questions
+              showChinese={showChinese}
+              beforeUnload={advanceSubStage}
+              disableOption={disableOption}
+              imageLinks={questions[subStage-1].image_link}
+            />
           ) : (
             <div>page does not exist</div>
           )}
