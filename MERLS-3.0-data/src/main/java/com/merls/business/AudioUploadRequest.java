@@ -6,6 +6,7 @@ public class AudioUploadRequest {
     private String audioData;
     private String userId;
     private Integer questionId;
+    private String bucketName;
 
     // Getters and setters
     public String getFileName() { return fileName; }
@@ -31,10 +32,17 @@ public class AudioUploadRequest {
         this.questionId = questionId;
     }
 
+    public String getBucketName() { return bucketName; }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
 
     @Override
     public String toString() {
         return "AudioUploadRequest{" +
+                "bucketName='" + bucketName + '\'' +
                 "fileName='" + fileName + '\'' +
                 ", fileType='" + fileType + '\'' +
                 ", audioData='" + (audioData != null ? "[BASE64_DATA]" : "null") + '\'' +

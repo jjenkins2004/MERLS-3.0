@@ -21,7 +21,8 @@ import com.merls.business.*;
 
 public class AudioUploadHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     private final AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
-    private final String bucketName = "merls-audio";
+//    private final String bucketName = "merls-audio";
+    private String bucketName = "merls-audio";
     private final Gson gson = new Gson();
 
     @Override
@@ -50,6 +51,8 @@ public class AudioUploadHandler implements RequestHandler<APIGatewayProxyRequest
             if (uploadRequest.getAudioData() == null) {
                 throw new IllegalArgumentException("Audio data is null");
             }
+
+            bucketName = uploadRequest.getBucketName();
 
             context.getLogger().log("Parsed request: " + uploadRequest.toString());
 

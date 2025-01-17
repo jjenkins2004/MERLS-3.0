@@ -95,7 +95,8 @@ const Test = ({ type, language }) => {
         fileType: 'audio/webm',
         audioData: base64Data,
         userId: localStorage.getItem("username"),
-        questionId: questionId
+        questionId: questionId,
+        bucketName: "merls-audio",
       };
 
       const response = await fetch(LAMBDA_API_ENDPOINT, {
