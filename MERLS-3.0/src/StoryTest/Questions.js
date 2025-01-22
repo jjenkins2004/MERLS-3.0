@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ReactMic } from "react-mic";
 
-const Questions = ({ showChinese, beforeUnload, imageLinks }) => {
+const Questions = ({ showChinese, beforeUnload, imageLinks, uploadToLambda, type }) => {
   //microphone recording
   const [recording, setRecording] = useState(false);
   const [finishedProcessing, setFinishedProcessing] = useState(false);
@@ -24,14 +24,8 @@ const Questions = ({ showChinese, beforeUnload, imageLinks }) => {
     const url = recordedBlob.blobURL;
     console.log(url);
     //recordAudioBlob(questionIdRef.current, recordedBlob);
-    //download file
-    // const link = document.createElement("a");
-    // link.href = url;
-    // link.download = "recording.webm";
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    // URL.revokeObjectURL(url);
+    const s3Url = await uploadToLambda(recordedBlob, type);
+    console.log('Recording stored at:', s3Url);
   };
 
   const onFinish = () => {

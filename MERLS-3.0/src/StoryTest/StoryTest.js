@@ -25,13 +25,15 @@ let links = [
 ];
 
 let test_questions = [
-  {link: "", image_link: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7", "https://preview.redd.it/world-where-cats-are-tiny-v0-ph2fbl81bjnc1.png?width=640&crop=smart&auto=webp&s=09b30f046cec73ae5ea0274051121df387af0c62", "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg"]},
-  {link: "", image_link: null},
-  {link: "", image_link: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7"]},
-  {link: "", image_link: null},
+  {question_audio:"", link: "", image_links: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7", "https://preview.redd.it/world-where-cats-are-tiny-v0-ph2fbl81bjnc1.png?width=640&crop=smart&auto=webp&s=09b30f046cec73ae5ea0274051121df387af0c62", "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg"]},
+  {question_audio:"", link: "", image_links: null},
+  {question_audio:"", link: "", image_links: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7"]},
+  {question_audio:"", link: "", image_links: null},
 ];
 
 let retellingLinks = [];
+
+const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
 
 const StoryTest = ({ language }) => {
   //currentStory and stages will use 1 based indexing
@@ -40,6 +42,7 @@ const StoryTest = ({ language }) => {
   const [stage, setStage] = useState(1);
   //used to keep track of the stage's different parts, i.e. current question or which narration link
   const [subStage, setSubStage] = useState(1);
+  const [audioUrls, setAudioUrls] = useState({});
 
   //data for questions
   const [stories, setStories] = useState([]);
@@ -80,6 +83,100 @@ const StoryTest = ({ language }) => {
     return () => clearTimeout(timeoutRef.current);
   }, [countDown]);
 
+  // fetch question list
+  useEffect(() => {
+    async function fetchQuestionList() {
+      const response = await fetch(
+          "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
+          language + "&type=story_question",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          }
+      );
+      console.log("getting questions");
+      const questionList = await response.json();
+      console.log("Fetched questions:", questionList);
+      setQuestions(questionList);
+    }
+    fetchQuestionList();
+  }, []);
+
+  // fetch story list
+  useEffect(() => {
+    async function fetchStoryList() {
+      const response = await fetch(
+          "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
+          language + "&type=story_narration",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          }
+      );
+      console.log("getting stories");
+      const storyList = await response.json();
+      console.log("Fetched stories:", storyList);
+      setStories(storyList);
+      setImageLinks(storyList[0].image_links);
+      // setNarrationLinks(storyList[0].narration_audios);
+    }
+    fetchStoryList();
+  }, []);
+
+  const recordAudioUrl = (questionId, s3Url) => {
+    if (!questionId || !s3Url) {
+      console.error('Missing required parameters:', { questionId, s3Url });
+      return;
+    }
+    const truncatedUrl = s3Url.split('?')[0];
+
+    setAudioUrls(prev => {
+      const updatedUrls = {...prev, [questionId]: truncatedUrl};
+      console.log('Current Audio URLs:', updatedUrls);
+      return updatedUrls;
+    });
+  };
+
+  // upload audio to s3, depends on type
+  const uploadToLambda = async (recordedBlob, type) => {
+    const base64Data = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(recordedBlob.blob);
+    });
+
+    // curr question id
+    const questionId = subStage;
+
+    const requestBody = {
+      fileType: 'audio/webm',
+      audioData: base64Data,
+      userId: localStorage.getItem("username"),
+      questionId: questionId,
+      bucketName: type === "retell"
+          ? "merls-story-user-audio/retell"
+          : "merls-story-user-audio/question"
+    };
+
+    const response = await fetch(LAMBDA_API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
+
+    // Parse response and record audio URL
+    const data = await response.json();
+    if (data.url) {
+      recordAudioUrl(questionId, data.url);
+    }
+    return data.url;
+  };
+
   //function to play instruction/story audio
   const playAudio = () => {
     setDisableOption(false);
@@ -109,7 +206,8 @@ const StoryTest = ({ language }) => {
     } else if (stage === 2) {
       audioLink = retellingLinks[subStage - 1];
     } else if (stage === 3) {
-      audioLink = questions[subStage - 1].link;
+      // audioLink = questions[subStage - 1].link;
+      audioLink = questions[subStage - 1].question_audio;
     } else {
       audioLink = "";
     }
@@ -265,13 +363,17 @@ const StoryTest = ({ language }) => {
               showChinese={showChinese}
               disableOption={disableOption}
               beforeUnload={advanceSubStage}
+              uploadToLambda={uploadToLambda}
+              type="retell"
             />
           ) : stage === 3 ? (
             <Questions
               showChinese={showChinese}
               beforeUnload={advanceSubStage}
               disableOption={disableOption}
-              imageLinks={questions[subStage-1].image_link}
+              imageLinks={questions[subStage-1].image_links}
+              uploadToLambda={uploadToLambda}
+              type="question"
             />
           ) : (
             <div>page does not exist</div>

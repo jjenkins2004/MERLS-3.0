@@ -2,15 +2,12 @@ import { React, useState, useRef, useEffect } from "react";
 import { ReactMic } from "react-mic";
 import "./StoryTest.css";
 
-const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
-
-const Retell = ({ imageLinks, showChinese, beforeUnload }) => {
+const Retell = ({ imageLinks, showChinese, beforeUnload, uploadToLambda, type }) => {
   //microphone recording
   const [recording, setRecording] = useState(false);
   const [finishedProcessing, setFinishedProcessing] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const micRef = useRef(null);
-  const [audioUrls, setAudioUrls] = useState({});
   // const [uploading, setUploading] = useState(false);
   const questionIdRef = useRef(0);
 
@@ -22,74 +19,6 @@ const Retell = ({ imageLinks, showChinese, beforeUnload }) => {
     setRecording(false);
   };
 
-  const recordAudioUrl = (questionId, s3Url) => {
-    if (!questionId || !s3Url) {
-      console.error('Missing required parameters:', { questionId, s3Url });
-      return;
-    }
-    const truncatedUrl = s3Url.split('?')[0];
-
-    setAudioUrls(prev => {
-      const updatedUrls = {...prev, [questionId]: truncatedUrl};
-      console.log('Current Audio URLs:', updatedUrls);
-      return updatedUrls;
-    });
-  };
-
-  const uploadToLambda = async (recordedBlob) => {
-    try {
-      // setUploading(true);
-
-      // Create a FileReader to convert blob to base64
-      const reader = new FileReader();
-      const base64Data = await new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(recordedBlob.blob);
-      });
-      // temp question id
-      questionIdRef.current += 1;
-      const questionId = questionIdRef.current;
-
-      const requestBody = {
-        fileType: 'audio/webm',
-        audioData: base64Data,
-        userId: localStorage.getItem("username"),
-        questionId: questionId,
-        bucketName: "merls-story-user-audio",
-      };
-      // console.log('Request body:', requestBody);
-
-      const response = await fetch(LAMBDA_API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
-      }
-
-      const data = await response.json();
-      // console.log('Upload success:', data);
-
-      // Record the S3 URL for this question
-      if (data.url) {
-        recordAudioUrl(questionIdRef.current, data.url);
-      }
-      return data.url;
-
-    } catch (error) {
-      console.error('Upload error:', error);
-      throw error;
-    } finally {
-      // setUploading(false);
-    }
-  };
-
   const onStop = async (recordedBlob) => {
     setFinishedProcessing(true);
     if (!recordedBlob) {
@@ -99,7 +28,7 @@ const Retell = ({ imageLinks, showChinese, beforeUnload }) => {
     console.log(url);
     //recordAudioBlob(questionIdRef.current, recordedBlob);
     // upload to s3
-    const s3Url = await uploadToLambda(recordedBlob);
+    const s3Url = await uploadToLambda(recordedBlob, type);
     console.log('Recording stored at:', s3Url);
   };
 

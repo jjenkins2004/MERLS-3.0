@@ -15,6 +15,9 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
 
     @Override
     public String handleRequest(Map<String, Object> input, Context context) {
+
+        context.getLogger().log("Received request body: " + input);
+
         Map<String, String> queryParams = (Map<String, String>) input.get("queryStringParameters");
 
         if (queryParams == null || !queryParams.containsKey("language")) {
@@ -30,8 +33,10 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
         }
 
         String type = queryParams.get("type");
-        if (!type.equals("repetition") && !type.equals("matching")) {
-            return createErrorResponse("Invalid parameter: type must be either 'repetition' or 'matching'");
+        if (!type.equals("repetition") && !type.equals("matching")
+                && !type.equals("story_question") && !type.equals("story_narration")) {
+            return createErrorResponse("Invalid parameter: type must be either 'repetition' or 'matching' " +
+                    "or 'story_question' or 'story_narration'");
         }
 
         String response = getQuestionsFromDB(type, language);
@@ -53,13 +58,24 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
             Statement stmt = conn.createStatement();
             // Adjust the query based on the language and type parameter
             String tableName;
+            String query;
             if (type.equals("matching")) {
                 tableName = language.equals("CN") ? "chinese_questions" : "english_questions";
+                query = "SELECT * FROM " + tableName + " WHERE is_active = true ORDER BY question_id";
+            }
+            else if (type.equals("repetition")) {
+                tableName = language.equals("CN") ? "chinese_repetition" : "english_repetition";
+                query = "SELECT * FROM " + tableName + " WHERE is_active = true ORDER BY question_id";
+            }
+            else if (type.equals("story_question")) {
+                tableName = "story_questions"; // by default english
+                query = "SELECT * FROM " + tableName + " WHERE is_active = true ORDER BY question_id";
             }
             else {
-                tableName = language.equals("CN") ? "chinese_repetition" : "english_repetition";
+                tableName = "story_test"; // by default english
+                query = "SELECT * FROM " + tableName + " WHERE is_active = true ORDER BY story_id";
             }
-            String query = "SELECT * FROM " + tableName + " WHERE is_active = true ORDER BY question_id";
+
             ResultSet rs = stmt.executeQuery(query);
 
             JSONArray jsonArray = new JSONArray();
@@ -79,11 +95,40 @@ public class QuestionsHandler implements RequestHandler<Map<String, Object>, Str
                     jsonArray.put(jsonObject);
                 }
             }
-            else {
+            else if (type.equals("repetition")) {
                 while (rs.next()) {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("question_id", rs.getInt("question_id"));
                     jsonObject.put("question_link", rs.getString("question_link"));
+                    jsonArray.put(jsonObject);
+                }
+            }
+            else if (type.equals("story_question")) {
+                while (rs.next()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("question_id", rs.getInt("question_id"));
+                    jsonObject.put("story_id", rs.getInt("story_id"));
+                    jsonObject.put("question_text", rs.getString("question_text"));
+
+                    String[] imageLinks = null;
+                    if (rs.getArray("image_links") != null) {
+                        imageLinks = (String[]) rs.getArray("image_links").getArray();
+                    } else {
+                        imageLinks = new String[0]; // Default to an empty array
+                    }
+                    jsonObject.put("image_links", new JSONArray(imageLinks));
+
+                    jsonObject.put("question_audio", rs.getString("question_audio"));
+                    jsonArray.put(jsonObject);
+                }
+            }
+            else {
+                while (rs.next()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("story_id", rs.getInt("story_id"));
+                    jsonObject.put("story_title", rs.getString("story_title"));
+                    jsonObject.put("narration_audios", new JSONArray(rs.getArray("narration_audios").getArray()));
+                    jsonObject.put("image_links", new JSONArray(rs.getArray("image_links").getArray()));
                     jsonArray.put(jsonObject);
                 }
             }
