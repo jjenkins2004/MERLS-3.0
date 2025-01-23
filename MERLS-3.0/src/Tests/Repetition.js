@@ -95,6 +95,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl, rec
         setStopRecording(false);
         setCountDown(3);
         setRecordingTimer(30);
+        setTimedOut(false);
       };
 
       const timerId = useRef(null);
@@ -211,7 +212,7 @@ const Repetition = ({curQuestion, recordAnswer, showChinese, recordAudioUrl, rec
                 </div>
                 )}
             </div>
-            <div style={{height: finishedListening ? "35px" : "60px"}} />
+            <div style={{height: finishedListening ? "10px" : "20px"}} />
                 {timedOut ? (
                     <div className="listeningContainer">
                         <img

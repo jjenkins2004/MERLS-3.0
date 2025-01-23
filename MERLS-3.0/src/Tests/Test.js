@@ -64,10 +64,6 @@ const Test = ({ type, language }) => {
     setAnswers({ ...answers, [questionId]: answerId });
   };
 
-  useEffect(() => {
-    setCurId(25);
-  }, [])
-
   const recordAudioBlob = (questionId, blob) => {
     if (!questionId || !blob) {
       console.error('Missing required parameters:', { questionId, blob });
