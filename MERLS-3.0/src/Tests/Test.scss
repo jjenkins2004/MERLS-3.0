@@ -398,6 +398,17 @@ body {
   border-color: rgb(231, 137, 255) !important;
 }
 
+.loadingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 1000px) {
   .imageContainer {
     margin-left: 15px;

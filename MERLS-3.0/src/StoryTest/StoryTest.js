@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../Tests/Test.scss";
 import Retell from "./Retell";
 import Questions from "./Questions";
+import CompletionPage from "../Tests/CompletionPage";
 
 let questionAudio;
 let audioLink;
@@ -25,15 +26,30 @@ let links = [
 ];
 
 let test_questions = [
-  {question_audio:"", link: "", image_links: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7", "https://preview.redd.it/world-where-cats-are-tiny-v0-ph2fbl81bjnc1.png?width=640&crop=smart&auto=webp&s=09b30f046cec73ae5ea0274051121df387af0c62", "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg"]},
-  {question_audio:"", link: "", image_links: null},
-  {question_audio:"", link: "", image_links: ["https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7"]},
-  {question_audio:"", link: "", image_links: null},
+  {
+    question_audio: "",
+    link: "",
+    image_links: [
+      "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+      "https://preview.redd.it/world-where-cats-are-tiny-v0-ph2fbl81bjnc1.png?width=640&crop=smart&auto=webp&s=09b30f046cec73ae5ea0274051121df387af0c62",
+      "https://imgcdn.stablediffusionweb.com/2024/9/14/7ea109f3-4496-468e-a947-460a21bb2a25.jpg",
+    ],
+  },
+  { question_audio: "", link: "", image_links: null },
+  {
+    question_audio: "",
+    link: "",
+    image_links: [
+      "https://preview.redd.it/yfdr471cb5ua1.png?auto=webp&s=e95f9bc386c1a23629600e8c6241e4a083c3aed7",
+    ],
+  },
+  { question_audio: "", link: "", image_links: null },
 ];
 
 let retellingLinks = [];
 
-const LAMBDA_API_ENDPOINT = "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
+const LAMBDA_API_ENDPOINT =
+  "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
 
 const StoryTest = ({ language }) => {
   //currentStory and stages will use 1 based indexing
@@ -54,7 +70,7 @@ const StoryTest = ({ language }) => {
   //questions for the current story
   const [questions, setQuestions] = useState(test_questions);
 
-  const [showLoading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
   const [showChinese, setShowChinese] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [countDown, setCountDown] = useState(3);
@@ -91,14 +107,15 @@ const StoryTest = ({ language }) => {
   useEffect(() => {
     async function fetchQuestionList() {
       const response = await fetch(
-          "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
-          language + "&type=story_question",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-            },
-          }
+        "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
+          language +
+          "&type=story_question",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        }
       );
       console.log("getting questions");
       const questionList = await response.json();
@@ -112,14 +129,15 @@ const StoryTest = ({ language }) => {
   useEffect(() => {
     async function fetchStoryList() {
       const response = await fetch(
-          "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
-          language + "&type=story_narration",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-            },
-          }
+        "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
+          language +
+          "&type=story_narration",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        }
       );
       console.log("getting stories");
       const storyList = await response.json();
@@ -127,20 +145,21 @@ const StoryTest = ({ language }) => {
       setStories(storyList);
       setImageLinks(storyList[0].image_links);
       // setNarrationLinks(storyList[0].narration_audios);
+      setShowLoading(false);
     }
     fetchStoryList();
   }, []);
 
   const recordAudioUrl = (questionId, s3Url) => {
     if (!questionId || !s3Url) {
-      console.error('Missing required parameters:', { questionId, s3Url });
+      console.error("Missing required parameters:", { questionId, s3Url });
       return;
     }
-    const truncatedUrl = s3Url.split('?')[0];
+    const truncatedUrl = s3Url.split("?")[0];
 
-    setAudioUrls(prev => {
-      const updatedUrls = {...prev, [questionId]: truncatedUrl};
-      console.log('Current Audio URLs:', updatedUrls);
+    setAudioUrls((prev) => {
+      const updatedUrls = { ...prev, [questionId]: truncatedUrl };
+      console.log("Current Audio URLs:", updatedUrls);
       return updatedUrls;
     });
   };
@@ -158,18 +177,19 @@ const StoryTest = ({ language }) => {
     const questionId = subStage;
 
     const requestBody = {
-      fileType: 'audio/webm',
+      fileType: "audio/webm",
       audioData: base64Data,
       userId: localStorage.getItem("username"),
       questionId: questionId,
-      bucketName: type === "retell"
+      bucketName:
+        type === "retell"
           ? "merls-story-user-audio/retell"
-          : "merls-story-user-audio/question"
+          : "merls-story-user-audio/question",
     };
 
     const response = await fetch(LAMBDA_API_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),
     });
 
@@ -286,7 +306,9 @@ const StoryTest = ({ language }) => {
   return (
     <div>
       {showLoading ? (
-        <div></div>
+        <div className="loadingContainer">
+          <CircularProgress size={75} thickness={3} variant="indeterminate" />
+        </div>
       ) : (
         <div id="testPage">
           <AppBar className="titleContainer">
@@ -375,7 +397,7 @@ const StoryTest = ({ language }) => {
               showChinese={showChinese}
               beforeUnload={advanceSubStage}
               disableOption={disableOption}
-              imageLinks={questions[subStage-1].image_links}
+              imageLinks={questions[subStage - 1].image_links}
               uploadToLambda={uploadToLambda}
               type="question"
             />
