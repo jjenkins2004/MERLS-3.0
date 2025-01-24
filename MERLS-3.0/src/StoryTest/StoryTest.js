@@ -71,6 +71,7 @@ const StoryTest = ({ language }) => {
   const [questions, setQuestions] = useState(test_questions);
 
   const [showLoading, setShowLoading] = useState(true);
+  const [completed, setCompleted] = useState(false);
   const [showChinese, setShowChinese] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [countDown, setCountDown] = useState(3);
@@ -271,6 +272,7 @@ const StoryTest = ({ language }) => {
         //advance story
         if (currentStory === stories.length) {
           //end test
+          setCompleted(true);
         } else {
           setCurrentStory((prev) => prev + 1);
         }
@@ -303,110 +305,119 @@ const StoryTest = ({ language }) => {
     }
   };
 
-  return (
-    <div>
-      {showLoading ? (
-        <div className="loadingContainer">
-          <CircularProgress size={75} thickness={3} variant="indeterminate" />
+  if (showLoading) {
+    return (
+      <div className="loadingContainer">
+        <CircularProgress size={75} thickness={3} variant="indeterminate" />
+      </div>
+    );
+  } else if (completed) {
+    return (
+      <CompletionPage
+        showChinese={showChinese}
+        audioLink={""}
+        imageLink={""}
+        submitAnswers={() => {}}
+      />
+    );
+  } else {
+    return (
+      <div id="testPage">
+        <AppBar className="titleContainer">
+          <progress id="progress" value={5} max={10} />
+          <TranslationButton
+            showChinese={showChinese}
+            setShowChinese={setShowChinese}
+          />
+        </AppBar>
+        <div className="debugAdvanceButton">
+          <GreenButton
+            textEnglish="next part"
+            onClick={() => {
+              setAudioPlaying(false);
+              setCountDown(3);
+              setDisableOption(true);
+              setStage((prevStage) => prevStage + 1);
+              setSubStage(1);
+            }}
+          />
         </div>
-      ) : (
-        <div id="testPage">
-          <AppBar className="titleContainer">
-            <progress id="progress" value={5} max={10} />
-            <TranslationButton
-              showChinese={showChinese}
-              setShowChinese={setShowChinese}
-            />
-          </AppBar>
-          <div className="debugAdvanceButton">
-            <GreenButton
-              textEnglish="next part"
-              onClick={() => {
-                setAudioPlaying(false);
-                setCountDown(3);
-                setDisableOption(true);
-                setStage((prevStage) => prevStage + 1);
-                setSubStage(1);
-              }}
-            />
-          </div>
-          <div className="indicator">
-            {audioPlaying ? (
-              <div>
-                <IconButton aria-label="pause" disabled>
-                  <PauseCircleIcon
-                    color="primary"
-                    className="pauseButton disabled"
-                  />
-                </IconButton>
-                <p className="actionText">
-                  {showChinese ? <>播放中</> : <>Playing Instructions</>}
-                </p>
-              </div>
-            ) : (
-              <div>
-                <IconButton
-                  aria-label="play"
-                  style={{ marginBottom: "0" }}
-                  onClick={() => {
-                    playAudio();
-                  }}
-                >
-                  <PlayCircleIcon color="primary" className={"pauseButton"} />
-                </IconButton>
-                <div className="actionText">
-                  {countDown > 0 ? (
-                    <p className="actionText">
-                      {showChinese ? (
-                        <>{countDown} 秒内播放音频</>
-                      ) : (
-                        <>Audio playing in {countDown} second(s)</>
-                      )}
-                    </p>
-                  ) : (
-                    <p className="actionText">
-                      {showChinese ? (
-                        <>再听一次指示?</>
-                      ) : (
-                        <>Listen to instructions again?</>
-                      )}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-          {stage === 1 ? (
-            <Story
-              imageLinks={imageLinks}
-              disableOption={disableOption}
-              showChinese={showChinese}
-              beforeUnload={advanceSubStage}
-            />
-          ) : stage === 2 ? (
-            <Retell
-              imageLinks={getRetellLinks()}
-              showChinese={showChinese}
-              disableOption={disableOption}
-              beforeUnload={advanceSubStage}
-              uploadToLambda={uploadToLambda}
-              type="retell"
-            />
-          ) : stage === 3 ? (
-            <Questions
-              showChinese={showChinese}
-              beforeUnload={advanceSubStage}
-              disableOption={disableOption}
-              imageLinks={questions[subStage - 1].image_links}
-              uploadToLambda={uploadToLambda}
-              type="question"
-            />
+        <div className="indicator">
+          {audioPlaying ? (
+            <div>
+              <IconButton aria-label="pause" disabled>
+                <PauseCircleIcon
+                  color="primary"
+                  className="pauseButton disabled"
+                />
+              </IconButton>
+              <p className="actionText">
+                {showChinese ? <>播放中</> : <>Playing Instructions</>}
+              </p>
+            </div>
           ) : (
-            <div>page does not exist</div>
+            <div>
+              <IconButton
+                aria-label="play"
+                style={{ marginBottom: "0" }}
+                onClick={() => {
+                  playAudio();
+                }}
+              >
+                <PlayCircleIcon color="primary" className={"pauseButton"} />
+              </IconButton>
+              <div className="actionText">
+                {countDown > 0 ? (
+                  <p className="actionText">
+                    {showChinese ? (
+                      <>{countDown} 秒内播放音频</>
+                    ) : (
+                      <>Audio playing in {countDown} second(s)</>
+                    )}
+                  </p>
+                ) : (
+                  <p className="actionText">
+                    {showChinese ? (
+                      <>再听一次指示?</>
+                    ) : (
+                      <>Listen to instructions again?</>
+                    )}
+                  </p>
+                )}
+              </div>
+            </div>
           )}
         </div>
-      )}
-    </div>
-  );
+        {stage === 1 ? (
+          <Story
+            imageLinks={imageLinks}
+            disableOption={disableOption}
+            showChinese={showChinese}
+            beforeUnload={advanceSubStage}
+          />
+        ) : stage === 2 ? (
+          <Retell
+            imageLinks={getRetellLinks()}
+            showChinese={showChinese}
+            disableOption={disableOption}
+            beforeUnload={advanceSubStage}
+            uploadToLambda={uploadToLambda}
+            type="retell"
+          />
+        ) : stage === 3 ? (
+          <Questions
+            showChinese={showChinese}
+            beforeUnload={advanceSubStage}
+            disableOption={disableOption}
+            imageLinks={questions[subStage - 1].image_links}
+            uploadToLambda={uploadToLambda}
+            type="question"
+          />
+        ) : (
+          <div>page does not exist</div>
+        )}
+      </div>
+    );
+  }
 };
 export default StoryTest;
