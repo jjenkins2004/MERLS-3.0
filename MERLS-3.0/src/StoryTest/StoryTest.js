@@ -104,35 +104,13 @@ const StoryTest = ({ language }) => {
     return () => clearTimeout(timeoutRef.current);
   }, [countDown]);
 
-  // fetch question list
-  useEffect(() => {
-    async function fetchQuestionList() {
-      const response = await fetch(
-        "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
-          language +
-          "&type=story_question",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
-      console.log("getting questions");
-      const questionList = await response.json();
-      console.log("Fetched questions:", questionList);
-      setQuestions(questionList);
-    }
-    fetchQuestionList();
-  }, []);
-
   // fetch story list
   useEffect(() => {
     async function fetchStoryList() {
       const response = await fetch(
         "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
           language +
-          "&type=story_narration",
+          "&type=story",
         {
           method: "GET",
           headers: {
@@ -145,6 +123,7 @@ const StoryTest = ({ language }) => {
       console.log("Fetched stories:", storyList);
       setStories(storyList);
       setImageLinks(storyList[0].image_links);
+      setQuestions(storyList[0].questions);
       // setNarrationLinks(storyList[0].narration_audios);
       setShowLoading(false);
     }
