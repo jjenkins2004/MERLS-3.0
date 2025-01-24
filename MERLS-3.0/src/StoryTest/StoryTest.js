@@ -45,9 +45,13 @@ const StoryTest = ({ language }) => {
   const [audioUrls, setAudioUrls] = useState({});
 
   //data for questions
+  //data for all stories
   const [stories, setStories] = useState([]);
+  //used to reference story image link
   const [imageLinks, setImageLinks] = useState(links);
+  //used to reference story narrationLinks
   const [narrationLinks, setNarrationLinks] = useState([]);
+  //questions for the current story
   const [questions, setQuestions] = useState(test_questions);
 
   const [showLoading, setShowLoading] = useState(false);
