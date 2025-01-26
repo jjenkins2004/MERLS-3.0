@@ -64,11 +64,11 @@ const StoryTest = ({ language }) => {
   //data for all stories
   const [stories, setStories] = useState([]);
   //used to reference story image link
-  const [imageLinks, setImageLinks] = useState(links);
+  const [imageLinks, setImageLinks] = useState([]);
   //used to reference story narrationLinks
   const [narrationLinks, setNarrationLinks] = useState([]);
   //questions for the current story
-  const [questions, setQuestions] = useState(test_questions);
+  const [questions, setQuestions] = useState([]);
 
   const [showLoading, setShowLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
@@ -119,8 +119,13 @@ const StoryTest = ({ language }) => {
         }
       );
       console.log("getting story data");
-      setStories(await response.json());
-      console.log("Fetched story data:", stories);
+      const data = await response.json();
+      setStories(data);
+      console.log("Fetched story data:", data);
+      //setting variables
+      setQuestions(data[0].questions);
+      setImageLinks(data[0].image_links);
+      setNarrationLinks(data[0].narration_audios);
       setShowLoading(false);
     }
     fetchStoryData();
@@ -248,7 +253,11 @@ const StoryTest = ({ language }) => {
         if (currentStory === stories.length) {
           //end test
           setCompleted(true);
+          console.log("test ending");
         } else {
+          setQuestions(stories[currentStory].questions);
+          setImageLinks(stories[currentStory].image_links);
+          setNarrationLinks(stories[currentStory].narration_audios);
           setCurrentStory((prev) => prev + 1);
         }
       } else {
