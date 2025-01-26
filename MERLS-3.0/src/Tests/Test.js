@@ -12,6 +12,7 @@ import TranslationButton from "../Components/TranslationButton";
 import AudioPermission from "./AudioPermission";
 import ReinforcementPage from "./ReinforcementPage";
 import CompletionPage from "./CompletionPage";
+import GreenButton from "../Components/GreenButton";
 
 const LAMBDA_API_ENDPOINT =
   "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
@@ -254,6 +255,19 @@ const Test = ({ type, language }) => {
             setShowChinese={setShowChinese}
           />
         </AppBar>
+        { localStorage.getItem("username") === "lucy" ? (
+          <div className="debugAdvanceButton">
+            <GreenButton
+              textEnglish="next part"
+              onClick={() => {
+                setCurId((prev) => prev+1);
+              }}
+            />
+          </div>
+        ) : (
+          null
+        )
+        }
         <Container className="testContainer">
           {completed ? (
             <CompletionPage

@@ -52,10 +52,10 @@ const LAMBDA_API_ENDPOINT =
   "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
 
 const StoryTest = ({ language }) => {
-  //currentStory and stages will use 1 based indexing
+  //currentStory will use 1 based indexing
   const [currentStory, setCurrentStory] = useState(1);
-  //used to keep track of the current question stage, stage 1 is telling the story, stage 2 is the retelling, stage 3 are the followup questions
-  const [stage, setStage] = useState(1);
+  //used to keep track of the current question stage, stage 0 is instruction, stage 1 is telling the story, stage 2 is the retelling, stage 3 are the followup questions
+  const [stage, setStage] = useState(0);
   //used to keep track of the stage's different parts, i.e. current question or which narration link
   const [subStage, setSubStage] = useState(1);
   const [audioUrls, setAudioUrls] = useState({});
@@ -126,6 +126,7 @@ const StoryTest = ({ language }) => {
       setQuestions(data[0].questions);
       setImageLinks(data[0].image_links);
       setNarrationLinks(data[0].narration_audios);
+      audioLink = "instruction link";
       setShowLoading(false);
     }
     fetchStoryData();
@@ -185,6 +186,12 @@ const StoryTest = ({ language }) => {
   //function to play instruction/story audio
   const playAudio = () => {
     setDisableOption(false);
+    console.log("playing " + audioLink);
+    try {
+      questionAudio.pause();
+    } catch {
+      console.log("couldn't pause audio");
+    }
     questionAudio = new Audio(audioLink);
     questionAudio.addEventListener("play", () => {
       setAudioPlaying(true);
@@ -223,7 +230,11 @@ const StoryTest = ({ language }) => {
     setAudioPlaying(false);
     setCountDown(3);
     setDisableOption(true);
-    if (stage === 1) {
+    if (stage === 0) {
+      setSubStage(1);
+      setStage(1);
+      updateInstructionLink(1, 1);
+    } else if (stage === 1) {
       //assume there are always 3 narration links each narrating two pictures
       if (subStage === 3) {
         updateInstructionLink(2, 1);
@@ -246,8 +257,9 @@ const StoryTest = ({ language }) => {
     } else {
       //go until the end of the questions
       if (subStage === questions.length) {
+        //reset for next story question
         audioLink = "instuction audio";
-        setStage(1);
+        setStage(0);
         setSubStage(1);
         //advance story
         if (currentStory === stories.length) {
@@ -255,6 +267,7 @@ const StoryTest = ({ language }) => {
           setCompleted(true);
           console.log("test ending");
         } else {
+          audioLink = "instruction link";
           setQuestions(stories[currentStory].questions);
           setImageLinks(stories[currentStory].image_links);
           setNarrationLinks(stories[currentStory].narration_audios);
@@ -297,12 +310,14 @@ const StoryTest = ({ language }) => {
     );
   } else if (completed) {
     return (
-      <CompletionPage
-        showChinese={showChinese}
-        audioLink={""}
-        imageLink={""}
-        submitAnswers={() => {}}
-      />
+      <div id = "testPage">
+        <CompletionPage
+          showChinese={showChinese}
+          audioLink={""}
+          imageLink={"https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif"}
+          submitAnswers={() => {}}
+        />
+      </div>
     );
   } else {
     return (
@@ -318,11 +333,7 @@ const StoryTest = ({ language }) => {
           <GreenButton
             textEnglish="next part"
             onClick={() => {
-              setAudioPlaying(false);
-              setCountDown(3);
-              setDisableOption(true);
-              setStage((prevStage) => prevStage + 1);
-              setSubStage(1);
+              advanceSubStage();
             }}
           />
         </div>
@@ -372,7 +383,7 @@ const StoryTest = ({ language }) => {
             </div>
           )}
         </div>
-        {stage === 1 ? (
+        {stage === 0 || stage === 1 ? (
           <Story
             imageLinks={imageLinks}
             disableOption={disableOption}
