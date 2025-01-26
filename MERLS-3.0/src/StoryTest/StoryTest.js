@@ -104,13 +104,13 @@ const StoryTest = ({ language }) => {
     return () => clearTimeout(timeoutRef.current);
   }, [countDown]);
 
-  // fetch question list
+  // fetching story data
   useEffect(() => {
-    async function fetchQuestionList() {
+    async function fetchStoryData() {
       const response = await fetch(
         "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
           language +
-          "&type=story_question",
+          "&type=story",
         {
           method: "GET",
           headers: {
@@ -118,37 +118,12 @@ const StoryTest = ({ language }) => {
           },
         }
       );
-      console.log("getting questions");
-      const questionList = await response.json();
-      console.log("Fetched questions:", questionList);
-      setQuestions(questionList);
-    }
-    fetchQuestionList();
-  }, []);
-
-  // fetch story list
-  useEffect(() => {
-    async function fetchStoryList() {
-      const response = await fetch(
-        "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions?language=" +
-          language +
-          "&type=story_narration",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
-      console.log("getting stories");
-      const storyList = await response.json();
-      console.log("Fetched stories:", storyList);
-      setStories(storyList);
-      setImageLinks(storyList[0].image_links);
-      // setNarrationLinks(storyList[0].narration_audios);
+      console.log("getting story data");
+      setStories(await response.json());
+      console.log("Fetched story data:", stories);
       setShowLoading(false);
     }
-    fetchStoryList();
+    fetchStoryData();
   }, []);
 
   const recordAudioUrl = (questionId, s3Url) => {
