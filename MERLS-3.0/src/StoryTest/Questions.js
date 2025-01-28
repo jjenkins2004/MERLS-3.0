@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ReactMic } from "react-mic";
 
-const Questions = ({ showChinese, beforeUnload, imageLinks, uploadToLambda, type }) => {
+const Questions = ({ showChinese, beforeUnload, question, uploadToLambda, type }) => {
   //microphone recording
   const [recording, setRecording] = useState(false);
   const [finishedProcessing, setFinishedProcessing] = useState(false);
@@ -50,9 +50,12 @@ const Questions = ({ showChinese, beforeUnload, imageLinks, uploadToLambda, type
           visualSetting="none" // Hide the waveform
         />
       </div>
-        {imageLinks ? (
+      <h1 className="storyQuestion">
+        {question.question_id + ". " + question.question_text}
+      </h1>
+        {question.image_links ? (
           <div className="container">
-            {imageLinks.map((item) => {
+            {question.image_links.map((item) => {
               return (
                 <div className="itemContainer">
                   <img

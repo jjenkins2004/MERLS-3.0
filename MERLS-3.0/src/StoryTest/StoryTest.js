@@ -404,7 +404,7 @@ const StoryTest = ({ language }) => {
             showChinese={showChinese}
             beforeUnload={advanceSubStage}
             disableOption={disableOption}
-            imageLinks={questions[subStage - 1].image_links}
+            question={questions[subStage-1]}
             uploadToLambda={uploadToLambda}
             type="question"
           />

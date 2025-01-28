@@ -292,6 +292,11 @@
   }
 }
 
+.storyQuestion {
+  margin: 24px;
+  font-size: xx-large;
+}
+
 @media(max-height: 440px) {
   #fullStory {
     .container {
