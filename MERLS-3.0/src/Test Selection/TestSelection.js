@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./TestSelection.css";
 import AppBar from "@mui/material/AppBar";
 import TranslationButton from "../Components/TranslationButton";
+import Confirmation from "../Components/Confirmation";
 
 const LanguageSelection = () => {
   const navigate = useNavigate();
@@ -15,14 +16,16 @@ const LanguageSelection = () => {
     useState(false);
   const [chineseRepetitionCompleted, setChineseRepetitionCompleted] =
     useState(false);
+  const [englishStoryCompleted, setEnglishStoryCompleted] = useState(false);
   const [selectedButton, setSelectedButton] = useState(0);
   const [showChinese, setShowChinese] = useState(true);
 
   const linkLocations = [
-    "/chinese-test",
-    "/english-test",
-    "/chinese-repetition-test",
-    "/english-repetition-test",
+    "/matching-test-chinese",
+    "/matching-test-english",
+    "/repetition-test-chinese",
+    "/repetition-test-english",
+    "/story-test-english"
   ];
 
   useEffect(() => {
@@ -157,6 +160,27 @@ const LanguageSelection = () => {
           {showChinese ? <>英语句子重复</> : <>English Sentence Repetition</>}
         </button>
         <button
+          className={`testButton ${
+            chineseListeningCompleted
+              ? "selectionDisabled"
+              : selectedButton === 5
+              ? "selected"
+              : "unselected"
+          }`}
+          onClick={() => {
+            if (!englishStoryCompleted) {
+              if (selectedButton === 5) {
+                setSelectedButton(0);
+              } else {
+                setSelectedButton(5);
+              }
+            }
+          }}
+          disabled={englishStoryCompleted}
+        >
+          {showChinese ? <>英语故事记忆</> : <>English Story Retention</>}
+        </button>
+        <button
           className={
             selectedButton === 0
               ? "selectionButton selectionDisabled"
@@ -164,16 +188,14 @@ const LanguageSelection = () => {
           }
           disabled={selectedButton === 0}
           onClick={() => {
-            const queryParam = `?cn-zw=${
-              showChinese ? "true" : "false"
-            }`;
+            const queryParam = `?cn-zw=${showChinese ? "true" : "false"}`;
             navigate(`${linkLocations[selectedButton - 1]}${queryParam}`);
           }}
         >
           {showChinese ? <>开始</> : <>Start</>}
         </button>
       </div>
-      {englishListeningCompleted && chineseListeningCompleted && (
+      {englishListeningCompleted && chineseListeningCompleted && englishRepetitionCompleted && chineseRepetitionCompleted && englishStoryCompleted && (
         <div className="completionText">
           {showChinese ? (
             <>恭喜!您已完成所有测试!</>

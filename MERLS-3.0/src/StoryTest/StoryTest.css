@@ -294,6 +294,7 @@
 
 .storyQuestion {
   margin: 24px;
+  text-decoration: underline;
   font-size: xx-large;
 }
 

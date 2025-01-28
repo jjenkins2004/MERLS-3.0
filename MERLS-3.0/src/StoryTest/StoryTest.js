@@ -12,6 +12,7 @@ import "../Tests/Test.scss";
 import Retell from "./Retell";
 import Questions from "./Questions";
 import CompletionPage from "../Tests/CompletionPage";
+import Confirmation from "../Components/Confirmation";
 
 let questionAudio;
 let audioLink;
@@ -51,6 +52,9 @@ let retellingLinks = [];
 const LAMBDA_API_ENDPOINT =
   "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
 
+const narration_instruciton =
+  "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/narration_instructions.m4a";
+
 const StoryTest = ({ language }) => {
   //currentStory will use 1 based indexing
   const [currentStory, setCurrentStory] = useState(1);
@@ -70,6 +74,7 @@ const StoryTest = ({ language }) => {
   //questions for the current story
   const [questions, setQuestions] = useState([]);
 
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [showChinese, setShowChinese] = useState(false);
@@ -77,6 +82,10 @@ const StoryTest = ({ language }) => {
   const [countDown, setCountDown] = useState(3);
   const [disableOption, setDisableOption] = useState(true);
   const timeoutRef = useRef(null);
+
+  //used for the progress bar
+  const [totalStages, setTotalStages] = useState(1);
+  const [currentStage, setCurrentStage] = useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,7 +107,9 @@ const StoryTest = ({ language }) => {
       }, 1000);
     } else {
       //plays audio with link that is assigned to audioLink
-      playAudio();
+      if (!audioPlaying) {
+        playAudio();
+      }
     }
 
     return () => clearTimeout(timeoutRef.current);
@@ -126,8 +137,17 @@ const StoryTest = ({ language }) => {
       setQuestions(data[0].questions);
       setImageLinks(data[0].image_links);
       setNarrationLinks(data[0].narration_audios);
-      audioLink = "instruction link";
+      audioLink = narration_instruciton;
       setShowLoading(false);
+
+      //finding total number of stages
+      var total = 0;
+      for (const element of data) {
+        //+ 4 for narration instruction audios + 3 retelling section + number of questions
+        total += 7;
+        total += element.questions.length;
+      }
+      setTotalStages(total);
     }
     fetchStoryData();
   }, []);
@@ -185,13 +205,13 @@ const StoryTest = ({ language }) => {
 
   //function to play instruction/story audio
   const playAudio = () => {
-    setDisableOption(false);
     console.log("playing " + audioLink);
-    try {
-      questionAudio.pause();
-    } catch {
-      console.log("couldn't pause audio");
+
+    if (!audioLink) {
+      console.log("audio link null");
+      return;
     }
+
     questionAudio = new Audio(audioLink);
     questionAudio.addEventListener("play", () => {
       setAudioPlaying(true);
@@ -210,6 +230,16 @@ const StoryTest = ({ language }) => {
     });
   };
 
+  //stop audio before when moving on
+  const stopAudio = () => {
+    try {
+      questionAudio.pause();
+      setAudioPlaying(false);
+    } catch {
+      console.log("couldn't pause audio");
+    }
+  };
+
   //defining functions for question flow and logic
   const updateInstructionLink = (stage, subStage) => {
     //get the next instruction link based on the based in stage and substages
@@ -226,10 +256,16 @@ const StoryTest = ({ language }) => {
   };
 
   const advanceSubStage = () => {
+    if (stage === 0 && currentStory === 1) {
+      setShowConfirmation(true);
+      return;
+    }
     //first reset all variables
     setAudioPlaying(false);
     setCountDown(3);
     setDisableOption(true);
+
+    setCurrentStage((prev) => prev + 1);
     if (stage === 0) {
       setSubStage(1);
       setStage(1);
@@ -310,10 +346,19 @@ const StoryTest = ({ language }) => {
     );
   } else if (completed) {
     return (
-      <div id = "testPage">
+      <div id="testPage">
+        <AppBar className="titleContainer">
+          <progress id="progress" value={1} max={1} />
+          <TranslationButton
+            showChinese={showChinese}
+            setShowChinese={setShowChinese}
+          />
+        </AppBar>
         <CompletionPage
           showChinese={showChinese}
-          audioLink={""}
+          audioLink={
+            "https://sites.usc.edu/heatlab/files/2024/11/RV-Englsih-End-of-the-test-narration-w-audio.m4a"
+          }
           imageLink={"https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif"}
           submitAnswers={() => {}}
         />
@@ -323,20 +368,44 @@ const StoryTest = ({ language }) => {
     return (
       <div id="testPage">
         <AppBar className="titleContainer">
-          <progress id="progress" value={5} max={10} />
+          <progress id="progress" value={currentStage} max={totalStages} />
           <TranslationButton
             showChinese={showChinese}
             setShowChinese={setShowChinese}
           />
         </AppBar>
-        <div className="debugAdvanceButton">
-          <GreenButton
-            textEnglish="next part"
-            onClick={() => {
-              advanceSubStage();
+        {showConfirmation ? (
+          <Confirmation
+            showChinese={showChinese}
+            setShowConfirmation={setShowConfirmation}
+            englishText={
+              "Are you sure you want to begin the English Story Test?"
+            }
+            chineseText={"你确定要开始英语故事测试吗"}
+            confirmAction={() => {
+              //first reset all variables
+              setAudioPlaying(false);
+              setCountDown(3);
+              setDisableOption(true);
+
+              //increment stage counter
+              setCurrentStage((prev) => prev + 1);
+              setSubStage(1);
+              setStage(1);
+              updateInstructionLink(1, 1);
             }}
           />
-        </div>
+        ) : null}
+        {localStorage.getItem("username") === "lucy" ? (
+          <div className="debugAdvanceButton">
+            <GreenButton
+              textEnglish="next part"
+              onClick={() => {
+                advanceSubStage();
+              }}
+            />
+          </div>
+        ) : null}
         <div className="indicator">
           {audioPlaying ? (
             <div>
@@ -388,23 +457,32 @@ const StoryTest = ({ language }) => {
             imageLinks={imageLinks}
             disableOption={disableOption}
             showChinese={showChinese}
-            beforeUnload={advanceSubStage}
+            beforeUnload={() => {
+              stopAudio();
+              advanceSubStage();
+            }}
           />
         ) : stage === 2 ? (
           <Retell
             imageLinks={getRetellLinks()}
             showChinese={showChinese}
             disableOption={disableOption}
-            beforeUnload={advanceSubStage}
+            beforeUnload={() => {
+              stopAudio();
+              advanceSubStage();
+            }}
             uploadToLambda={uploadToLambda}
             type="retell"
           />
         ) : stage === 3 ? (
           <Questions
             showChinese={showChinese}
-            beforeUnload={advanceSubStage}
+            beforeUnload={() => {
+              stopAudio();
+              advanceSubStage();
+            }}
             disableOption={disableOption}
-            question={questions[subStage-1]}
+            question={questions[subStage - 1]}
             uploadToLambda={uploadToLambda}
             type="question"
           />
