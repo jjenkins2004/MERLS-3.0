@@ -2,7 +2,7 @@ import { React, useState, useRef, useEffect } from "react";
 import { ReactMic } from "react-mic";
 import "./StoryTest.css";
 
-const Retell = ({ imageLinks, showChinese, beforeUnload, uploadToLambda, type }) => {
+const Retell = ({ imageLinks, showChinese, beforeUnload, uploadToLambda, type, disableOption }) => {
   //microphone recording
   const [recording, setRecording] = useState(false);
   const [finishedProcessing, setFinishedProcessing] = useState(false);
@@ -76,17 +76,21 @@ const Retell = ({ imageLinks, showChinese, beforeUnload, uploadToLambda, type })
             <div className="listeningBar" />
             <div className="listeningBar" />
             <div className="listeningBar" />
-            <p>Listening...</p>
+            <p>{showChinese ? "正在聆听..." : "Listening..."}</p>
             <div className="listeningBar" />
             <div className="listeningBar" />
             <div className="listeningBar" />
             <div className="listeningBar" />
           </div>
-          (click again to submit answer)
+          {showChinese ? "(再次点击提交答案)" : "(click again to submit answer)"}
         </div>
+      ) : disableOption ? (
+        <div className="recordingContainer disabled">
+          <p>{showChinese ? "正在播放说明..." : "Instructions playing..."}</p>
+          </div>
       ) : (
-        <div className="recordingContainer" onClick={startRecording}>
-          <p>Click to Record Answer</p>
+        <div className="recordingContainer enabled" onClick={startRecording}>
+          <p>{showChinese ? "点击录制答案" : "Click to record answer"}</p>
         </div>
       )}
     </div>

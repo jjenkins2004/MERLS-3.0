@@ -13,6 +13,7 @@ import Retell from "./Retell";
 import Questions from "./Questions";
 import CompletionPage from "../Tests/CompletionPage";
 import Confirmation from "../Components/Confirmation";
+import Instructions from "./Instructions";
 
 let questionAudio;
 let audioLink;
@@ -47,7 +48,11 @@ let test_questions = [
   { question_audio: "", link: "", image_links: null },
 ];
 
-let retellingLinks = [];
+let retellingLinks = [
+  "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/retell_instructions_1.m4a",
+  "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/retell_instructions_2.m4a",
+  "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/retell_instructions_2.m4a",
+];
 
 const LAMBDA_API_ENDPOINT =
   "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
@@ -143,8 +148,8 @@ const StoryTest = ({ language }) => {
       //finding total number of stages
       var total = 0;
       for (const element of data) {
-        //+ 4 for narration instruction audios + 3 retelling section + number of questions
-        total += 7;
+        //+ 4 for narration instruction audios + 3 retelling section + 1 for question instructions + number of questions
+        total += 8;
         total += element.questions.length;
       }
       setTotalStages(total);
@@ -247,7 +252,7 @@ const StoryTest = ({ language }) => {
       audioLink = narrationLinks[subStage - 1];
     } else if (stage === 2) {
       audioLink = retellingLinks[subStage - 1];
-    } else if (stage === 3) {
+    } else if (stage === 4) {
       // audioLink = questions[subStage - 1].link;
       audioLink = questions[subStage - 1].question_audio;
     } else {
@@ -261,7 +266,7 @@ const StoryTest = ({ language }) => {
       return;
     }
     //first reset all variables
-    setAudioPlaying(false);
+    stopAudio();
     setCountDown(3);
     setDisableOption(true);
 
@@ -283,34 +288,37 @@ const StoryTest = ({ language }) => {
     } else if (stage === 2) {
       //assume user will have 3 retelling sections
       if (subStage === 3) {
-        updateInstructionLink(3, 1);
+        audioLink = "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/question_instructions.m4a";
         setStage(3);
         setSubStage(1);
       } else {
         updateInstructionLink(2, subStage + 1);
         setSubStage((prevStage) => prevStage + 1);
       }
+    } else if (stage === 3) {
+      setStage(4);
+      updateInstructionLink(4, 1);
     } else {
       //go until the end of the questions
       if (subStage === questions.length) {
         //reset for next story question
-        audioLink = "instuction audio";
+        audioLink = narration_instruciton;
         setStage(0);
         setSubStage(1);
         //advance story
         if (currentStory === stories.length) {
           //end test
           setCompleted(true);
+          setAudioPlaying(true); //just to make sure that this componenet's audio function doesn't play, as the audio is going to be played in the Completion page
           console.log("test ending");
         } else {
-          audioLink = "instruction link";
           setQuestions(stories[currentStory].questions);
           setImageLinks(stories[currentStory].image_links);
           setNarrationLinks(stories[currentStory].narration_audios);
           setCurrentStory((prev) => prev + 1);
         }
       } else {
-        updateInstructionLink(3, subStage + 1);
+        updateInstructionLink(4, subStage + 1);
         setSubStage((prevStage) => prevStage + 1);
       }
     }
@@ -401,6 +409,7 @@ const StoryTest = ({ language }) => {
             <GreenButton
               textEnglish="next part"
               onClick={() => {
+                stopAudio();
                 advanceSubStage();
               }}
             />
@@ -475,6 +484,15 @@ const StoryTest = ({ language }) => {
             type="retell"
           />
         ) : stage === 3 ? (
+          <Instructions
+            showChinese={showChinese}
+            beforeUnload={() => {
+              stopAudio();
+              advanceSubStage();
+            }}
+            disableOption={disableOption}
+          />
+        ) : stage === 4 ? (
           <Questions
             showChinese={showChinese}
             beforeUnload={() => {

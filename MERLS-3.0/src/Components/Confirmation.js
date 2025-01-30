@@ -22,7 +22,7 @@ const Confirmation = ({
             className="buttonOverride"
             showChinese={showChinese}
             textEnglish={"Not yet"}
-            textChinese={""}
+            textChinese={"还没"}
             onClick={() => {
               setShowConfirmation(false);
             }}
@@ -32,7 +32,7 @@ const Confirmation = ({
             className="buttonOverride"
             showChinese={showChinese}
             textEnglish={"Yes!"}
-            textChinese={""}
+            textChinese={"是的!"}
             onClick={() => {
               confirmAction();
               setShowConfirmation(false);
