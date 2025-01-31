@@ -53,7 +53,15 @@ public class ParticipantDB {
 
 		try {
 			String updateQuery;
-			if (type.equals("repetition")) {
+			if (type.equals("story")) {
+				if (lang.equals("cn")) {
+					updateQuery = "UPDATE public.participants SET completed_story_cn = TRUE WHERE participant_id = ?";
+				}
+				else {
+					updateQuery = "UPDATE public.participants SET completed_story_en = TRUE WHERE participant_id = ?";
+				}
+			}
+			else if (type.equals("repetition")) {
 				if (lang.equals("cn")) {
 					updateQuery = "UPDATE public.participants SET completed_repetition_cn = TRUE WHERE participant_id = ?";
 				}

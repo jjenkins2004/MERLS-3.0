@@ -59,6 +59,7 @@ public class UsersHandler implements RequestHandler<Map<String, Object>, String>
                 jsonObject.put("completed_matching_en", rs.getBoolean("completed_matching_en"));
                 jsonObject.put("completed_repetition_cn", rs.getBoolean("completed_repetition_cn"));
                 jsonObject.put("completed_repetition_en", rs.getBoolean("completed_repetition_en"));
+                jsonObject.put("completed_story_en", rs.getBoolean("completed_story_en"));
                 jsonObject.put("is_active", rs.getBoolean("is_active"));
                 jsonArray.put(jsonObject);
             }

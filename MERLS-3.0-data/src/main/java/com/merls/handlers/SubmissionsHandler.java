@@ -52,7 +52,10 @@ public class SubmissionsHandler {
 			Map<Integer, Integer> answers = submission.getUserAns();
 			Boolean isEN = submission.isEN();
 
-			if (submission.isAudioTest()) {
+			if (submission.getSubmissionType().equals("story")) {
+				ParticipantDB.updateCompleted(participantId, "story", !isEN ? "cn" : "en");
+			}
+			else if (submission.isAudioTest()) {
 				ParticipantDB.updateCompleted(participantId, "repetition", !isEN ? "cn" : "en");
 			}
 			else {

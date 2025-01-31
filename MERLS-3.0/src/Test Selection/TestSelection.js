@@ -49,6 +49,7 @@ const LanguageSelection = () => {
             setChineseListeningCompleted(user.completed_matching_cn);
             setEnglishRepetitionCompleted(user.completed_repetition_en);
             setChineseRepetitionCompleted(user.completed_repetition_cn);
+            setEnglishStoryCompleted(user.completed_matching_en);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -161,7 +162,7 @@ const LanguageSelection = () => {
         </button>
         <button
           className={`testButton ${
-            chineseListeningCompleted
+              englishStoryCompleted
               ? "selectionDisabled"
               : selectedButton === 5
               ? "selected"
