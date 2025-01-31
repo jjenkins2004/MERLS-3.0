@@ -68,6 +68,8 @@ const StoryTest = ({ language }) => {
   //used to keep track of the stage's different parts, i.e. current question or which narration link
   const [subStage, setSubStage] = useState(1);
   const [audioUrls, setAudioUrls] = useState({});
+  const [retellUrls, setRetellUrls] = useState({});
+  const subStageRef = useRef(subStage);
 
   //data for questions
   //data for all stories
@@ -157,18 +159,38 @@ const StoryTest = ({ language }) => {
     fetchStoryData();
   }, []);
 
-  const recordAudioUrl = (questionId, s3Url) => {
+  const recordAudioUrl = (questionId, s3Url, type) => {
     if (!questionId || !s3Url) {
       console.error("Missing required parameters:", { questionId, s3Url });
       return;
     }
     const truncatedUrl = s3Url.split("?")[0];
 
-    setAudioUrls((prev) => {
-      const updatedUrls = { ...prev, [questionId]: truncatedUrl };
-      console.log("Current Audio URLs:", updatedUrls);
-      return updatedUrls;
-    });
+    if (type === "retell") {
+      setRetellUrls((prev) => {
+        const updatedUrls = {
+          ...prev,
+          [currentStory]: {
+            ...(prev[currentStory] || {}),
+            [questionId]: truncatedUrl,
+          },
+        };
+        console.log("Current Audio URLs for retell:", updatedUrls);
+        return updatedUrls;
+      });
+    } else {
+      setAudioUrls((prev) => {
+        const updatedUrls = {
+          ...prev,
+          [currentStory]: {
+            ...(prev[currentStory] || {}),
+            [questionId]: truncatedUrl,
+          },
+        };
+        console.log("Current Audio URLs for questions:", updatedUrls);
+        return updatedUrls;
+      });
+    }
   };
 
   // upload audio to s3, depends on type
@@ -181,7 +203,9 @@ const StoryTest = ({ language }) => {
     });
 
     // curr question id
-    const questionId = subStage;
+    const questionId = subStageRef.current;
+    console.log("current story id:", currentStory);
+    console.log("current question id:", questionId);
 
     const requestBody = {
       fileType: "audio/webm",
@@ -190,8 +214,8 @@ const StoryTest = ({ language }) => {
       questionId: questionId,
       bucketName:
         type === "retell"
-          ? "merls-story-user-audio/retell"
-          : "merls-story-user-audio/question",
+          ? `merls-story-user-audio/retell/${currentStory}`
+          : `merls-story-user-audio/question/${currentStory}`,
     };
 
     const response = await fetch(LAMBDA_API_ENDPOINT, {
@@ -203,9 +227,40 @@ const StoryTest = ({ language }) => {
     // Parse response and record audio URL
     const data = await response.json();
     if (data.url) {
-      recordAudioUrl(questionId, data.url);
+      recordAudioUrl(questionId, data.url, type);
     }
     return data.url;
+  };
+
+  const submitAnswers = async () => {
+    const username = localStorage.getItem("username");
+    // console.log("type:", type);
+    let endpoint =
+        "https://ue2r8y56oe.execute-api.us-east-2.amazonaws.com/default/getQuestions";
+    let requestBody;
+    requestBody = {
+      participantId: username,
+      userAns: null,
+      isEN: language === "CN" ? false : true,
+      isAudioTest: false,
+      storySubmissionList: audioUrls,
+      retellSubmissionList: retellUrls,
+      submissionType: "story",
+    };
+    console.log("Submitting data:", requestBody);
+
+    const response = await fetch(endpoint, {
+      method: "PUT",
+      body: JSON.stringify(requestBody),
+    });
+
+    if (response.ok) {
+      const queryParam = `?cn-zw=${showChinese ? "true" : "false"}`;
+      navigate(`/test-selection${queryParam}`);
+    } else {
+      alert("Failed to submit answers");
+    }
+
   };
 
   //function to play instruction/story audio
@@ -286,6 +341,7 @@ const StoryTest = ({ language }) => {
         setSubStage((prevStage) => prevStage + 1);
       }
     } else if (stage === 2) {
+      subStageRef.current = subStage;
       //assume user will have 3 retelling sections
       if (subStage === 3) {
         audioLink = "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/question_instructions.m4a";
@@ -299,6 +355,7 @@ const StoryTest = ({ language }) => {
       setStage(4);
       updateInstructionLink(4, 1);
     } else {
+      subStageRef.current = subStage;
       //go until the end of the questions
       if (subStage === questions.length) {
         //reset for next story question
@@ -368,7 +425,7 @@ const StoryTest = ({ language }) => {
             "https://sites.usc.edu/heatlab/files/2024/11/RV-Englsih-End-of-the-test-narration-w-audio.m4a"
           }
           imageLink={"https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif"}
-          submitAnswers={() => {}}
+          submitAnswers={submitAnswers}
         />
       </div>
     );

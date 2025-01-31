@@ -25,10 +25,71 @@ public class SubmissionsDB {
 		String participantId = event.getParticipantId();
 		boolean isEN = event.isEN;
 		boolean isAudioTest = event.isAudioTest();
-		log.info("Received submission - participantId:" + participantId + " isEN:"+isEN+" isAudioTest: "+ isAudioTest);
+		String submissionType = event.getSubmissionType();
+		log.info("Received submission - participantId:" + participantId +
+				" isEN:"+isEN+" isAudioTest: "+ isAudioTest + " submissionType: " + submissionType);
 
 		try {
-			if (isAudioTest) {
+			if (submissionType.equals("story")) {
+				log.info("story submission");
+				HashMap<Integer, HashMap<Integer, String>> storySubmissions = event.getStorySubmissionList();
+				HashMap<Integer, HashMap<Integer, String>> retellSubmissions = event.getRetellSubmissionList();
+
+      			// Handle story submissions
+				if (storySubmissions != null && !storySubmissions.isEmpty()) {
+					String query = "INSERT INTO PUBLIC.STORY_SUBMISSIONS(participant_id, question_id, audio_url, is_EN, story_id) " +
+							"VALUES(?, ?, ?, ?, ?)";
+
+					for (Map.Entry<Integer, HashMap<Integer, String>> storyEntry : storySubmissions.entrySet()) {
+						int storyId = storyEntry.getKey();
+						HashMap<Integer, String> questionSubmissions = storyEntry.getValue();
+
+						for (Map.Entry<Integer, String> questionEntry : questionSubmissions.entrySet()) {
+							int questionId = questionEntry.getKey();
+							String audioUrl = questionEntry.getValue();
+
+							ps = connection.prepareStatement(query);
+							ps.setString(1, participantId);
+							ps.setInt(2, questionId);
+							ps.setString(3, audioUrl);
+							ps.setBoolean(4, isEN);
+							ps.setInt(5, storyId);
+							ps.executeUpdate();
+						}
+					}
+				} else {
+					log.info("No story submissions found.");
+				}
+
+				// Handle retell submissions
+				if (retellSubmissions != null && !retellSubmissions.isEmpty()) {
+					String query = "INSERT INTO PUBLIC.RETELL_SUBMISSIONS(participant_id, question_id, audio_url, is_EN, story_id) " +
+							"VALUES(?, ?, ?, ?, ?)";
+
+					for (Map.Entry<Integer, HashMap<Integer, String>> storyEntry : retellSubmissions.entrySet()) {
+						int storyId = storyEntry.getKey();
+						HashMap<Integer, String> questionSubmissions = storyEntry.getValue();
+
+						for (Map.Entry<Integer, String> questionEntry : questionSubmissions.entrySet()) {
+							int questionId = questionEntry.getKey();
+							String audioUrl = questionEntry.getValue();
+
+							ps = connection.prepareStatement(query);
+							ps.setString(1, participantId);
+							ps.setInt(2, questionId);
+							ps.setString(3, audioUrl);
+							ps.setBoolean(4, isEN);
+							ps.setInt(5, storyId);
+							ps.executeUpdate();
+						}
+					}
+				} else {
+					log.info("No retell submissions found.");
+				}
+
+
+			}
+			else if (isAudioTest) {
 				log.info("audio request");
 
 				String repetitionTable = isEN ? "english_repetition" : "chinese_repetition";

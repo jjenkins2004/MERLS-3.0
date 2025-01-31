@@ -86,14 +86,17 @@ public class SubmissionsHandler {
 
 		// Only validate userAns if isAudioTest is false
 		boolean isAudioTest = (Boolean) requestBody.get("isAudioTest");
-		if (!isAudioTest) {
-			if (!requestBody.containsKey("userAns") || !(requestBody.get("userAns") instanceof HashMap)) {
-				throw new IllegalArgumentException("userAns is missing or not a valid map");
-			}
-		} else {
-			// For audio test, validate audioSubmissionList
-			if (!requestBody.containsKey("audioSubmissionList") || !(requestBody.get("audioSubmissionList") instanceof HashMap)) {
-				throw new IllegalArgumentException("audioSubmissionList is missing or not a valid map");
+		String submissionType = requestBody.get("submissionType").toString();
+		if (!submissionType.equals("story")) {
+			if (!isAudioTest) {
+				if (!requestBody.containsKey("userAns") || !(requestBody.get("userAns") instanceof HashMap)) {
+					throw new IllegalArgumentException("userAns is missing or not a valid map");
+				}
+			} else {
+				// For audio test, validate audioSubmissionList
+				if (!requestBody.containsKey("audioSubmissionList") || !(requestBody.get("audioSubmissionList") instanceof HashMap)) {
+					throw new IllegalArgumentException("audioSubmissionList is missing or not a valid map");
+				}
 			}
 		}
 

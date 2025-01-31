@@ -9,8 +9,12 @@ public class Submission {
 	public String participantId;
 	public HashMap<Integer, Integer> userAns;
 	public HashMap<Integer, String> audioSubmissionList;
+	public HashMap<Integer, HashMap<Integer, String>> storySubmissionList;
+	public HashMap<Integer, HashMap<Integer, String>> retellSubmissionList;
+
 	public boolean isEN;
 	public boolean isAudioTest;
+	public String submissionType;
 
 	public Submission() {
 	}
@@ -57,5 +61,26 @@ public class Submission {
 
 	public void setAudioSubmissionList(HashMap<Integer, String> audioSubmissionList) {
 		this.audioSubmissionList = audioSubmissionList;
+	}
+
+	public String getSubmissionType() {
+		return submissionType;
+	}
+	public void setSubmissionType(String submissionType) {
+		this.submissionType = submissionType;
+	}
+
+	public HashMap<Integer, HashMap<Integer, String>> getRetellSubmissionList() {
+		return retellSubmissionList;
+	}
+	public void setRetellSubmissionList(HashMap<Integer, HashMap<Integer, String>> retellSubmissionList) {
+		this.retellSubmissionList = retellSubmissionList;
+	}
+
+	public HashMap<Integer, HashMap<Integer, String>> getStorySubmissionList() {
+		return storySubmissionList;
+	}
+	public void setStorySubmissionList(HashMap<Integer, HashMap<Integer, String>> storySubmissionList) {
+		this.storySubmissionList = storySubmissionList;
 	}
 }
