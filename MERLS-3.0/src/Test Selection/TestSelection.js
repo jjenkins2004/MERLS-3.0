@@ -49,7 +49,7 @@ const LanguageSelection = () => {
             setChineseListeningCompleted(user.completed_matching_cn);
             setEnglishRepetitionCompleted(user.completed_repetition_en);
             setChineseRepetitionCompleted(user.completed_repetition_cn);
-            setEnglishStoryCompleted(user.completed_matching_en);
+            setEnglishStoryCompleted(user.completed_story_en);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
