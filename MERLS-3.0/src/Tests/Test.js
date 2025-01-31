@@ -149,6 +149,7 @@ const Test = ({ type, language }) => {
             isEN: language === "CN" ? false : true,
             isAudioTest: false,
             audioSubmissionList: null,
+            submissionType: "matching",
           };
         } else if (type === "repetition") {
           const audioUrls = {};
@@ -173,6 +174,7 @@ const Test = ({ type, language }) => {
             isEN: language === "CN" ? false : true,
             isAudioTest: true,
             userAns: null,
+            submissionType: "repetition",
           };
         }
 

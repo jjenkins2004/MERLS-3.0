@@ -89,6 +89,7 @@ const StoryTest = ({ language }) => {
   const [countDown, setCountDown] = useState(3);
   const [disableOption, setDisableOption] = useState(true);
   const timeoutRef = useRef(null);
+  const [uploadsInProgress, setUploadsInProgress] = useState(0);
 
   //used for the progress bar
   const [totalStages, setTotalStages] = useState(1);
@@ -195,6 +196,7 @@ const StoryTest = ({ language }) => {
 
   // upload audio to s3, depends on type
   const uploadToLambda = async (recordedBlob, type) => {
+    setUploadsInProgress(prev => prev + 1);
     const base64Data = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
@@ -229,6 +231,7 @@ const StoryTest = ({ language }) => {
     if (data.url) {
       recordAudioUrl(questionId, data.url, type);
     }
+    setUploadsInProgress(prev => prev - 1);
     return data.url;
   };
 
@@ -426,6 +429,7 @@ const StoryTest = ({ language }) => {
           }
           imageLink={"https://sites.usc.edu/heatlab/files/2024/10/puppy3.gif"}
           submitAnswers={submitAnswers}
+          uploadsInProgress={uploadsInProgress}
         />
       </div>
     );

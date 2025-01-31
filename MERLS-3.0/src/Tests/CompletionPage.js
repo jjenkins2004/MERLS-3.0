@@ -13,6 +13,7 @@ const CompletionPage = ({
   audioLink,
   imageLink,
   submitAnswers,
+  uploadsInProgress = 0,
 }) => {
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [replay, setReplay] = useState(false);
@@ -151,7 +152,7 @@ const CompletionPage = ({
           showChinese={showChinese}
           textEnglish={loading ? "Submitting..." : "Submit Answers"}
           textChinese={loading ? "提交中..." : "提交答案"}
-          disabled={loading}
+          disabled={loading || uploadsInProgress > 0}
           onClick={() => {
             if (!loading) {
               submitAnswers();
