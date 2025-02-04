@@ -110,6 +110,10 @@ const StoryTest = ({ language }) => {
   //initial audio instructions
   useEffect(() => {
     clearTimeout(timeoutRef.current);
+    //dont initiate countdown if on loading screen or audio permission
+    if (showLoading || showAudioPermission) {
+      return
+    }
     if (countDown > 0) {
       // timeoutRef is used here so we can pause the countDown by clearing timeout
       timeoutRef.current = setTimeout(() => {
@@ -123,7 +127,7 @@ const StoryTest = ({ language }) => {
     }
 
     return () => clearTimeout(timeoutRef.current);
-  }, [countDown]);
+  }, [countDown, showLoading, showAudioPermission]);
 
   // fetching story data
   useEffect(() => {
