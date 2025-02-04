@@ -14,6 +14,7 @@ import Questions from "./Questions";
 import CompletionPage from "../Tests/CompletionPage";
 import Confirmation from "../Components/Confirmation";
 import Instructions from "./Instructions";
+import AudioPermission from "../Tests/AudioPermission";
 
 let questionAudio;
 let audioLink;
@@ -57,7 +58,7 @@ let retellingLinks = [
 const LAMBDA_API_ENDPOINT =
   "https://2inehosoqi.execute-api.us-east-2.amazonaws.com/prod/audio-upload";
 
-const narration_instruciton =
+const narration_instruction =
   "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/narration_instructions.m4a";
 
 const StoryTest = ({ language }) => {
@@ -81,6 +82,7 @@ const StoryTest = ({ language }) => {
   //questions for the current story
   const [questions, setQuestions] = useState([]);
 
+  const [showAudioPermission, setShowAudioPermission] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
@@ -145,7 +147,7 @@ const StoryTest = ({ language }) => {
       setQuestions(data[0].questions);
       setImageLinks(data[0].image_links);
       setNarrationLinks(data[0].narration_audios);
-      audioLink = narration_instruciton;
+      audioLink = narration_instruction;
       setShowLoading(false);
 
       //finding total number of stages
@@ -347,7 +349,8 @@ const StoryTest = ({ language }) => {
       subStageRef.current = subStage;
       //assume user will have 3 retelling sections
       if (subStage === 3) {
-        audioLink = "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/question_instructions.m4a";
+        audioLink =
+          "https://merls-story-audio.s3.us-east-2.amazonaws.com/instruction/question_instructions.m4a";
         setStage(3);
         setSubStage(1);
       } else {
@@ -362,7 +365,7 @@ const StoryTest = ({ language }) => {
       //go until the end of the questions
       if (subStage === questions.length) {
         //reset for next story question
-        audioLink = narration_instruciton;
+        audioLink = narration_instruction;
         setStage(0);
         setSubStage(1);
         //advance story
@@ -412,6 +415,10 @@ const StoryTest = ({ language }) => {
         <CircularProgress size={75} thickness={3} variant="indeterminate" />
       </div>
     );
+  } else if (showAudioPermission) {
+    return (
+      <AudioPermission showChinese={showChinese} setShowAudioPermission={setShowAudioPermission}/>
+    )
   } else if (completed) {
     return (
       <div id="testPage">
